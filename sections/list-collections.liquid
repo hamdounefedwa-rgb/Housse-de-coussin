@@ -1,0 +1,17 @@
+{% render 'breadcrumb' %}
+<div class="wrapper">
+<h1 style="display:none;">Collections</h1>
+{% for link in linklists.all-collections.links %}
+  {% assign collection = link.object %}
+  {% render 'collection-list-item', collection: collection %}
+  {% unless forloop.last %}<hr>{% endunless %}
+{% else %}
+{% assign collections_custom = collections | sort: 'published_at' | reverse %}
+  {% for collection in collections_custom %}
+    {% unless collection.handle == 'frontpage' or collection.handle == 'all' %}
+      {% render 'collection-list-item', collection: collection %}
+      {% unless forloop.last %}<hr>{% endunless %}
+    {% endunless %}
+  {% endfor %}
+{% endfor %}
+</div>

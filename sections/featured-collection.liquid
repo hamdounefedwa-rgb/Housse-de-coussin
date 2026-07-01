@@ -1,0 +1,1866 @@
+<div id="section-id-{{ section.id }}" 
+  data-section-id="{{ section.id }}" 
+  data-section-type="collection-row"
+  data-title-height="{{ section.settings.grid_crop_title }}" 
+  data-title-height-sm="{{ section.settings.grid_crop_title_sm }}" 
+  data-title-truncate="{{ section.settings.title_truncate }}" 
+  data-title-truncate-sm="{{ section.settings.title_truncate_sm }}" 
+  class="section-collection {% if section.settings.section_spaced %}section-spaced{% endif %} 
+  color-scheme {{ section.settings.color_scheme }} section-id-{{ section.id }} 
+  {{ section.settings.class }}
+  grid-layout-{{ section.settings.layout }} {% if section.settings.thumbnails_img_opacity %} opacity-enable{% endif %}" 
+  > 
+
+  <div class="{% if section.settings.full_page %} wrapper-full-page {% else %} wrapper{% endif %}">
+
+  {%- liquid
+  assign featured_row = section.settings.home_featured_row
+  assign row_limit = section.settings.pagination | times: 1
+
+  if section.settings.full_page
+    assign page_width = "3000"
+  else 
+    assign page_width = settings.page_width | replace: "px", ""
+  endif
+  
+  case section.settings.grid
+    when '2'  
+      assign grid_item_width = 'one-half'
+      assign size = page_width | divided_by: 2 
+      assign image_size = size | minus: 20
+    when '3' 
+      assign grid_item_width = 'one-third'
+      assign size = page_width | divided_by: 3
+      assign image_size = size  | minus: 20
+    when '4'
+      assign grid_item_width = 'one-quarter'
+      assign size = page_width | divided_by: 4
+      assign image_size = size | minus: 20
+    when '5' 
+      assign grid_item_width = 'one-fifth'
+      assign size = page_width | divided_by: 5
+      assign image_size = size | minus: 20   
+  endcase   
+
+  case section.settings.grid_sm
+    when '1'
+      assign grid_item_width_sm = 'small--one-whole'
+      assign size_sm = 360
+      assign image_size_sm = size_sm | minus: 20
+    when '2'
+      assign grid_item_width_sm = 'small--one-half'    
+      assign size_sm = 360 | divided_by: 2 
+      assign image_size_sm = size_sm | minus: 20
+  endcase
+
+  -%} 
+
+  {% if collections[featured_row].all_products_count != 0 and section.settings.home_featured_row != blank %}
+
+    {% if section.settings.grid_slider %}
+
+      {% assign featured_collection = collections[featured_row].products %}
+
+      {% assign header_title = collections[featured_row].title %}
+
+      {% render 'featured-row-header', section: section, featured_row: featured_row, header_title: header_title %} 
+
+      {% render 'slider-product-list', featured_row: featured_row, row_limit: row_limit, featured_collection: featured_collection, image_size: image_size, image_size_sm: image_size_sm, image_layout: section.settings.image_layout %}
+
+    {% else %} 
+      {% render 'featured-row', not_showing_sold_out_products: section.settings.not_showing_sold_out_products, row_limit: row_limit, featured_row: featured_row, grid_item_width: grid_item_width, grid_item_width_sm: grid_item_width_sm, image_size: image_size, image_size_sm: image_size_sm, image_layout: section.settings.image_layout, show_colors: section.settings.product_show_swatch_color %}
+    {% endif %} 
+
+  <!-- feature-row -->
+  {% else %}
+
+  <div class="section-header section-header--layout-{{ section.settings.title_layout }}">
+  <{{ section.settings.title_hn }} class="h1 {{ section.settings.title_hn }}">{{ 'homepage.featured_collection_rows.heading' | t }}</{{ section.settings.title_hn }}>
+  <div class="section-header--right">
+    <a href="{{ collections[featured_row].url }}">{{ 'homepage.featured_collection_rows.more' | t }} &rsaquo;</a>
+  </div>
+  </div>
+
+  <div class="grid text-center">
+    <div class="grid-uniform" style="justify-content:center;">
+      {% for i in (1..3) %}
+      <div class="grid-item large--one-fifth medium--one-third text-center product-grid-item">
+        {% capture current %}{% cycle 1, 2, 3, 4 %}{% endcapture %}
+        {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}         
+        <h3 class="h3"><a style="color:inherit;" href="/admin/products">{{ 'homepage.featured_collection_rows.example_product_title' | t }}</a></h3>
+          <p>$19.99</p>        
+      </div>
+      {% endfor %}    
+    </div>
+  </div>
+
+{% endif %}
+</div>
+</div>
+
+{% render 'section-custom-css', elem: section %}
+{% render 'section-featured-collection-custom-css', elem: section %}
+
+{% schema %}
+{
+
+"name": {
+ "fr": "Liste des produits",
+ "es": "Lista de productos",
+ "en": "List of products"
+},
+"class": "featured-collection",
+"settings": [
+{
+  "type": "paragraph",
+  "content": {
+    "fr": "[Tutoriel vidéo](https://youtu.be/fjOWSIDSl8g)",
+    "es": "[Video tutorial](https://youtu.be/_yTCajfwp30)",
+    "en": "[Video tutorial](https://youtu.be/_yTCajfwp30)"
+  }
+},
+ {
+   "type":"header",
+   "content": {
+     "fr": "Important",
+     "es": "Important",
+     "en": "Important"
+   }
+ }, 
+ {
+   "type": "paragraph",
+   "content": {
+     "fr": "Certaines options nécessitent de cliquer sur Enregistrer afin de voir le changement",
+     "es": "Some options require clicking on Save to see the change",
+     "en": "Some options require clicking on Save to see the change"
+   }    
+ },
+ {
+   "type": "collection",
+   "id": "home_featured_row",
+   "label": {
+     "fr": "Collection",
+     "es": "Collección",
+     "en": "Collection"
+   }
+ },
+
+ {
+   "type":"header",
+   "content": {
+     "fr": "Section",
+     "es": "Section",
+     "en": "Section"
+   }
+ },
+ {
+  "type": "select",
+  "id": "title_hn",
+  "label": {
+    "fr": "Balise Hn du titre de la section (SEO)",
+    "es": "Hn tag of section title (SEO)",
+    "en": "Hn tag of section title (SEO)"
+  },
+  "default": "h2",
+  "options": [
+    {
+      "value": "h2",
+      "label": "h2"
+    },
+    {
+      "value": "h3",
+      "label": "h3"
+    },
+    {
+      "value": "h4",
+      "label": "h4"
+    },
+    {
+      "value": "h5",
+      "label": "h5"
+    },
+    {
+      "value": "h6",
+      "label": "h6"
+    },
+    {
+      "value": "p",
+      "label": "p"
+    },
+    {
+      "value": "div",
+      "label": "div"
+    }
+  ]
+},
+ {
+  "type": "text",
+  "id": "title_divider",
+  "label": {
+    "fr": "Contenu HTML ",
+    "es": "HTML code",
+    "en": "HTML code"
+  }       
+},
+ {
+  "type": "select",
+  "id": "grid",
+  "label": {
+    "fr": "Nombre de produits par rangée",
+    "es": "Número de productos por línea",
+    "en": "Number of products per row"
+  },
+  "default": "4",
+  "options": [
+    {
+      "value": "2",
+      "label": "2"
+    },
+    {
+      "value": "3",
+      "label": "3"
+    },
+    {
+      "value": "4",
+      "label": "4"
+    },          
+    {
+      "value": "5",
+      "label": "5"
+    }      
+  ]
+}, 
+{
+  "type": "select",
+  "id": "grid_sm",
+  "label": {
+    "fr": "Nombre de produits par rangée (mobile)",
+    "es": "Número de productos por línea (mobile)",
+    "en": "Number of products per row (mobile)"
+  },
+  "default": "2",
+   
+  "options": [
+    {
+      "value": "1",
+      "label": "1"
+    },
+    {
+      "value": "2",
+      "label": "2"
+    }               
+  ]
+}, 
+ {
+   "type": "text",
+   "id": "pagination",
+   "label": {
+     "fr": "Nombre de produits",
+     "es": "Number of products",
+     "en": "Number of products"
+   },
+   "default": "8",
+   "info": {
+    "fr": "50 max - Limitation Shopify ",
+    "es": "50 max - Shopify limitation",
+    "en": "50 max - Shopify limitation"
+  }
+},
+
+{
+  "type": "checkbox",
+  "id": "not_showing_sold_out_products",
+  "label": {
+    "fr": "Masquer les produits épuisés",
+    "es": "No mostrar los productos agotados",
+    "en": "Not showing sold out produts"
+  },
+  "default": false
+},
+{
+  "type": "checkbox",
+  "id": "collection_show_link",
+  "label": {
+    "fr": "Afficher Lien/Bouton voir toute la collection",
+    "es": "Mostrar enlace ver toda la colección",
+    "en": "Display the link to the collection"
+  },
+  "default": false
+},
+
+ {
+  "type":"header",
+  "content": {
+    "fr": "Vignette du produit",
+    "es": "Product thumbnail",
+    "en": "Product thumbnail"
+  }
+},
+ 
+ {
+   "type": "select",
+   "id": "block_title_hn",
+   "label": {
+     "fr": "Balise Hn des titres des produits (SEO)",
+     "es": "Hn tag of products titles (SEO)",
+     "en": "Hn tag of products titles (SEO)"
+   },
+   "default": "h3",
+   "options": [
+     {
+       "value": "h2",
+       "label": "h2"
+     },
+     {
+       "value": "h3",
+       "label": "h3"
+     },
+     {
+       "value": "h4",
+       "label": "h4"
+     },
+     {
+       "value": "h5",
+       "label": "h5"
+     },
+     {
+       "value": "h6",
+       "label": "h6"
+     },
+     {
+       "value": "p",
+       "label": "p"
+     },
+     {
+       "value": "div",
+       "label": "div"
+     }
+   ]
+ },
+ {
+   "type":      "range",
+   "id":        "title_truncate",
+   "min":       5,
+   "max":        200,
+   "step":       5,
+   "unit":       "uni",
+   "label": {
+     "fr": "Nombre de caractères Max du titre des vignettes",
+     "es": "Número de caracteres en el título de las miniaturas",
+     "en": "Max number of characters for thumbnail title"
+   },
+   "default":   200
+ },
+ {
+   "type":      "range",
+   "id":        "title_truncate_sm",
+   "min":       5,
+   "max":        200,
+   "step":       5,
+   "unit":       "uni",
+   "label": {
+     "fr": "Nombre de caractères Max du titre des vignettes (mobile)",
+     "es": "Número de caracteres en el título de las miniaturas (mobile)",
+     "en": "Max number of characters for thumbnail title (mobile)"
+   },
+   "default":   200
+ },
+ {
+   "type": "range",
+   "id": "grid_crop_title",
+   "label": {
+     "fr": "Hauteur de la zone du titre (desktop)",
+     "es": "Altura del área del título (desktop)",
+     "en": "Title zone height (desktop)"
+   },
+   "min": 20,
+   "max": 120,
+   "step": 5,
+   "unit":       "px",
+   "default": 35                
+ },
+ {
+   "type": "range",
+   "id": "grid_crop_title_sm",
+   "label": {
+     "fr": "Hauteur de la zone du titre (mobile)",
+     "es": "Altura del área del título (mobile)",
+     "en": "Title zone height (mobile)"
+   },
+   "min": 20,
+   "max": 120,
+   "step": 5,
+   "unit":       "px",
+   "default": 35                
+ },
+ {
+    "type": "select",
+    "id": "reviews_tabs_apps",
+    "label": {
+      "fr": "Notation (Application d'avis)",
+      "es": "Rating (Reviews apps)",
+      "en": "Rating (Reviews apps)"
+    },
+    "options": [
+      {
+        "value": "none",
+        "label": {
+          "fr": "Aucune",
+          "es": "No",
+          "en": "None"
+        }
+      },
+      {
+        "value": "loox",
+        "label": "Loox"
+      },
+      {
+        "value": "ryviu",
+        "label": "Ryviu"
+      },
+      {
+        "value": "pr",
+        "label": "Product reviews"
+      },
+      {
+        "value": "alireviews",
+        "label": "Alireviews"
+      },
+      {
+        "value": "judgeme",
+        "label": "Judge me"
+      } 
+    ]
+  },
+ {
+   "type":"header",
+   "content": {
+     "fr": "Options",
+     "es": "Options",
+     "en": "Options"
+   }
+ },
+ {
+  "type": "checkbox",
+  "id": "grid_scroll",
+  "label": {
+    "fr": "Défilement Horizontal sur mobile",
+    "es": "Horizontal scroll according (mobile)",
+    "en": "Horizontal scroll according (mobile)"
+  },
+  "info": {
+    "fr": "Incompatible avec le carrousel",
+    "es": "Not compatible with the carousel",
+    "en": "Not compatible with the carousel"
+  }
+},
+ {
+  "type": "checkbox",
+  "id": "thumbnails_center",
+
+  "label": {
+    "fr": "Centrer les éléments",
+    "es": "Center the elements",
+    "en": "Center the elements"
+  },
+  "default": true
+},
+ {
+   "type": "checkbox",
+   "id": "thumbnails_imgbis",
+   "label": {
+     "fr": "Afficher 2ème image au survol",
+     "es": "Mostrar la 2ª imagen en el cursor",
+     "en": "Show 2nd image on hover"
+   },
+   "default": false     
+ },
+
+ { 
+   "type": "checkbox",
+   "id": "price_text",
+   "label": {
+     "fr": "Afficher le à partir de",
+     "es": "Mostrar el desde",
+     "en": "Display From... for prices"
+   },
+   "default": true     
+ },
+ {
+   "type": "checkbox",
+   "id": "product_show_saved_amount2",
+
+   "label": {
+     "fr": "Afficher l'économie gagnée",
+     "es": "Mostrar el ahorro conseguido",
+     "en": "Display the savings amount"
+   },
+   "default": true
+ },
+ {
+   "type": "checkbox",
+   "id": "product_show_compare_at_price2",
+   "label": {
+     "fr": "Afficher le prix barré",
+     "es": "Mostrar el precio tachado",
+     "en": "Display compare at price"
+   },
+   "default": true
+ },
+
+ {
+   "type": "checkbox",
+   "id": "product_show_badge",
+   "label": {
+     "fr": "Afficher le badge promo",
+     "es": "Mostrar el circulo de promoción",
+     "en": "Display promo badge"
+   },
+   "default": false
+ },
+ 
+ {
+   "type": "checkbox",
+   "id": "product_new_show",
+   "label": {
+     "fr": "Afficher le badge nouveauté",
+     "es": "Display new product badge",
+     "en": "Display new product badge"
+   },
+   "default": false
+ },
+ {
+   "type":"text",
+   "id":"product_new_time",
+   "label": {
+     "fr": "Nombre de jours ou le produit est considéré comme nouveau",
+     "es": "Number of days the product is considered new",
+     "en": "Number of days the product is considered new"
+   },
+   "default": "60"
+ },
+ {
+   "type": "checkbox",
+   "id": "product_show_swatch_color",
+   "label": {
+     "fr": "Afficher les couleurs",
+     "es": "Mostrar colores",
+     "en": "Display colors"
+   },
+   "info":{
+     "fr": "Application Variantes Couleurs doit être activée",
+     "es": "La aplicación Swatch colors debe estar activada",
+     "en": "Swatch colors application must be enabled"
+   }, 
+   "default": false
+ },
+
+ 
+ {
+   "type": "select",
+   "id": "btn_choice",
+   "label": {
+     "fr": "Choix du bouton",
+     "es": "Selección del botón",
+     "en": "Button type"
+   },
+   "default": "0",
+   "options": [
+     {
+       "value": "0",
+       "label": {
+         "fr": "Pas de bouton",
+         "es": "Pas de bouton",
+         "en": "No button"
+       }
+     },
+     {
+       "value": "1",
+       "label": {
+         "fr": "Voir le produit",
+         "es": "Ver el producto",
+         "en": "See the product"
+       }
+     },
+     {
+       "value": "2",
+       "label": {
+         "fr": "Ajouter au panier",
+         "es": "Añadir al carrito",
+         "en": "Add to cart"
+       }
+     }                  
+   ]
+ },    
+ 
+ {
+    "type":"header",       
+    "content":{
+       "fr":"Mise en forme - Section",
+       "es":"Layout - Section",
+       "en":"Layout - Section"
+    }
+  },
+  {
+    "type": "checkbox",
+    "id": "full_page",
+    "label": {
+      "fr": "Pleine page",
+      "es": "Full page",
+      "en": "Full page"
+    },
+    "default": false
+  },
+  {
+    "type":"checkbox",
+    "id":"section_spaced",       
+    "label":{
+      "fr":"Espacer la section - Haut",
+      "es":"Add space - Above the section",
+      "en":"Add space - Above the section"
+    },
+    "default": true
+  },
+  {
+    "type": "select",
+    "id": "color_scheme",
+    "label": {
+      "fr": "Combinaison de couleurs",
+      "es": "Color combinations",
+      "en": "Color combinations"
+    },
+    "default": "color-scheme-none",
+    "options": [
+      {
+        "value": "color-scheme-none",
+        "label": {
+          "fr": "Sans",
+          "es": "None",
+          "en": "None"
+        }
+      },
+      {
+        "value": "color-scheme-1",
+        "label": {
+          "fr": "Combinaison 1",
+          "es": "Combination 1",
+          "en": "Combination 1"
+        }
+      },
+       {
+        "value": "color-scheme-2",
+        "label": {
+          "fr": "Combinaison 2",
+          "es": "Combination 2",
+          "en": "Combination 2"
+        }
+      },
+       {
+        "value": "color-scheme-3",
+        "label": {
+          "fr": "Combinaison 3",
+          "es": "Combination 3",
+          "en": "Combination 3"
+        }
+      },
+      {
+        "value": "color-scheme-inverse",
+        "label": {
+          "fr": "Inversé",
+          "es": "Inverted",
+          "en": "Inverted"
+        }
+      }
+    ]
+  }, 
+  {
+    "type": "select",
+    "id": "title_layout",
+    "label": {
+      "fr": "Modèle de titre",
+      "es": "Title layout",
+      "en": "Title layout"
+    },
+    "default": "1",
+    "options": [
+      {
+        "value": "0",
+        "label": {
+          "fr": "Modèle 1",
+          "es": "Layout 1",
+          "en": "Layout 1"
+        }
+      },
+      {
+        "value": "1",
+        "label": {
+          "fr": "Modèle 2",
+          "es": "Layout 2",
+          "en": "Layout 2"
+        }
+      },
+      {
+        "value": "2",
+        "label": {
+          "fr": "Modèle 3",
+          "es": "Layout 3",
+          "en": "Layout 3"
+        }
+      }
+     ]
+  },      
+  
+  
+  {
+    "type": "select",
+    "id": "title_link_layout",
+    "label": {
+      "fr": "Placement Lien/Bouton voir toute la collection",
+      "es": "View collection position",
+      "en": "View collection position"
+    },
+    "default": "1",
+    "options": [
+      {
+        "value": "0",
+        "label": {
+          "fr": "En haut",
+          "es": "Top",
+          "en": "Top"
+        }
+      },
+      {
+        "value": "1",
+        "label": {
+          "fr": "En bas",
+          "es": "Bottom",
+          "en": "Bottom"
+        }
+      }
+      
+     ]
+  },
+ 
+  {
+    "type": "select",
+    "id": "link_layout",
+    "label": {
+      "fr": "Modèle du lien",
+      "es": "Link type",
+      "en": "Link type"
+    },
+    "default": "btn",
+    "options": [
+      {
+        "value": "link",
+        "label": {
+          "fr": "Lien",
+          "es": "Link",
+          "en": "Link"
+        }
+      },
+      {
+        "value": "btn",
+        "label": {
+          "fr": "Bouton",
+          "es": "Button",
+          "en": "Button"
+        }
+      }        
+     ]
+  },
+
+  {
+    "type": "select",
+    "id": "btn_collection_scheme",
+    "label": {
+      "fr": "Style du bouton voir toute la collection",
+      "es": "Button style - see all collection",
+      "en": "Button style - see all collection"
+    },
+    "default": "btn-primary",
+    "options": [
+    {
+      "value": "btn-inherit",        
+      "label": {
+        "fr": "Hérité",
+        "es": "Inherited",
+        "en": "Inherited"
+      }
+    },
+    {
+      "value": "btn-primary",        
+      "label": {
+        "fr": "Principal",
+        "es": "Primary",
+        "en": "Primary"
+      }
+    },
+    {
+      "value": "btn-secondary",        
+      "label": {
+        "fr": "Secondaire",
+        "es": "Secondary",
+        "en": "Secondary"
+      }
+    },
+    {
+      "value": "btn-third",
+      "label": {
+        "fr": "Transparent",
+        "es": "Transparent",
+        "en": "Transparent"
+      }        
+    }
+    
+    ]
+  },
+
+  {
+    "type":"header",       
+    "content":{
+       "fr":"Mise en forme - Vignette",
+       "es":"Layout - Thumbnails",
+       "en":"Layout - Thumbnails"
+    }
+  },
+ 
+ {
+   "type": "select",
+   "id": "layout",
+   "label": {
+     "fr": "Modèles",
+     "es": "Models",
+     "en": "Models"
+   },
+   "default": "0",
+   "options": [
+     {
+       "value": "0",
+       "label": {
+         "fr": "Vignettes",
+         "es": "Model 1",
+         "en": "Model 1"
+       }
+     },
+     {
+       "value": "1",
+       "label": {
+         "fr": "Vignettes + contenu au survol",
+         "es": "Model 2",
+         "en": "Model 2"
+       }
+     },
+     {
+       "value": "2",
+       "label": {
+         "fr": "Vignettes en 2 colonnes",
+         "es": "Model 3",
+         "en": "Model 3"
+       }
+     }
+    ]
+ },
+ {
+  "type":"select",
+  "id":"d_flex_align_items",
+  "label":{
+    "fr":"Alignement vertical des éléments",
+    "es":"Vertical alignment of the content",
+    "en":"Vertical alignment of the content"
+  },
+  "default":"flex-start",
+  "options":[
+    {
+      "value":"flex-start",
+      "label":"Sans"
+    },
+    {
+      "value":"center",
+      "label":"Centré"
+    },
+    {
+      "value":"flex-end",
+      "label":"En bas"
+    },
+    {
+      "value":"stretch",
+      "label":"Etiré"
+    }
+  ],
+  "default": "stretch"
+},
+ {
+   "type": "checkbox",
+   "id": "layout_2_border_enable",
+   "label": {
+     "fr": "Activer une bordure",
+     "es": "Add border",
+     "en": "Add border"
+   },
+   "default": false     
+ },
+ 
+ {
+   "type": "checkbox",
+   "id": "thumbnails_zoom",
+   "label": {
+     "fr": "Activer l'effet de Zoom au survol",
+     "es": "Activar el efecto Zoom en la imagen",
+     "en": "Activate zoom effect on hover"
+   },
+   "default": false     
+ },
+ 
+ {
+  "type": "select",
+  "id": "image_layout",
+  "label": {
+    "fr": "Modèle d'image",
+    "es": "Image layout",
+    "en": "Image layout"
+  },
+  "default": "1",
+  "options": [
+    {
+      "value": "0",
+      "label": {
+        "fr": "Original",
+        "es": "Original",
+        "en": "Original"
+      }
+    },
+    {
+      "value": "1",
+      "label": {
+        "fr": "Carré",
+        "es": "Square",
+        "en": "Square"
+      }
+    },
+    {
+      "value": "1.33",
+      "label": {
+        "fr": "Paysage",
+        "es": "Landscape",
+        "en": "Landscape"
+      }
+    },
+    {
+      "value": "0.66",
+      "label": {
+        "fr": "Portrait",
+        "es": "Portrait",
+        "en": "Portrait"
+      }
+    }
+   ]
+},  
+  
+ {
+  "type":"text",
+  "id":"img_border_radius_v2",     
+  "label":{
+    "fr":"Arrondi de l'image",
+    "es":"Rounded corners on image",
+    "en":"Rounded corners on image"
+  },
+  "default":"0px",
+  "info":"px or % (50% = perfect circle)"
+},
+
+ 
+  {
+   "type": "select",
+   "id": "product_position_badge",
+   "label": {
+     "fr": "Position du badge promo",
+     "es": "Posición de la insignia de promoción",
+     "en": "Promo badge position"
+   },
+   "default": "left",
+   "options": [
+     {
+       "value": "left",          
+       "label": {
+         "fr": "Gauche",
+         "es": "Left",
+         "en": "Left"
+       }
+     },
+     {
+       "value": "right",          
+       "label": {
+         "fr": "Droite",
+         "es": "Right",
+         "en": "Right"
+       }
+     }
+   ]
+ },
+  {
+   "type": "select",
+   "id": "product_position_new",
+   "label": {
+     "fr": "Position du badge nouveauté",
+     "es": "Posición de la insignia de novedad",
+     "en": "New badge position"
+   },
+   "default": "right",
+   "options": [
+     {
+       "value": "left",          
+       "label": {
+         "fr": "Gauche",
+         "es": "Left",
+         "en": "Left"
+       }
+     },
+     {
+       "value": "right",          
+       "label": {
+         "fr": "Droite",
+         "es": "Right",
+         "en": "Right"
+       }
+     }
+   ]
+ },
+{
+    "type": "select",
+    "id": "btn_scheme",
+    "label": {
+      "fr": "Style du bouton",
+      "es": "Button style",
+      "en": "Button style"
+    },
+    "default": "btn-primary",
+    "options": [
+    {
+      "value": "btn-inherit",        
+      "label": {
+        "fr": "Hérité",
+        "es": "Inherited",
+        "en": "Inherited"
+      }
+    },
+    {
+      "value": "btn-primary",        
+      "label": {
+        "fr": "Principal",
+        "es": "Primary",
+        "en": "Primary"
+      }
+    },
+    {
+      "value": "btn-secondary",        
+      "label": {
+        "fr": "Secondaire",
+        "es": "Secondary",
+        "en": "Secondary"
+      }
+    },
+    {
+      "value": "btn-third",
+      "label": {
+        "fr": "Transparent",
+        "es": "Transparent",
+        "en": "Transparent"
+      }        
+    },
+    {
+      "value": "btn-atc",        
+      "label": {
+        "fr": "Ajouter au panier",
+        "es": "Add to cart",
+        "en": "Add to cart"
+      }
+    }
+    ]
+  },
+ 
+{
+    "type":"header",       
+    "content":{
+       "fr":"Carrousel de produits",
+       "es":"Opciones de carrusel de productos",
+       "en":"Product carousel options"
+    }
+ },
+{
+   "type": "checkbox",
+   "id": "grid_slider",
+   "label": {
+     "fr": "Activer la version Carousel",
+     "es": "Activar la versión de Carrusel",
+     "en": "Activate the Carousel system"
+   }
+ },
+ 
+ {
+   "type": "checkbox",
+   "id": "grid_slider_products_mobile_center",
+   "label": {
+     "fr": "Mode centré avec décalage des produits (Mobile)",
+     "es": "Centered mode with offest product display (Mobile)",
+     "en": "Centered mode with offset product display (Mobile)"
+   }
+ },
+ 
+{
+  "type": "header",
+  "content": {
+    "fr": "Personnalisation des couleurs",
+    "es": "Color customization",
+    "en": "Color customization"
+  }
+},
+{
+  "type": "paragraph",
+  "content": {
+    "fr": "[Tutoriel vidéo](https://youtu.be/mX5vrnrv4_I)",
+    "es": "[Video tutorial](https://youtu.be/mX5vrnrv4_I)",
+    "en": "[Video tutorial](https://youtu.be/mX5vrnrv4_I)"
+  }
+},
+{
+  "type": "paragraph",
+  "content": {
+  "fr": "Reprend la main sur les paramètres génériques du thème",
+  "es": "Will replace the generic customization from theme settings",
+  "en": "Will replace the generic customization from theme settings"
+  }
+},
+
+{
+  "type": "header",
+  "content": {
+      "fr": "Section",
+      "es": "Section",
+      "en": "Section"
+  }
+},
+
+{
+  "type": "checkbox",
+  "id": "block_color_enable",
+  "label": {
+    "fr": "Activer",
+    "es": "Activate",
+    "en": "Activate"
+  },
+  "default": false
+},
+ 
+ 
+ 
+ {
+   "type":"color",
+   "id":"block_bgcolor",
+   "label":{
+     "fr":"Couleur de fond",
+     "es":"Background color",
+     "en":"Background color"
+   },
+   "default":"#F0F0F0"
+ },
+
+ 
+ 
+ 
+ {
+   "type":"image_picker",
+   "id":"block_image",
+   "label":{
+     "fr":"Image de fond (optionnel)",
+     "es":"Background image (optional)",
+     "en":"Background image (optional)"
+   },
+   "info":"1900px Min"
+ },
+ {
+   "type":"checkbox",
+   "id":"section_parallax",
+   "label":{
+     "fr":"Effet parallax",
+     "es":"Parallax effect",
+     "en":"Parallax effect"
+   },
+   "default":false
+ },
+ {
+   "type":"checkbox",
+   "id":"block_bgcolor_gradient",
+   "label":{
+     "fr":"Activer la prise en charge du dégradé",
+     "es":"Enable gradient",
+     "en":"Enable gradient"
+   },
+   "default":false
+ },
+ {
+   "type":"range",
+   "id":"block_bgcolor_gradient_direction",
+   "min":0,
+   "max":180,
+   "step":2,
+   "unit":"deg",
+   "label":{
+     "fr":"Sens du dégradé",
+     "es":"Gradient direction",
+     "en":"Gradient direction"
+   },
+   "default":90
+ },
+ {
+   "type":"color",
+   "id":"block_bgcolor_gradient_1",
+   "label":{
+     "fr":"Fond - Couleur 1",
+     "es":"Background - Color 1",
+     "en":"Background - Color 1"
+   },
+   "default":"#F0F0F0"
+ },
+ {
+   "type":"color",
+   "id":"block_bgcolor_gradient_2",
+   "label":{
+     "fr":"Fond - Couleur 2",
+     "es":"Background - Color 2",
+     "en":"Background - Color 2"
+   },
+   "default":"#333333"
+ },
+ {
+   "type":"range",
+   "id":"block_bgcolor_gradient_1_percent_2",
+   "min":0,
+   "max":100,
+   "step":1,
+   "unit":"%",
+   "label":{
+     "fr":"Proportion des couleurs",
+     "es":"Color ratio",
+     "en":"Color ratio"
+   },
+   "default":0
+ },
+ {
+   "type":"range",
+   "id":"block_bgcolor_gradient_1_percent_1",
+   "min":0,
+   "max":100,
+   "step":1,
+   "unit":"%",
+   "label":{
+     "fr":"Début du flou",
+     "es":"Blur beginning",
+     "en":"Blur beginning"
+   },
+   "default":0
+ },
+ {
+   "type":"range",
+   "id":"block_bgcolor_gradient_2_percent_1",
+   "min":0,
+   "max":100,
+   "step":1,
+   "unit":"%",
+   "label":{
+     "fr":"Fin du flou ",
+     "es":"Blur ending",
+     "en":"Blur ending"
+   },
+   "default":100
+ },
+ {
+   "type":"color",
+   "id":"section_shadow_color",
+   "label":{
+     "fr":"Ombre de la section",
+     "es":"Shadow color of the section",
+     "en":"Shadow color of the section"
+   },
+   
+   "default":"#000000"
+ },
+ {
+   "type":"range",
+   "id":"section_shadow_opacity",
+   "min":0,
+   "max":1,
+   "step":0.1,
+   "unit":"deg",
+   "label":{
+     "fr":"Degré d'opacité de la section",
+     "es":"Opacity of the section",
+     "en":"Opacity of the section"
+   },
+   "default":0.2
+ },
+ {
+   "type":"range",
+   "id":"section_shadow_size",
+   "min":0,
+   "max":100,
+   "step":1,
+   "unit":"px",
+   "label":{
+     "fr":"Taille de l'ombre de la section",
+     "es":"Shadow size of the section",
+     "en":"Shadow size of the section"
+   },
+   "default":0
+ },
+ {
+    "type":"color",
+    "id":"block_shadow_color",       
+    "label":{
+       "fr":"Couleur de l'ombre des vignettes",
+       "es":"Shadow color of the thumbnails",
+       "en":"Shadow color of the thumbnails"
+    },
+    "default":"#000000"
+  },
+  {
+     "type": "range",
+     "id": "block_shadow_opacity",
+     "min": 0,
+     "max": 1,
+     "step": 0.1,
+     "unit": "deg",
+     "label": {
+       "fr": "Degré d'opacité des vignettes",
+       "es": "Opacity of the thumbnails",
+       "en": "Opacity of the thumbnails"
+     },
+     "default": 0.2
+  },
+  {
+     "type": "range",
+     "id": "block_shadow_size",
+     "min": 0,
+     "max": 100,
+     "step": 1,
+     "unit": "px",
+     "label": {
+       "fr": "Taille de l'ombre des vignettes",
+       "es": "Shadow size of the thumbnails",
+       "en": "Shadow size of the thumbnails"
+     },
+     
+     "default": 0
+  },
+  
+  {
+    "type": "checkbox",
+    "id": "thumbnails_img_opacity",
+    "label": {
+      "fr": "Opacité sur l'image au survol",
+      "es": "Opacidad en la imagen al desplazar el cursor",
+      "en": "Image opacity on hover"
+    },
+    "default": false     
+  },
+    
+   {
+       "type": "range",
+       "id": "thumbnails_img_opacity_deg",
+       "min": 0,
+       "max": 1,
+       "step": 0.1,
+       "unit": "deg",
+       "label": {
+         "fr": "Degré d'opacité sur l'image au survol",
+         "es": "Image opacity level on hover",
+         "en": "Image opacity level on hover"
+       },
+       "default": 0.1
+    },
+ 
+  {
+    "type": "header",
+    "content": {
+        "fr": "Contenu",
+        "es": "Content",
+        "en": "Content"
+    }
+  },
+  {
+    "type": "checkbox",
+    "id": "colors_product_content",
+    "label": {
+      "fr": "Activer",
+      "es": "Activate",
+      "en": "Activate"
+    },
+    "default": false
+  },
+  
+  {
+    "type":"color",
+    "id":"block_title_color",
+    "label":{
+      "fr":"Titre de la section",
+      "es":"Section title",
+      "en":"Section title"
+    },
+    "default":"#333333"
+  },
+  {
+    "type":"color",
+    "id":"block_card_bg_color",
+    "label":{
+      "fr":"Fond de la vignette",
+      "es":"Thumbnail background",
+      "en":"Thumbnail background"
+    }
+  }, 
+  {
+    "type":"color",
+    "id":"block_card_border_color",
+    "label":{
+      "fr":"Bordure",
+      "es":"Thumbnail border",
+      "en":"Thumbnail border"
+    }
+  },
+  {
+    "type":"color",
+    "id":"block_card_title_color",
+    "label":{
+      "fr":"Titre du produit",
+      "es":"Product title",
+      "en":"Product title"
+    },
+    "default":"#333333"
+  },
+  {
+    "type":"color",
+    "id":"block_card_text_color",
+    "label":{
+      "fr":"Texte du produit",
+      "es":"Product text",
+      "en":"Product text"
+    },
+    "default":"#333333"
+  },
+  {
+    "type":"color",
+    "id":"block_card_price_color",
+    "label":{
+      "fr":"Prix du produit",
+      "es":"Product price",
+      "en":"Product price"
+    },
+    "default":"#333333"
+  },
+  {
+    "type":"color",
+    "id":"block_card_price2_color",
+    "label":{
+      "fr":"Prix barré du produit",
+      "es":"Product compare at price",
+      "en":"Product compare at price"
+    },
+    "default":"#333333"
+  },
+  {
+    "type":"color",
+    "id":"block_card_btn_bg_color",
+    "label":{
+      "fr":"Fond Bouton du produit",
+      "es":"Product button background",
+      "en":"Product button background"
+    },
+    "default":"#333"
+  },
+  {
+    "type":"color",
+    "id":"block_card_btn_color",
+    "label":{
+      "fr":"Texte Bouton du produit",
+      "es":"Product button text",
+      "en":"Product button text"
+    },
+    "default":"#FFF"
+  },
+  {
+    "type": "color",
+    "id": "color_price_bg",
+    "label": {
+      "fr": "Fond Badges",
+      "es": "Badge background",
+      "en": "Badge background"
+    },
+    "default": "#fb8a18",
+    "info": {
+      "fr": "Fond de la zone économisez, promo",
+      "es": "Fondo de la zona ahorra y oferta",
+      "en": "Savings and promo badge background"
+    }
+  },
+  {
+    "type": "color",
+    "id": "color_price_text",
+    "label": {
+      "fr": "Texte Badges",
+      "es": "Badge text",
+      "en": "Badge text"
+    },
+    "default": "#fff",
+    "info": {
+      "fr": "Texte de la zone économisez, promo",
+      "es": "Texto de la zona ahorra y oferta",
+      "en": "Savings and promo badge text"
+    }
+  },
+  {
+    "type": "header",
+    "content": {
+      "fr": "Personnalisation des tailles",
+      "es": "Size customization",
+      "en": "Size customization"
+    }
+  },
+  {
+    "type": "paragraph",
+    "content": {
+      "fr": "[Tutoriel vidéo](https://youtu.be/ovHmpm105x8)",
+      "es": "[Video tutorial](https://youtu.be/ovHmpm105x8)",
+      "en": "[Video tutorial](https://youtu.be/ovHmpm105x8)"
+    }
+  },
+  {
+    "type": "checkbox",
+    "id": "block_size_enable",
+    "label": {
+      "fr": "Activer",
+      "es": "Activate",
+      "en": "Activate"
+    },
+    "default": false
+  },
+  {
+    "type": "header",
+    "content": {
+      "fr": "Format Bureau",
+      "es": "Layout (Desktop)",
+      "en": "Layout (Desktop)"
+    }
+  },  
+ {
+   "type":"range",
+   "id":"block_title_size",
+   "min":0,
+   "max":60,
+   "step":1,
+   "unit":"px",
+   "label":{
+     "fr":"Taille du titre de la section",
+     "es":"Font size of section title",
+     "en":"Font size of section title"
+   },
+   "default":28
+ },
+ 
+ {
+   "type":"range",
+   "id":"block_card_title_size",
+   "min":0,
+   "max":60,
+   "step":1,
+   "unit":"px",
+   "label":{
+     "fr":"Taille des titres des produits",
+     "es":"Font size of product titles",
+     "en":"Font size of product titles"
+   },
+   "default":17
+ },
+ {
+  "type":"range",
+  "id":"block_card_text_size",
+  "min":0,
+  "max":60,
+  "step":1,
+  "unit":"px",
+  "label":{
+    "fr":"Taille des textes & badges des produits",
+    "es":"Font size of product texts & badges",
+    "en":"Font size of product texts & badges"
+  },
+  "default":17
+},
+ {
+   "type":"range",
+   "id":"block_card_price_size",
+   "min":0,
+   "max":60,
+   "step":1,
+   "unit":"px",
+   "label":{
+     "fr":"Taille du prix des produits",
+     "es":"Font size of product prices",
+     "en":"Font size of product prices"
+   },
+   "default":18
+ },
+ {
+  "type":"range",
+  "id":"block_card_price2_size",
+  "min":0,
+  "max":60,
+  "step":1,
+  "unit":"px",
+  "label":{
+    "fr":"Taille du prix barré des produits",
+    "es":"Font size of product compare at prices",
+    "en":"Font size of product compare at prices"
+  },
+  "default":16
+},
+    
+ {
+     "type": "range",
+     "id": "block_btn_size",
+     "min": 0,
+     "max": 60,
+     "step": 1,
+     "unit": "px",
+     "label": {
+       "fr": "Taille du bouton",
+       "es": "Font size of button",
+       "en": "Font size of button"
+     },
+     "default": 17
+  },
+  {
+    "type": "header",
+    "content": {
+      "fr": "Format Mobile",
+      "es": "Layout (Mobile)",
+      "en": "Layout (Mobile)"
+    }
+  },
+  {
+    "type":"range",
+    "id":"block_title_size_sm",
+    "min":0,
+    "max":60,
+    "step":1,
+    "unit":"px",
+    "label":{
+      "fr":"Taille du titre de la section",
+      "es":"Font size of section title",
+      "en":"Font size of section title"
+    },
+    "default":28
+  },
+  
+  {
+    "type":"range",
+    "id":"block_card_title_size_sm",
+    "min":0,
+    "max":60,
+    "step":1,
+    "unit":"px",
+    "label":{
+      "fr":"Taille des titres des produits",
+      "es":"Font size of product titles",
+      "en":"Font size of product titles"
+    },
+    "default":17
+  },
+  {
+   "type":"range",
+   "id":"block_card_text_size_sm",
+   "min":0,
+   "max":60,
+   "step":1,
+   "unit":"px",
+   "label":{
+     "fr":"Taille des textes & badges des produits",
+     "es":"Font size of product texts & badges",
+     "en":"Font size of product texts & badges"
+   },
+   "default":17
+ },
+  {
+    "type":"range",
+    "id":"block_card_price_size_sm",
+    "min":0,
+    "max":60,
+    "step":1,
+    "unit":"px",
+    "label":{
+      "fr":"Taille du prix des produits",
+      "es":"Font size of product prices",
+      "en":"Font size of product prices"
+    },
+    "default":18
+  },
+  {
+   "type":"range",
+   "id":"block_card_price2_size_sm",
+   "min":0,
+   "max":60,
+   "step":1,
+   "unit":"px",
+   "label":{
+     "fr":"Taille du prix barré des produits",
+     "es":"Font size of product compare at prices",
+     "en":"Font size of product compare at prices"
+   },
+   "default":16
+ },
+     
+  {
+      "type": "range",
+      "id": "block_btn_size_sm",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": {
+        "fr": "Taille du bouton",
+        "es": "Font size of button",
+        "en": "Font size of button"
+      },
+      "default": 17
+   },
+
+  {
+    "type": "header",
+    "content": {
+      "fr": "Personnalisation de la disposition",
+      "es": "Spacing customization",
+      "en": "Spacing customization"
+    }
+  },
+  {
+    "type": "paragraph",
+    "content": {
+      "fr": "[Tutoriel vidéo](https://youtu.be/LLS1yEwaPsw)",
+      "es": "[Video tutorial](https://youtu.be/LLS1yEwaPsw)",
+      "en": "[Video tutorial](https://youtu.be/LLS1yEwaPsw)"
+    }
+  },
+  {
+    "type": "paragraph",
+    "content": {
+      "fr": "Les espacements sont séparés par des espaces avec 4 valeurs maximales - Haut Droit Bas Gauche - L'unité peut être le rem, px, % - Exemple: 20px 0px 20px 20px - [En savoir plus](https://developer.mozilla.org/fr/docs/Web/CSS/padding) ",
+      "es": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)",
+      "en": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)"
+      }
+  },
+  {
+    "type": "checkbox",
+    "id": "block_spacing_enable",
+    "label": {
+      "fr": "Activer",
+      "es": "Activate",
+      "en": "Activate"
+    },
+    "default": false
+  },
+  {
+    "type": "text",
+    "id": "section_max_width",
+    "label": {
+      "fr": "Longueur max (% ou px)",
+      "es": "Max width (% ou px)",
+      "en": "Max width (% or px)"
+    }
+  },
+  {
+    "type": "header",
+    "content": {
+      "fr": "Format Bureau",
+      "es": "Layout (Desktop)",
+      "en": "Layout (Desktop)"
+    }
+  },
+  {
+    "type": "text",
+    "id": "block_padding",
+    "label": {
+        "fr": "Espacements intérieur",
+        "es": "Interior Spacing",
+        "en": "Interior Spacing"
+      }
+  },
+  {
+    "type": "text",
+    "id": "block_margin",
+    "label": {
+        "fr": "Espacements extérieur",
+        "es": "Exterior Spacing",
+        "en": "Exterior Spacing"
+      }
+  },
+  {
+    "type": "header",
+    "content": {
+      "fr": "Format Mobile",
+      "es": "Layout (Mobile)",
+      "en": "Layout (Mobile)"
+    }
+  },
+  {
+    "type": "text",
+    "id": "block_padding_sm",
+    "label": {
+        "fr": "Espacements intérieur",
+        "es": "Interior Spacing",
+        "en": "Interior Spacing"
+      }
+  },
+  {
+    "type": "text",
+    "id": "block_margin_sm",
+    "label": {
+        "fr": "Espacements extérieur",
+        "es": "Exterior Spacing",
+        "en": "Exterior Spacing"
+      }
+  },
+  {
+    "type": "header",
+    "content": {
+      "fr": "Personnalisation avancée",
+      "es": "Advanced CSS",
+      "en": "Advanced CSS"
+    }
+  },
+  {
+    "type": "text",
+    "id": "class",
+    "label": "CSS Class"
+  },
+  {
+    "type": "text",
+    "id": "id",
+    "label": "CSS Id"
+  }
+ 
+],
+"presets":
+[
+ {
+
+   "name": {
+     "fr": "Liste des produits",
+     "es": "Lista de productos",
+     "en": "List of products"
+   },      
+   "category": {
+     "fr": "Liste d'éléments",
+     "es": "Lista de elementos",
+     "en": "List of items"
+   }
+ }
+]
+}
+{% endschema %}

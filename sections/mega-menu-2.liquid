@@ -1,0 +1,405 @@
+{% if section.blocks.size > 0 %}
+  <div class="dropdown_container mega-menu mega-menu-2" data-dropdown="{{ section.settings.parent | handleize }}" data-section-id="{{ section.id }}" data-section-type="megamenu">
+    <div class="dropdown menu">
+      <div class="dropdown_content {% if section.blocks < 4 %}dropdown_narrow{% endif %}">
+        {% for block in section.blocks %}
+          <div class="dropdown_column grid-item {{ section.settings.grid_width }}" {{ block.shopify_attributes }}>
+            {% if block.type == 'column' %}
+              {% comment %}Richtext{% endcomment %}
+              {% if block.settings.richtext_top %}
+                <div class="mega-menu__richtext">
+                  {{ block.settings.richtext_top }}
+                </div>
+              {% endif %}
+
+              {% comment %}Image with caption and link{% endcomment %}
+              {% if block.settings.image_top != nil or block.settings.image_caption_top != blank %}
+                <div class="mega-menu__image-caption-link">
+                  <a {% if block.settings.image_link_top != blank %}href="{{ block.settings.image_link_top }}"{% endif %} >
+                    {% if block.settings.image_top != nil %}
+                      <img  src="{{ block.settings.image_top | img_url: '500x' }}"
+                        width="{{ block.settings.image_top.width }}" height="{{ block.settings.image_top.height }}"
+                            alt="{{ block.settings.image_top.alt | escape }}"
+                            class="lazyload {{ settings.image_loading_style }}"
+                            loading="lazy"
+                             />
+                    {% endif %}
+                    {% if block.settings.image_caption_top %}
+                      <p>{{ block.settings.image_caption_top }}</p>
+                    {% endif %}
+                  </a>
+                </div>
+              {% endif %}
+
+              {% comment %}Menu 1{% endcomment %}
+              {% if block.settings.menu_1 != blank %}
+                <div class="dropdown_column__menu">
+                  <ul class="dropdown_title">
+                    <li>
+                      <a {% if block.settings.menu_1_link %}href="{{ block.settings.menu_1_link }}"{% endif %}>{{ linklists[block.settings.menu_1].title }}</a>
+                    </li>
+                  </ul>
+                  {% if linklists[block.settings.menu_1] != empty %}
+                    <ul>
+                      {% for sublink in linklists[block.settings.menu_1].links %}
+                        <li>
+                          <a href="{{ sublink.url }}">{{ sublink.title }}</a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+              {% comment %}Menu 2{% endcomment %}
+              {% if block.settings.menu_2 != blank %}
+                <div class="dropdown_column__menu">
+                  <ul class="dropdown_title">
+                    <li>
+                      <a {% if block.settings.menu_2_link %}href="{{ block.settings.menu_2_link }}"{% endif %}>{{ linklists[block.settings.menu_2].title }}</a>
+                    </li>
+                  </ul>
+                  {% if linklists[block.settings.menu_2] != empty %}
+                    <ul>
+                      {% for sublink in linklists[block.settings.menu_2].links %}
+                        <li>
+                          <a href="{{ sublink.url }}">{{ sublink.title }}</a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+              {% comment %}Menu 3{% endcomment %}
+              {% if block.settings.menu_3 != blank %}
+                <div class="dropdown_column__menu">
+                  <ul class="dropdown_title">
+                    <li>
+                      <a {% if block.settings.menu_3_link %}href="{{ block.settings.menu_3_link }}"{% endif %}>{{ linklists[block.settings.menu_3].title }}</a>
+                    </li>
+                  </ul>
+                  {% if linklists[block.settings.menu_3] != empty %}
+                    <ul>
+                      {% for sublink in linklists[block.settings.menu_3].links %}
+                        <li>
+                          <a href="{{ sublink.url }}">{{ sublink.title }}</a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+              {% comment %}Menu 4{% endcomment %}
+              {% if block.settings.menu_4 != blank %}
+                <div class="dropdown_column__menu">
+                  <ul class="dropdown_title">
+                    <li>
+                      <a {% if block.settings.menu_4_link %}href="{{ block.settings.menu_4_link }}"{% endif %}>{{ linklists[block.settings.menu_4].title }}</a>
+                    </li>
+                  </ul>
+                  {% if linklists[block.settings.menu_4] != empty %}
+                    <ul>
+                      {% for sublink in linklists[block.settings.menu_4].links %}
+                        <li>
+                          <a href="{{ sublink.url }}">{{ sublink.title }}</a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+              {% comment %}Image with caption and link{% endcomment %}
+              {% if block.settings.image_bottom != nil or block.settings.image_caption_bottom != blank %}
+                <div class="mega-menu__image-caption-link">
+                  <a {% if block.settings.image_link_bottom != blank %}href="{{ block.settings.image_link_bottom }}"{% endif %} >
+                    {% if block.settings.image_bottom != nil %}
+                      <img  src="{{ block.settings.image_bottom | img_url: '500x' }}"
+                        width="{{ block.settings.image_bottom.width }}" height="{{ block.settings.image_bottom.height }}"
+                            alt="{{ block.settings.image_bottom.alt | escape }}"
+                            class="lazyload {{ settings.image_loading_style }}"
+                            loading="lazy"
+                             />
+                    {% endif %}
+                    {% if block.settings.image_caption_bottom %}
+                      <p>{{ block.settings.image_caption_bottom }}</p>
+                    {% endif %}
+                  </a>
+                </div>
+              {% endif %}
+
+              {% comment %}Richtext{% endcomment %}
+              {% if block.settings.richtext_bottom %}
+                <div class="mega-menu__richtext">
+                  {{ block.settings.richtext_bottom }}
+                </div>
+              {% endif %}
+
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div> 
+{% endif %}
+
+{% schema %}
+{
+  "name": {
+    "fr": "Méga menu 2",
+    "es": "Mega menú 2",
+    "en": "Mega menu 2"
+  },
+  "class": "mega-menu-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "parent",
+      "label": {
+        "fr": "Nom du menu",
+        "es": "Nombre del menú",
+        "en": "Menu name"
+      },
+      "info": {
+        "fr": "Mettre le même titre que le menu que vous souhaitez voir apparaitre",
+        "es": "Ponga el mismo título que el menú que desea que aparezca",
+        "en": "Put the title of the menu element you want to turn into a mega menu"
+      }
+    },
+    {
+      "type": "select",
+      "id": "grid_width",
+      "label": {
+        "fr": "Largeur de la colonne",
+        "es": "Width of the column",
+        "en": "Width of the column"
+      },          
+      "options": [
+        {
+          "value": "large--one-sixth",
+          "label": "16.667%"
+        },
+        {
+          "value": "large--one-fifth",
+          "label": "20%"
+        },
+        {
+          "value": "large--one-quarter",
+          "label": "25%"
+        },
+        {
+          "value": "large--one-third",
+          "label": "33%"
+        },
+        {
+          "value": "large--two-quarters",
+          "label": "50%"
+        }
+      ],
+      "default": "large--two-quarters"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": {
+        "fr": "Colonne du Sous-menu",
+        "es": "Columna de submenú",
+        "en": "Sub-menu column"
+      },
+      "settings": [
+        {
+          "type": "header",
+          "content": {
+            "fr": "Contenu en haut",
+            "es": "Contenido arriba",
+            "en": "Content at the top"
+          }
+        },
+        {
+          "type": "richtext",
+          "id": "richtext_top",
+          "label": {
+            "fr": "Zone de texte",
+            "es": "Zona de texto",
+            "en": "Text zone"
+          }
+        },
+        {
+          "type": "image_picker",
+          "id": "image_top",
+          "label": {
+            "fr": "Image",
+            "es": "Imagen",
+            "en": "Image"
+          }
+        },
+        {
+          "type": "text",
+          "id": "image_caption_top",
+          "label": {
+            "fr": "Texte sous l'image",
+            "es": "Texto debajo de la imagen",
+            "en": "Text under the image"
+          }
+        },
+        {
+          "type": "url",
+          "id": "image_link_top",
+          "label": {
+            "fr": "Lien de l'image",
+            "es": "Enlace de imagen",
+            "en": "Image link"
+          }
+        },
+        {
+          "type": "header",
+          "content": {
+            "fr": "Navigation",
+            "es": "Navegación",
+            "en": "Navigation"
+          }
+        },
+        {
+          "type": "link_list",
+          "id": "menu_1",
+          "label": {
+            "fr": "Menu 1",
+            "es": "Menú 1",
+            "en": "Menu 1"
+          }
+        },
+        {
+          "type": "url",
+          "id": "menu_1_link",
+          "label": {
+            "fr": "Menu 1 Lien",
+            "es": "Menú 1 Enlace",
+            "en": "Menu 1 link"
+          },
+          "info": {
+            "fr": "Mettre un lien sur le titre du menu",
+            "es": "Poner un enlace en el título del menú",
+            "en": "Put a link on the menu title"
+          }
+        },
+        {
+          "type": "link_list",
+          "id": "menu_2",
+          "label": {
+            "fr": "Menu 2",
+            "es": "Menú 2",
+            "en": "Menu 2"
+          }
+        },
+        {
+          "type": "url",
+          "id": "menu_2_link",
+          "label": {
+            "fr": "Menu 2 Lien",
+            "es": "Menú 2 Enlace",
+            "en": "Menu 2 link"
+          },
+          "info": {
+            "fr": "Mettre un lien sur le titre du menu",
+            "es": "Poner un enlace en el título del menú",
+            "en": "Put a link on the menu title"
+          }
+        },
+        {
+          "type": "link_list",
+          "id": "menu_3",
+          "label": {
+            "fr": "Menu 3",
+            "es": "Menú 3",
+            "en": "Menu 3"
+          }
+        },
+        {
+          "type": "url",
+          "id": "menu_3_link",
+          "label": {
+            "fr": "Menu 3 Lien",
+            "es": "Menú 3 Enlace",
+            "en": "Menu 3 link"
+          },
+          "info": {
+            "fr": "Mettre un lien sur le titre du menu",
+            "es": "Poner un enlace en el título del menú",
+            "en": "Put a link on the menu title"
+          }
+        },
+        {
+          "type": "link_list",
+          "id": "menu_4",
+          "label": {
+            "fr": "Menu 4",
+            "es": "Menú 4",
+            "en": "Menu 4"
+          }
+        },
+        {
+          "type": "url",
+          "id": "menu_4_link",
+          "label": {
+            "fr": "Menu 4 Lien",
+            "es": "Menú 4 Enlace",
+            "en": "Menu 4 link"
+          },
+          "info": {
+            "fr": "Mettre un lien sur le titre du menu",
+            "es": "Poner un enlace en el título del menú",
+            "en": "Put a link on the menu title"
+          }
+        },
+        {
+          "type": "header",
+          "content": {
+            "fr": "Contenu en bas",
+            "es": "Contenido abajo",
+            "en": "Content at the bottom"
+          }
+        },
+        {
+          "type": "image_picker",
+          "id": "image_bottom",
+          "label": {
+            "fr": "Image",
+            "es": "Imagen",
+            "en": "Image"
+          }
+        },
+        {
+          "type": "text",
+          "id": "image_caption_bottom",
+          "label": {
+            "fr": "Description d'image",
+            "es": "Descripción de la imagen",
+            "en": "Image Description"
+          }
+        },
+        {
+          "type": "url",
+          "id": "image_link_bottom",
+          "label": {
+            "fr": "Image Lien",
+            "es": "Imagen enlace",
+            "en": "Image link"
+          }
+        },
+        {
+          "type": "richtext",
+          "id": "richtext_bottom",
+          "label": {
+            "fr": "Zone de texte",
+            "es": "Zona de texto",
+            "en": "Text zone"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

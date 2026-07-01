@@ -1,0 +1,172 @@
+.newsletter-modal {
+  display: none;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1041;
+  background: rgba(45, 45, 50, .8)
+}
+
+.newsletter-modal .modal-overlay {
+  height: 100%;
+  position: absolute;
+  width: 100%
+}
+
+.newsletter-modal .modal-window {
+  display: none;
+  min-height: 320px;
+  margin: 0 auto;
+  position: relative;
+  top: 25%;
+  max-width: 900px;
+  z-index: 999
+}
+
+.newsletter-modal .window-window {
+  position: relative
+}
+
+.newsletter-modal .window-window .window-background {
+  opacity: .8;
+  filter: alpha(opacity=80)
+}
+
+.newsletter-modal .window-window .window-content {
+  position: relative;
+  color: var(--newsletterPopupColor);
+  background: var(--newsletterPopupBgColor);
+  overflow: hidden
+}
+
+.newsletter-modal .left {
+  padding: 3rem
+}
+
+.newsletter-modal .right {
+  flex: 1;
+  position: relative;
+}
+
+.newsletter-modal .contact-form {
+  margin: 0
+}
+
+.newsletter-modal .contact-form .input-group {
+  max-width: 400px
+}
+
+.newsletter-modal .window-window .window-content a,
+.newsletter-modal .window-window .window-content input {
+  color: var(--newsletterPopupColor)
+}
+
+.newsletter-modal .window-window .window-content input {
+  border: 1px solid var(--color-text-body-opacity1)
+}
+
+.newsletter-modal .window-window .window-content .btn.close,
+.close-window,
+.close-modal {
+  min-width: auto;
+  color: var(--newsletterPopupClose);
+  background: var(--newsletterPopupBgClose);
+  padding: 0;
+  height: 28px;
+  width: 28px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 9;
+  text-align: center;
+  font-size: 25px;
+  line-height: 27px;
+  font-family: arial;
+  border-radius: 0;
+  cursor: pointer;
+  filter: alpha(opacity=100);
+  opacity: 1;
+  filter: alpha(opacity=100)
+}
+
+.newsletter-modal .window-window .window-content .btn.close:hover,
+.close-window:hover,
+.close-modal:hover {
+  color: var(--newsletterPopupClose);
+  background: var(--newsletterPopupBgClose);
+  opacity: .8
+}
+
+.newsletter-modal .window-window .window-content .title {
+  text-transform: uppercase;
+  font-size: 20px;
+  position: relative;
+  letter-spacing: .05em;
+  margin-bottom: 8px
+}
+
+.newsletter-modal .window-window .window-content .sub-title {
+  margin-bottom: 15px;
+  letter-spacing: .05em
+}
+
+.newsletter-modal .window-window .window-content .message {
+  clear: both;
+  padding: 15px 0 23px;
+  margin-bottom: 0;
+  letter-spacing: .02em;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 20px
+}
+
+.newsletter-modal form {
+  margin: 0
+}
+
+.newsletter-wrapper-img1 {
+  height: 100%;
+  width:100%;
+  position: absolute;
+  top:0;
+  right: 0;
+  text-align: center;
+  overflow: hidden
+}
+
+.newsletter-wrapper-img1 img {
+  float: right;
+  min-height: 320px;
+  width: auto
+}
+
+@media(max-width:749px) {
+  .newsletter-modal .modal-window {
+      width: 94%;
+      margin-left: 3%;
+      margin-right: 3%;
+      top: 25%
+  }
+}
+
+@media(max-width:481px) {
+  .newsletter-modal .modal-window {
+      width: 94%;
+      margin-left: 3%;
+      margin-right: 3%;
+      top: 15%
+  }
+  .newsletter-modal .window-window .window-content .left {
+      width: 100%;
+      max-width: 100%;
+      flex-basis: calc(100% - var(--gutter-half));
+      padding-left: 15px;
+      padding-right: 15px
+  }
+  .newsletter-modal .window-window .window-content .right {
+      display: none
+  }
+}

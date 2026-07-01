@@ -1,0 +1,2155 @@
+<link rel="stylesheet" href="{{ 'section-slideshow.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'section-slideshow.css' | asset_url | stylesheet_tag }}</noscript>
+
+{% render 'section-custom-css', elem: section %}
+{% render 'section-slideshow-custom-css', elem: section %}
+
+{% if section.settings.title_hn %}
+{% assign title_hn = section.settings.title_hn %}
+{% else %}
+{% assign title_hn = "h3" %}
+{% endif %}
+
+<div class="{% if section.settings.section_spaced %}section-spaced{% endif %} {% unless section.settings.full_page %}wrapper {% endunless %} section-id-{{ section.id }} 
+  {{ section.settings.class }}" id="{{ section.settings.id }}">
+  <div class="slideshow"
+       id="slideshow--{{ section.id }}" 
+       data-section-id="{{ section.id }}" 
+       data-section-type="slideshow-section" 
+       data-slider-home-auto="{{ section.settings.slider_home_auto }}" 
+       data-slider-home-rate="{{ section.settings.slider_home_rate }}"
+       data-slider-home-dots="{{ section.settings.slider_home_dots }}"
+       data-slider-home-infinite="{{ section.settings.slider_home_infinite }}"
+       >
+
+    {% for block in section.blocks %}
+     
+    <div id="{{ block.settings.id }}" class="slide--{{ block.id }} slide block-id-{{ block.id }} {% if section.settings.slider_home_link %} simulate-link {% endif %} {{ block.settings.class }}" data-slider-index="{{ forloop.index0 }}" {% if section.settings.slider_home_link %} data-link="{{ block.settings.link }}" {% endif %} {{ block.shopify_attributes }} >      
+      
+      {% if block.settings.video contains "youtu.be" %}
+
+      {% assign videoId = block.settings.video | split: "/" | last %}
+
+      <div class="video-wrapper">
+        <iframe loading="lazy" width="100%" height="100%" src="https://www.youtube.com/embed/{{ videoId }}?rel=0&showinfo=0&vq=720{% if block.settings.slider_video_autoplay == true %};autoplay=1{% endif %}"></iframe>
+      </div>         
+
+      {% elsif block.settings.video contains "watch" %}
+
+      {% assign videoUri = block.settings.video | split: "?v=" | last %}      
+      {% assign videoId = videoUri | split: "&" | first %}   
+
+      <div class="video-wrapper video-zoom-{{ block.settings.slider_video_zoom_sm }}">
+        <iframe loading="lazy" width="100%" height="100%" src="https://www.youtube.com/embed/{{ videoId }}?rel=0&showinfo=0&vq=720{% if block.settings.slider_video_autoplay == true %};autoplay=1{% endif %}"></iframe>
+      </div>       
+
+      {% elsif block.settings.video contains "mp4" or  block.settings.video contains "m4v" %}      
+
+      <div class="video-wrapper video-zoom-{{ block.settings.slider_video_zoom_sm }}">
+        <video loading="lazy"  playsinline="" autoplay="true" muted="" loop="loop">
+          <source src="{{ block.settings.video }}" type="video/mp4">
+        </video>
+      </div>
+
+      {% if block.settings.slider_text_enable %}
+
+      <div class="slideshow-show-{{ block.settings.slider_text_enable }}" style="display:none">
+        <div class="slideshow__text-wrap {% if block.settings.title != blank or block.settings.subheading != blank or block.settings.link != blank %} slideshow__overlay effect-{{ block.settings.slider_overlay_effects }}{% endif %}">
+          <div class="slideshow__text-content">
+            <div>
+
+              {% unless block.settings.title == blank %}
+              <{{ title_hn }} class="item h1 mega-title slideshow__title{% if settings.link != blank %} slideshow__title--has-link{% endif %}{% if section.settings.text_size == 'large' %} mega-title--large{% endif %}">
+                <span>{{ block.settings.title | escape }}</span>
+              </{{ title_hn }}>
+              {% endunless %}
+              {% unless block.settings.subheading == blank %}
+             
+                <p class="item mega-subtitle slideshow__subtitle{% if section.settings.text_size == 'large' %} mega-subtitle--large{% endif %}">
+                <span>{{ block.settings.subheading | escape }}</span>
+                </p>
+             
+              {% endunless %}
+              {% if block.settings.link or block.settings.link2 %}
+              <div class="slideshow__btns"> 
+              {% if block.settings.link %}
+                <a href="{{ block.settings.link }}" class="item slide-link btn btn-1 btn-effect-{{ section.settings.slider_btn_effect }}">
+                  {{ block.settings.linktext | escape }}               
+                </a>   
+              {% endif %}
+              {% if block.settings.link2 %}
+                <a href="{{ block.settings.link2 }}" class="item slide-link btn btn-2 btn-effect-{{ section.settings.slider_btn_effect }}">
+                  {{ block.settings.linktext2 | escape }}               
+                </a>   
+                {% endif %}
+              </div>  
+              {% endif %}                
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {% else %}
+
+      {% if block.settings.slide != blank %} 
+
+            
+        
+      <picture>    
+        {% unless block.settings.slide_mobile %}      
+        <source
+          srcset="
+          {%- if block.settings.slide.width >= 300 -%}{{ block.settings.slide | image_url: width: 300 }} 300w,{%- endif -%}
+          {%- if block.settings.slide.width >= 360 -%}{{ block.settings.slide | image_url: width: 360 }} 360w,{%- endif -%}
+          {%- if block.settings.slide.width >= 480 -%}{{ block.settings.slide | image_url: width: 480 }} 480w,{%- endif -%}
+          {%- if block.settings.slide.width >= 750 -%}{{ block.settings.slide | image_url: width: 750 }} 750w,{%- endif -%}
+          {%- if block.settings.slide.width >= 1070 -%}{{ block.settings.slide | image_url: width: 1070 }} 1070w,{%- endif -%}
+          {%- if block.settings.slide.width >= 1500 -%}{{ block.settings.slide | image_url: width: 1500 }} 1500w,{%- endif -%}
+          {%- if block.settings.slide.width >= 1780 -%}{{ block.settings.slide | img_url: '1780x' }} 1780w,{%- endif -%}
+          {%- if block.settings.slide.width >= 2000 -%}{{ block.settings.slide | img_url: '2000x' }} 2000w,{%- endif -%}
+          {%- if block.settings.slide.width >= 3000 -%}{{ block.settings.slide | img_url: '3000x' }} 3000w,{%- endif -%}
+          {{ block.settings.slide | image_url }} {{ block.settings.slide.width }}w"         
+          alt="{{ block.settings.slide.alt | escape }}"         
+          width="{{ block.settings.slide.width }}"
+          height="{{ block.settings.slide.height }}"  
+          sizes="(max-width: 960px) 50vw, 100vw"
+        >
+        {% endunless %}
+     
+        {% if block.settings.slide_mobile %}        
+        <source
+          media="(max-width: 749px)"
+          srcset="{%- if block.settings.slide_mobile.width >= 300 -%}{{ block.settings.slide_mobile | image_url: width: 300 }} 300w,{%- endif -%}
+          {%- if block.settings.slide_mobile.width >= 360 -%}{{ block.settings.slide_mobile | image_url: width: 360 }} 360w,{%- endif -%}
+          {%- if block.settings.slide_mobile.width >= 480 -%}{{ block.settings.slide_mobile | image_url: width: 480 }} 480w,{%- endif -%}
+          {%- if block.settings.slide_mobile.width >= 600 -%}{{ block.settings.slide_mobile | image_url: width: 600 }} 600w,{%- endif -%}
+          {%- if block.settings.slide_mobile.width >= 800 -%}{{ block.settings.slide_mobile | image_url: width: 800 }} 800w,{%- endif -%}"                    
+          alt="{{ block.settings.slide_mobile.alt | escape }}"        
+          width="{{ block.settings.slide_mobile.width }}"
+          height="{{ block.settings.slide_mobile.height }}">
+        {% endif %}
+     
+        <img
+        srcset="{%- if block.settings.slide.width >= 165 -%}{{ block.settings.slide | image_url: width: 165 }} 165w,{%- endif -%}
+          {%- if block.settings.slide.width >= 360 -%}{{ block.settings.slide | image_url: width: 360 }} 360w,{%- endif -%}
+          {%- if block.settings.slide.width >= 480 -%}{{ block.settings.slide | image_url: width: 480 }} 480w,{%- endif -%}
+          {%- if block.settings.slide.width >= 750 -%}{{ block.settings.slide | image_url: width: 750 }} 750w,{%- endif -%}
+          {%- if block.settings.slide.width >= 1070 -%}{{ block.settings.slide | image_url: width: 1070 }} 1070w,{%- endif -%}
+          {%- if block.settings.slide.width >= 1500 -%}{{ block.settings.slide | image_url: width: 1500 }} 1500w,{%- endif -%}
+          {%- if block.settings.slide.width >= 1780 -%}{{ block.settings.slide | image_url: width: 1780 }} 1780w,{%- endif -%}
+          {%- if block.settings.slide.width >= 2000 -%}{{ block.settings.slide | image_url: width: 2000 }} 2000w,{%- endif -%}
+          {%- if block.settings.slide.width >= 3000 -%}{{ block.settings.slide | image_url: width: 3000 }} 3000w,{%- endif -%}
+          {{ block.settings.slide | image_url }} {{ block.settings.slide.width }}w"
+        src="{{ block.settings.slide | image_url: width: block.settings.slide.width }}"
+        alt="{{ block.settings.slide.alt | escape }}"        
+        width="{{ block.settings.slide.width }}"
+        height="{{ block.settings.slide.height }}"  
+        sizes="(max-width: 960px) 50vw, 100vw"   
+   
+        >
+      </picture>   
+        
+      {% else %}
+      {{ 'lifestyle-1' | placeholder_svg_tag }}      
+      {% endif %}      
+      
+     
+
+        {% if block.settings.slider_text_enable %}
+
+        <div class="slideshow-show-{{ block.settings.slider_text_enable }}" style="display:none">
+          <div class="slideshow__text-wrap  
+            {% if block.settings.title != blank or block.settings.subheading != blank or block.settings.link != blank %} slideshow__overlay effect-{{ block.settings.slider_overlay_effects }}{% endif %}">
+            <div class="slideshow__text-content">
+            
+              {% unless block.settings.title == blank %}
+              <{{ title_hn }} class="item h1 mega-title slideshow__title{% if settings.link != blank %} slideshow__title--has-link{% endif %}{% if section.settings.text_size == 'large' %} mega-title--large{% endif %}">
+                <span>{{ block.settings.title | escape }}</span>
+              </{{ title_hn }}>
+              {% endunless %}
+              {% unless block.settings.subheading == blank %}
+             
+                <p class="item slideshow-text mega-subtitle slideshow__subtitle{% if section.settings.text_size == 'large' %} mega-subtitle--large{% endif %}">
+                <span>{{ block.settings.subheading | escape }}</span>
+                </p>
+        
+              {% endunless %}
+             
+              {% if block.settings.link or block.settings.link2  %}
+              <div class="slideshow__btns"> 
+              {% if block.settings.link %}
+                <a href="{{ block.settings.link }}" class="item slide-link btn btn-1 btn-effect-{{ section.settings.slider_btn_effect }}">
+                  {{ block.settings.linktext | escape }}               
+                </a>   
+              {% endif %}
+              {% if block.settings.link2  %}
+                <a href="{{ block.settings.link2 }}" class="item slide-link btn btn-2 btn-effect-{{ section.settings.slider_btn_effect }}">
+                  {{ block.settings.linktext2 | escape }}               
+                </a>   
+                {% endif %}
+              </div>  
+              {% endif %}
+             
+            </div>
+          </div>
+          {% render 'block-slideshow-custom-css', section: section, elem: block %}
+        </div>
+        {% endif %}
+
+      {% else %} 
+      {{ 'lifestyle-1' | placeholder_svg_tag }}
+      {% endif %}
+     
+    </div>  
+     
+    {% endfor %}
+
+  </div>
+
+  {% if section.blocks.size < 2 %} 
+    
+    <style>
+      .slick-dots {
+        display:none !important;
+      }
+    </style>
+    {% endif %}
+  {% if block.settings.slider_home_scroll %}  
+  <a href="#main-content" class="movearrow">
+    <span class="icon-scroll">
+      <svg width="35px" height="28px" viewBox="0 0 52 28" enable-background="new 0 0 52 28" xml:space="preserve">
+        <polyline fill="none" stroke="#2e3438" stroke-width="4" stroke-miterlimit="10" points="50.038,2.546 25.928,24.541 1.816,2.546"></polyline>
+      </svg>
+    </span>
+  </a>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": {
+    "fr": "Carrousel",
+    "es": "Carusel",
+    "en": "Carousel"
+  },
+  "class": "slider-section",
+  "max_blocks": 8,
+  "settings": [
+  {
+    "type": "paragraph",
+    "content": {
+      "fr": "[Tutoriel vidéo](https://youtu.be/4ob43ifzU1Y)",
+      "es": "[Video tutorial](https://youtu.be/oYmqfxcVIsI)",
+      "en": "[Video tutorial](https://youtu.be/oYmqfxcVIsI)"
+    }
+  },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Important",
+        "es": "Important",
+        "en": "Important"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "Certaines options nécessitent de cliquer sur Enregistrer afin de voir le changement",
+        "es": "Some options require clicking on Save to see the change",
+        "en": "Some options require clicking on Save to see the change"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_home_link",
+      "label": {
+        "fr": "Activer le lien sur l'image",
+        "es": "Activar el enlace en la imagen",
+        "en": "Activate the link on image"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_home_auto",
+      "label": {
+        "fr": "Rotation automatique",
+        "es": "Rotación automática",
+        "en": "Automatic rotation"
+      }
+    },
+    {
+      "type": "text",
+      "id": "slider_home_rate",
+      "label": {
+        "fr": "Temps de transition (ms)",
+        "es": "Tiempo de transición (ms)",
+        "en": "Transition delay (ms)"
+      },
+      "default": "7000"
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_home_infinite",
+      "label": {
+        "fr": "Défilement infini",
+        "es": "Infinite scroll",
+        "en": "Infinite scroll"
+      },
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_home_dots",
+      "label": {
+        "fr": "Barres de navigation",
+        "es": "Navigation dots",
+        "en": "Navigation dots"
+      }      
+    },
+    {
+      "type": "select",
+      "id": "slider_btn_effect",
+      "label": {
+        "fr": "Effet de survol du bouton",
+        "es": "Efecto flotante del botón",
+        "en": "Hover effect on button"
+      },
+      "options": [        
+        {
+          "value": "1",
+          "label": {
+            "fr": "Légère opacité",
+            "es": "Ligera opacidad",
+            "en": "Slight opacity"
+          }
+        },
+        {
+          "value": "2",
+          "label": {
+            "fr": "De gauche à droite",
+            "es": "De izquierda a derecha",
+            "en": "From left to right"
+          }
+        },
+        {
+          "value": "3",
+          "label": {
+            "fr": "Du milieu vers gauche et droite",
+            "es": "De centro a izquierda y derecha",
+            "en": "From center to left and right"
+          }
+        }
+      ],
+      "default": "1"
+    },
+   
+    {
+      "type": "checkbox",
+      "id": "slider_home_scroll",
+      "label": {
+        "fr": "Activer flèche de scroll",
+        "es": "Activar la flecha de la barra de desplazamiento",
+        "en": "Activate scroll down arrow"
+      }
+    },
+    {
+      "type": "select",
+      "id": "title_hn",
+      "label": {
+        "fr": "Balise Hn du titre des slides (SEO)",
+        "es": "Hn tag of slide title (SEO)",
+        "en": "Hn tag of slide title (SEO)"
+      },
+      "default": "h2",
+      "options": [
+        {
+          "value": "h2",
+          "label": "h2"
+        },
+        {
+          "value": "h3",
+          "label": "h3"
+        },
+        {
+          "value": "h4",
+          "label": "h4"
+        },
+        {
+          "value": "h5",
+          "label": "h5"
+        },
+        {
+          "value": "h6",
+          "label": "h6"
+        },
+        {
+          "value": "p",
+          "label": "p"
+        },
+        {
+          "value": "div",
+          "label": "div"
+        }
+      ]
+    },
+     {
+      "type":"header",
+      "content":{
+        "fr":"Mise en forme",
+        "es":"Layout",
+        "en":"Layout"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "full_page",
+      "label": {
+        "fr": "Pleine page",
+        "es": "Full page",
+        "en": "Full page"
+      },
+      "default": true
+    }, 
+    {
+       "type":"checkbox",
+       "id":"section_spaced",       
+       "label":{
+          "fr":"Espacer la section - Haut",
+          "es":"Add space - Above the section",
+          "en":"Add space - Above the section"
+       }
+    },    
+    
+    {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation des couleurs",
+        "es": "Color customization",
+        "en": "Color customization"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "[Tutoriel vidéo](https://youtu.be/mX5vrnrv4_I)",
+        "es": "[Video tutorial](https://youtu.be/j8md1egrR_4)",
+        "en": "[Video tutorial](https://youtu.be/j8md1egrR_4)"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+      "fr": "Reprend la main sur les paramètres génériques du thème",
+      "es": "Will replace the generic customization from theme settings",
+      "en": "Will replace the generic customization from theme settings"
+      }
+    },
+
+    {
+      "type": "header",
+      "content": {
+          "fr": "Section",
+          "es": "Section",
+          "en": "Section"
+      }
+    },
+
+    {
+      "type": "checkbox",
+      "id": "block_color_enable",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+
+    {
+       "type":"color",
+       "id":"block_bgcolor",       
+       "label":{
+          "fr":"Fond de la section",
+          "es":"Section background color",
+          "en":"Section background color"
+       },
+       "default":"#ffffff"
+     },
+     {
+       "type":"image_picker",
+       "id":"block_image",       
+       "label":{
+          "fr":"Image de fond (optionnel)",
+          "es":"Background image (optional)",
+          "en":"Background image (optional)"
+       },
+       "info":"1900px Min"
+     },
+     {
+       "type":"checkbox",
+       "id":"section_parallax",      
+       "label":{
+          "fr":"Effet parallax",
+          "es":"Parallax effect",
+          "en":"Parallax effect"
+       },
+       "default":false
+     },
+     {
+       "type":"checkbox",
+       "id":"block_bgcolor_gradient",       
+       "label":{
+          "fr":"Activer la prise en charge du dégradé",
+          "es":"Enable gradient",
+          "en":"Enable gradient"
+       },
+       "default":false
+     },
+	 {
+        "type": "range",
+        "id": "block_bgcolor_gradient_direction",
+        "min": 0,
+        "max": 180,
+        "step": 2,
+        "unit": "deg",
+        "label": {
+          "fr": "Sens du dégradé",
+          "es": "Gradient direction",
+          "en": "Gradient direction"
+        },
+        "default": 90
+     },
+     {
+       "type":"color",
+       "id":"block_bgcolor_gradient_1",       
+       "label":{
+          "fr":"Fond - Couleur 1",
+          "es":"Background - Color 1",
+          "en":"Background - Color 1"
+       },
+       "default":"#F0F0F0"
+     },     
+     {
+       "type":"color",
+       "id":"block_bgcolor_gradient_2",       
+       "label":{
+          "fr":"Fond - Couleur 2",
+          "es":"Background - Color 2",
+          "en":"Background - Color 2"
+       },
+       "default":"#333333"
+     },
+     {
+        "type": "range",
+        "id": "block_bgcolor_gradient_1_percent_2",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "label": {
+          "fr": "Proportion des couleurs",
+          "es": "Color ratio",
+          "en": "Color ratio"
+        },
+        "default": 0
+     },
+     {
+        "type": "range",
+        "id": "block_bgcolor_gradient_1_percent_1",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "label": {
+          "fr": "Début du flou",
+          "es": "Blur beginning",
+          "en": "Blur beginning"
+        },
+        "default": 0
+     },
+     {
+        "type": "range",
+        "id": "block_bgcolor_gradient_2_percent_1",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "label": {
+          "fr": "Fin du flou ",
+          "es": "Blur ending",
+          "en": "Blur ending"
+        },
+        "default": 100
+     },
+     {
+       "type":"color",
+       "id":"section_shadow_color",       
+       "label":{
+          "fr":"Ombre de la section",
+          "es":"Shadow color of the section",
+          "en":"Shadow color of the section"
+       },
+       "default":"#000000"
+     },
+     {
+        "type": "range",
+        "id": "section_shadow_opacity",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "unit": "deg",
+        "label": {
+          "fr": "Degré d'opacité de la section",
+          "es": "Opacity of the section",
+          "en": "Opacity of the section"
+        },
+        "default": 0.2
+     },
+     {
+        "type": "range",
+        "id": "section_shadow_size",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": {
+          "fr": "Taille de l'ombre de la section",
+          "es": "Shadow size of the section",
+          "en": "Shadow size of the section"
+        },
+        "default": 0
+     },  
+     {
+      "type": "header",
+      "content": {
+         "fr": "Contenu",
+         "es": "Content",
+         "en": "Content"
+      }
+   },
+   {
+      "type": "checkbox",
+      "id": "colors_product_content",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+    {
+        "type": "color",
+        "id": "slider_title_color",
+        "label": {
+          "fr": "Titre du carrousel",
+          "es": "Color del título del carrusel",
+          "en": "Carousel title"
+        },
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "slider_bgtitle_color",
+        "label": {
+          "fr": "Fond des titres du carrousel",
+          "es": "Color de fondo de los títulos del carrusel",
+          "en": "Carousel title background"
+        }
+      },
+      {
+        "type": "range",
+        "id": "slider_bgtitle_color_opacity",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "unit": "deg",
+        "label": {
+          "fr": "Degré d'opacité fond titre",
+          "es": "Title background opacity",
+          "en": "Title background opacity"
+        },
+        "default": 0.7
+      },
+      {
+        "type": "color",
+        "id": "slider_text_color",
+        "label": {
+          "fr": "Texte du carrousel",
+          "es": "Color del texto del carrusel",
+          "en": "Carousel text"
+        },
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "slider_bgtext_color",
+        "label": {
+          "fr": "Fond des textes du carrousel",
+          "es": "Color de fondo de los textos del carrusel",
+          "en": "Carousel text background"
+        }
+      },
+      {
+        "type": "range",
+        "id": "slider_bgtext_color_opacity",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "unit": "deg",
+        "label": {
+          "fr": "Degré d'opacité fond texte",
+          "es": "Text background opacity",
+          "en": "Text background opacity"
+        },
+        "default": 0
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_title_color",
+        "label": {
+          "fr": "Texte du bouton",
+          "es": "Color del texto del botón",
+          "en": "Button text"
+        },
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_bgtitle_color",
+        "label": {
+          "fr": "Fond du bouton",
+          "es": "Color de fondo del botón",
+          "en": "Button background"
+        },
+        "default": "#111"
+      },
+      {
+        "type": "range",
+        "id": "slider_btn_bgtitle_color_opacity",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "unit": "deg",
+        "label": {
+          "fr": "Degré d'opacité fond bouton",
+          "es": "Button background opacity",
+          "en": "Button background opacity"
+        },
+        "default": 1
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_TextHovertitle_color",
+        "label": {
+          "fr": "Texte du bouton au survol",
+          "es": "Color del texto del botón cuando se desplaza el cursor",
+          "en": "Button text on hover"
+        },
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_bgHovertitle_color",
+        "label": {
+          "fr": "Fond du bouton au survol",
+          "es": "Color de fondo del botón cuando se desplaza el cursor",
+          "en": "Button background on hover"
+        },
+        "default": "#111"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_border_color",
+        "label": {
+          "fr": "Bordure du bouton",
+          "es": "Color del borde del botón",
+          "en": "Button border"
+        },
+        "default": "#FFF"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_border_hover_color",
+        "label": {
+          "fr": "Bordure du bouton au survol",
+          "es": "Color del borde del botón on hover",
+          "en": "Button border on hover"
+        },
+        "default": "#FFF"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn2_title_color",
+        "label": {
+          "fr": "Texte du bouton",
+          "es": "Color del texto del botón",
+          "en": "Button text color"
+        },
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn2_bgtitle_color",
+        "label": {
+          "fr": "Fond du bouton",
+          "es": "Color de fondo del botón",
+          "en": "Button background color"
+        },
+        "default": "#111"
+      },
+      {
+        "type": "range",
+        "id": "slider_btn2_bgtitle_color_opacity",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "unit": "deg",
+        "label": {
+          "fr": "Degré d'opacité fond bouton",
+          "es": "Opacity background Button ",
+          "en": "Opacity Button background"
+        },
+        "default": 1
+      },
+      {
+        "type": "color",
+        "id": "slider_btn2_TextHovertitle_color",
+        "label": {
+          "fr": "Texte du bouton au survol",
+          "es": "Color del texto del botón cuando se desplaza el cursor",
+          "en": "Button text color on hover"
+        },
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn2_bgHovertitle_color",
+        "label": {
+          "fr": "Fond du bouton au survol",
+          "es": "Color de fondo del botón cuando se desplaza el cursor",
+          "en": "Button background color on hover"
+        },
+        "default": "#111"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn2_border_color",
+        "label": {
+          "fr": "Bordure du bouton",
+          "es": "Color del borde del botón",
+          "en": "Button border color"
+        },
+        "default": "#FFF"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn2_border_hover_color",
+        "label": {
+          "fr": "Bordure du bouton au survol",
+          "es": "Color del borde del botón on hover",
+          "en": "Button border on hover"
+        },
+        "default": "#FFF"
+      },
+      {
+        "type": "color",
+        "id": "slider_angle",
+        "label": {
+          "fr": "Flèches du carrousel",
+          "es": "Color de las flechas del carrusel",
+          "en": "Carousel arrows"
+        },
+        "default": "#ddd"
+      },
+      {
+        "type": "color",
+        "id": "slider_dot_color1",
+        "label": {
+          "fr": "Points de navigation",
+          "es": "Color de los puntos de navegación",
+          "en": "Navigation dots"
+        },
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "slider_dot_color2",
+        "label": {
+          "fr": "Point de navigation actif",
+          "es": "Color del punto de navegación activo",
+          "en": "Active navigation dot"
+        },
+        "default": "#e0932f"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_scroll_bg_color",
+        "label": {
+          "fr": "Fond du bouton de scroll",
+          "es": "Scroll button background",
+          "en": "Scroll button background"
+        },
+        "default": "rgba(255, 255, 255, 0.7)"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_scroll_color",
+        "label": {
+          "fr": "Icone du bouton de scroll",
+          "es": "Scroll button arrow icon",
+          "en": "Scroll button arrow icon"
+        },
+        "default": "#2e3438"
+      },
+      {
+        "type": "color",
+        "id": "slider_content_bg",
+        "label": {
+          "fr": "Fond du bloc",
+          "es": "Content block background",
+          "en": "Content block background"
+        }
+      },
+      {
+        "type": "range",
+        "id": "slider_content_bg_opacity",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "unit": "deg",
+        "label": {
+          "fr": "Degré d'opacité fond bloc",
+          "es": "Opacity block background",
+          "en": "Opacity block background"
+        },
+        "default": 0
+      },
+
+    {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation des tailles",
+        "es": "Size customization",
+        "en": "Size customization"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "[Tutoriel vidéo](https://youtu.be/ovHmpm105x8)",
+        "es": "[Video tutorial](https://youtu.be/i4PZ8W99KYA)",
+        "en": "[Video tutorial](https://youtu.be/i4PZ8W99KYA)"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "block_size_enable",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Bureau",
+        "es": "Layout (Desktop)",
+        "en": "Layout (Desktop)"
+      }
+    },  
+    {
+        "type": "range",
+        "id": "block_title_size",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "unit": "px",
+        "label": {
+          "fr": "Taille du titre",
+          "es": "Font size of title",
+          "en": "Font size of title"
+        },
+        "default": 43
+     },
+     {
+        "type": "range",
+        "id": "block_text_size",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "unit": "px", 
+        "label": {
+          "fr": "Taille du texte",
+          "es": "Font size of text",
+          "en": "Font size of text"
+        },
+        "default": 19
+     },
+     {
+        "type": "range",
+        "id": "block_btn_size",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "unit": "px", 
+        "label": {
+          "fr": "Taille du bouton",
+          "es": "Font size of button",
+          "en": "Font size of button"
+        },
+        "default": 17
+     },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Mobile",
+        "es": "Layout (Mobile)",
+        "en": "Layout (Mobile)"
+      }
+    },
+    {
+        "type": "range",
+        "id": "block_title_size_sm",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "unit": "px",
+        "label": {
+          "fr": "Taille du titre",
+          "es": "Font size of title",
+          "en": "Font size of title"
+        },
+        "default": 21
+     },
+     {
+        "type": "range",
+        "id": "block_text_size_sm",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "unit": "px", 
+        "label": {
+          "fr": "Taille du texte",
+          "es": "Font size of text",
+          "en": "Font size of text"
+        },
+        "default": 16
+     },
+     {
+        "type": "range",
+        "id": "block_btn_size_sm",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "unit": "px", 
+        "label": {
+          "fr": "Taille du bouton",
+          "es": "Font size of button",
+          "en": "Font size of button"
+        },
+        "default": 16
+     },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation de la disposition",
+        "es": "Spacing customization",
+        "en": "Spacing customization"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "[Tutoriel vidéo](https://youtu.be/LLS1yEwaPsw)",
+        "es": "[Video tutorial](https://youtu.be/Lv-3vaK-wNE)",
+        "en": "[Video tutorial](https://youtu.be/Lv-3vaK-wNE)"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "Les espacements sont séparés par des espaces avec 4 valeurs maximales - Haut Droit Bas Gauche - L'unité peut être le rem, px, % - Exemple: 20px 0px 20px 20px - [En savoir plus](https://developer.mozilla.org/fr/docs/Web/CSS/padding) ",
+        "es": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)",
+        "en": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)"
+        }
+    },
+    
+    {
+      "type": "checkbox",
+      "id": "block_spacing_enable",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "section_max_width",
+      "label": {
+        "fr": "Longueur max (% ou px)",
+        "es": "Max width (% ou px)",
+        "en": "Max width (% or px)"
+      }
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Bureau",
+        "es": "Layout (Desktop)",
+        "en": "Layout (Desktop)"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_padding",
+      "label": {
+        "fr": "Espacements intérieur",
+        "es": "Interior Spacing",
+        "en": "Interior Spacing"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_margin",
+      "label": {
+        "fr": "Espacements extérieur",
+        "es": "Exterior Spacing",
+        "en": "Exterior Spacing"
+      }
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Mobile",
+        "es": "Layout (Mobile)",
+        "en": "Layout (Mobile)"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_padding_sm",
+      "label": {
+        "fr": "Espacements intérieur",
+        "es": "Interior Spacing",
+        "en": "Interior Spacing"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_margin_sm",
+      "label": {
+        "fr": "Espacements extérieur",
+        "es": "Exterior Spacing",
+        "en": "Exterior Spacing"
+      }
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation avancée",
+        "es": "Advanced CSS",
+        "en": "Advanced CSS"
+      }
+    },
+    {
+      "type": "text",
+      "id": "class",
+      "label": "CSS Class"
+    },
+    {
+      "type": "text",
+      "id": "id",
+      "label": "CSS Id"
+    }
+    
+  ],
+  "presets": [
+    {
+      "name": {
+        "fr": "Carrousel",
+        "es": "Carusel",
+        "en": "Carousel"
+      },
+      "category": {
+        "fr": "Média",
+        "es": "Medios de comunicación",
+        "en": "Media"
+      },
+      "blocks": [
+        {
+          "type": "image"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": {
+        "fr": "Image ou vidéo",
+        "es": "Imagen vidéo",
+        "en": "Image or video"
+      },
+      "settings": [
+        {
+          "type": "header",
+          "content": {
+            "fr": "Image",
+            "es": "Image",
+            "en": "Image"
+          }
+        },
+        {
+          "type": "image_picker",
+          "id": "slide",
+          "label": {
+            "fr": "Image",
+            "es": "Imagen",
+            "en": "Image"
+          },
+          "info": {
+            "fr": "Taille recommandée 1900x1000",
+            "es": "Talla recomendada 1900x1000",
+            "en": "Recommended size 1900x1000"
+          }
+        },
+        {
+          "type": "image_picker",
+          "id": "slide_mobile",
+          "label": {
+            "fr": "Image pour le mobile (optionnel)",
+            "es": "Imagen",
+            "en": "Image for mobile"
+          },
+          "info": {
+            "fr": "Taille recommandée 600x600",
+            "es": "Talla recomendada 600x600",
+            "en": "Recommended size 600x600"
+          }
+        },
+        {
+          "type": "range",
+          "id": "block_image_opacity",
+          "min": 0,
+          "max": 1,
+          "step": 0.1,
+          "unit": "deg",
+          "label": {
+            "fr": "Degré d'assombrissement de l'image",
+            "es": "Degree of darkening of the image",
+            "en": "Degree of darkening of the image"
+          },
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": {
+            "fr": "Vidéo",
+            "es": "Video",
+            "en": "Video"
+          }
+        },
+        {
+          "type": "text",
+          "id": "video",
+          "label": {
+            "fr": "Url de la vidéo - video Youtube ou fichier mp4",
+            "es": "Url del video - video de Youtube o un archivo mp4",
+            "en": "Url of the video - Youtube or mp4 file"
+          },
+          "info": {
+            "fr": "Remplir ce champ désactivera automatiquement la prise en charge des images et des textes",
+            "es": "Rellenar este campo desactivará automáticamente el soporte de imágenes.",
+            "en": "Filling in this field will automatically disable support for images and texts."
+          }
+        },
+        {
+          "type": "checkbox",
+          "id": "slider_video_zoom_sm",
+          "label": {
+            "fr": "Activer le zoom vidéo sur mobile (full height)",
+            "es": "Enable video zoom on mobile (full height)",
+            "en": "Enable video zoom on mobile (full height)"
+          }
+        },
+
+        {
+          "type": "header",
+          "content": {
+            "fr": "Info générique",
+            "es": "General info",
+            "en": "General info"
+          }
+        },
+        {
+          "type": "checkbox",
+          "id": "slider_text_enable",
+          "label": {
+            "fr": "Activer les textes et le bouton sur l'image",
+            "es": "Activar los textos y el botón de la imagen",
+            "en": "Activate the texts and the button on image"
+          }
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": {
+            "fr": "Titre",
+            "es": "Título",
+            "en": "Title"
+          },
+          "default": {
+            "fr": "Titre de l'image",
+            "es": "Título de la imagen",
+            "en": "Image title"
+          }
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": {
+            "fr": "Texte",
+            "es": "Línea de base",
+            "en": "Text"
+          },
+          "default": {
+            "fr": "Texte du carrousel",
+            "es": "Texto del carusel",
+            "en": "Carousel text"
+          }
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": {
+            "fr": "Lien du bouton",
+            "es": "Enlace",
+            "en": "Link of button"
+          }
+        },
+        {
+          "type": "text",
+          "id": "linktext",
+          "label": {
+            "fr": "Texte du bouton",
+            "es": "Texto del boton",
+            "en": "Button text"
+          },
+          "default": {
+            "fr": "En savoir plus",
+            "es": "Para saber más sobre el tema",
+            "en": "Learn more"
+          }
+        },
+        {
+          "type": "url",
+          "id": "link2",
+          "label": {
+            "fr": "Lien du bouton secondaire",
+            "es": "Enlace secundario del botón",
+            "en": "Secondary Link of button"
+          }
+        },
+        {
+          "type": "text",
+          "id": "linktext2",
+          "label": {
+            "fr": "Texte du bouton secondaire",
+            "es": "Texto del secundario boton",
+            "en": "Secondary Button text"
+          },
+          "default": {
+            "fr": "En savoir plus",
+            "es": "Para saber más sobre el tema",
+            "en": "Learn more"
+          }
+        },
+        {
+          "type": "header",
+          "content": {
+            "fr": "Placement et effets spéciaux",
+            "es": "Colocación y efectos especiales",
+            "en": "Placement and special effects"
+          }
+        },
+        {
+          "type": "select",
+          "id": "slider_position",
+          "label": {
+            "fr": "Position horizontale des textes",
+            "es": "Posición horizontal de los textos",
+            "en": "Horizontal content position"
+          },
+          "options": [          
+            {
+              "value": "0",
+              "label": {
+                "fr": "Placé à gauche",
+                "es": "Colocado a la izquierda",
+                "en": "On the left"
+              }
+            },
+            {
+              "value": "1",
+              "label": {
+                "fr": "Centré",
+                "es": "Centrado",
+                "en": "In the center"
+              }
+            },
+            {
+              "value": "2",
+              "label": {
+                "fr": "Placé à droite",
+                "es": "Colocados a la derecha",
+                "en": "On the right"
+              }
+            }
+
+          ],
+          "default":"1"
+        },
+        {
+          "type": "select",
+          "id": "slider_position_sm",
+          "label": {
+            "fr": "Position horizontale des textes (mobile)",
+            "es": "Posición horizontal de los textos (mobile)",
+            "en": "Horizontal content position (mobile)"
+          },
+          "options": [          
+            {
+              "value": "0",
+              "label": {
+                "fr": "Placé à gauche",
+                "es": "Colocado a la izquierda",
+                "en": "On the left"
+              }
+            },
+            {
+              "value": "1",
+              "label": {
+                "fr": "Centré",
+                "es": "Centrado",
+                "en": "In the center"
+              }
+            },
+            {
+              "value": "2",
+              "label": {
+                "fr": "Placé à droite",
+                "es": "Colocados a la derecha",
+                "en": "On the right"
+              }
+            }
+
+          ],
+          "default":"1"
+        },
+        {
+          "type": "select",
+          "id": "slider_overlay_effects",
+          "label": {
+            "fr": "Effet de transition des textes",
+            "es": "Efecto de transición de los textos",
+            "en": "Text transition effect"
+          },
+          "options": [
+            {
+              "value": "999",
+              "label": {
+                "fr": "Aucun",
+                "es": "Ninguno",
+                "en": "None"
+              }
+            },
+            {
+              "value": "0",
+              "label": {
+                "fr": "Fondu - de haut en bas",
+                "es": "Fundido - de arriba hacia abajo",
+                "en": "Slide - from top to bottom"
+              }
+            },
+            {
+              "value": "1",
+              "label": {
+                "fr": "Fondu - de bas en haut",
+                "es": "Fundido - de abajo hacia arriba",
+                "en": "Slide - from bottom to top"
+              }
+            },
+            {
+              "value": "2",
+              "label": {
+                "fr": "Fondu - de gauche à droite",
+                "es": "Fundido - de izquierda a derecha",
+                "en": "Slide - from left to right"
+              }
+            },
+            {
+              "value": "3",
+              "label": {
+                "fr": "Fondu - de droite à gauche",
+                "es": "Fundido - de derecha a izquierda",
+                "en": "Slide - from right to left"
+              }
+            },
+            {
+              "value": "4",
+              "label": {
+                "fr": "Zoom - apparition",
+                "es": "Zoom - aparecer",
+                "en": "Zoom - appearance"
+              }
+            },
+            {
+              "value": "5",
+              "label": {
+                "fr": "Zoom - apparition de haut en bas",
+                "es": "Zoom - aparecer de arriba hacia abajo",
+                "en": "Zoom - appearance from top to bottom"
+              }
+            },
+            {
+              "value": "6",
+              "label": {
+                "fr": "Zoom - apparition de bas en haut",
+                "es": "Zoom - aparecer de abajo hacia arriba",
+                "en": "Zoom - appearance from bottom to top"
+              }
+            },
+            {
+              "value": "7",
+              "label": {
+                "fr": "Zoom - apparition de gauche à droite",
+                "es": "Zoom - aparecer de izquierda a derecha",
+                "en": "Zoom - appearance from left to right"
+              }
+            },
+            {
+              "value": "8",
+              "label": {
+                "fr": "Zoom - apparition de droite à gauche",
+                "es": "Zoom - aparecer de derecha a izquierda",
+                "en": "Zoom - appearance from right to left"
+              }
+            }
+          ],
+          "default": "4"
+        },
+        
+    {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation des couleurs",
+        "es": "Color customization",
+        "en": "Color customization"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "[Tutoriel vidéo](https://youtu.be/mX5vrnrv4_I)",
+        "es": "[Video tutorial](https://youtu.be/j8md1egrR_4)",
+        "en": "[Video tutorial](https://youtu.be/j8md1egrR_4)"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+      "fr": "Reprend la main sur les paramètres génériques du thème",
+      "es": "Will replace the generic customization from theme settings",
+      "en": "Will replace the generic customization from theme settings"
+      }
+    },
+
+    {
+      "type": "header",
+      "content": {
+          "fr": "Bloc",
+          "es": "Block",
+          "en": "Block"
+      }
+    },
+
+    {
+      "type": "checkbox",
+      "id": "block_color_enable",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+
+    {
+        "type": "color",
+        "id": "slider_title_color",
+        "label": {
+          "fr": "Titre du carrousel",
+          "es": "Color del título del carrusel",
+          "en": "Carousel title color"
+        },
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "slider_bgtitle_color",
+        "label": {
+          "fr": "Fond des titres du carrousel",
+          "es": "Color de fondo de los títulos del carrusel",
+          "en": "Carousel title background color"
+        }
+      },
+      {
+        "type": "range",
+        "id": "slider_bgtitle_color_opacity",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "unit": "deg",
+        "label": {
+          "fr": "Degré d'opacité fond titre",
+          "es": "Opacity Title background",
+          "en": "Opacity Title background"
+        },
+        "default": 0.7
+      },
+      {
+        "type": "color",
+        "id": "slider_text_color",
+        "label": {
+          "fr": "Texte du carrousel",
+          "es": "Color del texto del carrusel",
+          "en": "Carousel text color"
+        },
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "slider_bgtext_color",
+        "label": {
+          "fr": "Fond des textes du carrousel",
+          "es": "Color de fondo de los textos del carrusel",
+          "en": "Carousel text background color"
+        }
+      },
+      {
+        "type": "range",
+        "id": "slider_bgtext_color_opacity",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "unit": "deg",
+        "label": {
+          "fr": "Degré d'opacité fond texte",
+          "es": "Opacity text background  ",
+          "en": "Opacity text background "
+        },
+        "default": 0
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_title_color",
+        "label": {
+          "fr": "Texte du bouton",
+          "es": "Color del texto del botón",
+          "en": "Button text color"
+        },
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_bgtitle_color",
+        "label": {
+          "fr": "Fond du bouton",
+          "es": "Color de fondo del botón",
+          "en": "Button background color"
+        },
+        "default": "#111"
+      },
+      {
+        "type": "range",
+        "id": "slider_btn_bgtitle_color_opacity",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "unit": "deg",
+        "label": {
+          "fr": "Degré d'opacité fond bouton",
+          "es": "Opacity background Button ",
+          "en": "Opacity Button background"
+        },
+        "default": 1
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_TextHovertitle_color",
+        "label": {
+          "fr": "Texte du bouton au survol",
+          "es": "Color del texto del botón cuando se desplaza el cursor",
+          "en": "Button text color on hover"
+        },
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_bgHovertitle_color",
+        "label": {
+          "fr": "Fond du bouton au survol",
+          "es": "Color de fondo del botón cuando se desplaza el cursor",
+          "en": "Button background color on hover"
+        },
+        "default": "#111"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_border_color",
+        "label": {
+          "fr": "Bordure du bouton",
+          "es": "Color del borde del botón",
+          "en": "Button border color"
+        },
+        "default": "#FFF"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_border_hover_color",
+        "label": {
+          "fr": "Bordure du bouton au survol",
+          "es": "Color del borde del botón on hover",
+          "en": "Button border on hover"
+        },
+        "default": "#FFF"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn2_title_color",
+        "label": {
+          "fr": "Texte du bouton",
+          "es": "Color del texto del botón",
+          "en": "Button text color"
+        },
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn2_bgtitle_color",
+        "label": {
+          "fr": "Fond du bouton",
+          "es": "Color de fondo del botón",
+          "en": "Button background color"
+        },
+        "default": "#111"
+      },
+      {
+        "type": "range",
+        "id": "slider_btn2_bgtitle_color_opacity",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "unit": "deg",
+        "label": {
+          "fr": "Degré d'opacité fond bouton",
+          "es": "Opacity background Button ",
+          "en": "Opacity Button background"
+        },
+        "default": 1
+      },
+      {
+        "type": "color",
+        "id": "slider_btn2_TextHovertitle_color",
+        "label": {
+          "fr": "Texte du bouton au survol",
+          "es": "Color del texto del botón cuando se desplaza el cursor",
+          "en": "Button text color on hover"
+        },
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn2_bgHovertitle_color",
+        "label": {
+          "fr": "Fond du bouton au survol",
+          "es": "Color de fondo del botón cuando se desplaza el cursor",
+          "en": "Button background color on hover"
+        },
+        "default": "#111"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn2_border_color",
+        "label": {
+          "fr": "Bordure du bouton",
+          "es": "Color del borde del botón",
+          "en": "Button border color"
+        },
+        "default": "#FFF"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn2_border_hover_color",
+        "label": {
+          "fr": "Bordure du bouton au survol",
+          "es": "Color del borde del botón on hover",
+          "en": "Button border on hover"
+        },
+        "default": "#FFF"
+      },
+      {
+        "type": "color",
+        "id": "slider_angle",
+        "label": {
+          "fr": "Flèches du carrousel",
+          "es": "Color de las flechas del carrusel",
+          "en": "Carousel arrows color"
+        },
+        "default": "#ddd"
+      },
+      {
+        "type": "color",
+        "id": "slider_dot_color1",
+        "label": {
+          "fr": "Points de navigation",
+          "es": "Color de los puntos de navegación",
+          "en": "Navigation dots color"
+        },
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "slider_dot_color2",
+        "label": {
+          "fr": "Point de navigation actif",
+          "es": "Color del punto de navegación activo",
+          "en": "Active navigation dot color"
+        },
+        "default": "#e0932f"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_scroll_bg_color",
+        "label": {
+          "fr": "Fond du bouton de scroll",
+          "es": "Scroll button background",
+          "en": "Scroll button background"
+        },
+        "default": "rgba(255, 255, 255, 0.7)"
+      },
+      {
+        "type": "color",
+        "id": "slider_btn_scroll_color",
+        "label": {
+          "fr": "Icone du bouton de scroll",
+          "es": "Scroll button arrow icon",
+          "en": "Scroll button arrow icon"
+        },
+        "default": "#2e3438"
+      },
+
+    {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation des tailles",
+        "es": "Size customization",
+        "en": "Size customization"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "[Tutoriel vidéo](https://youtu.be/ovHmpm105x8)",
+        "es": "[Video tutorial](https://youtu.be/i4PZ8W99KYA)",
+        "en": "[Video tutorial](https://youtu.be/i4PZ8W99KYA)"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "block_size_enable",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Bureau",
+        "es": "Layout (Desktop)",
+        "en": "Layout (Desktop)"
+      }
+    },  
+    {
+        "type": "range",
+        "id": "block_title_size",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "unit": "px",
+        "label": {
+          "fr": "Taille du titre",
+          "es": "Font size of title",
+          "en": "Font size of title"
+        },
+        "default": 43
+     },
+     {
+        "type": "range",
+        "id": "block_text_size",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "unit": "px", 
+        "label": {
+          "fr": "Taille du texte",
+          "es": "Font size of text",
+          "en": "Font size of text"
+        },
+        "default": 19
+     },
+     {
+        "type": "range",
+        "id": "block_btn_size",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "unit": "px", 
+        "label": {
+          "fr": "Taille du bouton",
+          "es": "Font size of button",
+          "en": "Font size of button"
+        },
+        "default": 17
+     },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Mobile",
+        "es": "Layout (Mobile)",
+        "en": "Layout (Mobile)"
+      }
+    },
+    {
+        "type": "range",
+        "id": "block_title_size_sm",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "unit": "px",
+        "label": {
+          "fr": "Taille du titre",
+          "es": "Font size of title",
+          "en": "Font size of title"
+        },
+        "default": 21
+     },
+     {
+        "type": "range",
+        "id": "block_text_size_sm",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "unit": "px", 
+        "label": {
+          "fr": "Taille du texte",
+          "es": "Font size of text",
+          "en": "Font size of text"
+        },
+        "default": 16
+     },
+     {
+        "type": "range",
+        "id": "block_btn_size_sm",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "unit": "px", 
+        "label": {
+          "fr": "Taille du bouton",
+          "es": "Font size of button",
+          "en": "Font size of button"
+        },
+        "default": 16
+     },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation de la disposition",
+        "es": "Spacing customization",
+        "en": "Spacing customization"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "[Tutoriel vidéo](https://youtu.be/LLS1yEwaPsw)",
+        "es": "[Video tutorial](https://youtu.be/Lv-3vaK-wNE)",
+        "en": "[Video tutorial](https://youtu.be/Lv-3vaK-wNE)"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "Les espacements sont séparés par des espaces avec 2 valeurs maximales - Gauche Haut - L'unité doit être en % - Exemple: 50% 50%",
+        "es": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)",
+        "en": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)"
+        }
+    },
+    {
+      "type": "checkbox",
+      "id": "block_spacing_enable",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+    
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Bureau",
+        "es": "Layout (Desktop)",
+        "en": "Layout (Desktop)"
+      }
+    },
+   
+    {
+      "type": "text",
+      "id": "block_margin",
+      "label": "Position",
+      "default": "50% 50%",
+      "info": {
+        "fr": "Gauche Haut",
+        "es": "Left Top",
+        "en": "Left Top"
+      }
+    },
+    {
+      "type": "select",
+      "id": "block_text_align",
+      "label": {
+        "fr": "Alignement des textes ",
+        "es": "Posición horizontal de los textos ",
+        "en": "Horizontal content position "
+      },
+      "options": [          
+        {
+          "value": "flex-start",
+          "label": {
+            "fr": "Placé à gauche",
+            "es": "Colocado a la izquierda",
+            "en": "On the left"
+          }
+        },
+        {
+          "value": "center",
+          "label": {
+            "fr": "Centré",
+            "es": "Centrado",
+            "en": "In the center"
+          }
+        },
+        {
+          "value": "flex-end",
+          "label": {
+            "fr": "Placé à droite",
+            "es": "Colocados a la derecha",
+            "en": "On the right"
+          }
+        }
+
+      ],
+      "default":"center"
+    },
+    
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Mobile",
+        "es": "Layout (Mobile)",
+        "en": "Layout (Mobile)"
+      }
+    },
+    
+    {
+      "type": "text",
+      "id": "block_margin_sm",
+      "label": "Position",
+      "default": "50% 50%",
+      "info": {
+        "fr": "Gauche Haut",
+        "es": "Left Top",
+        "en": "Left Top"
+      }
+    },
+    {
+      "type": "select",
+      "id": "block_text_align_sm",
+      "label": {
+        "fr": "Alignement des textes",
+        "es": "Posición horizontal de los textos",
+        "en": "Horizontal content position"
+      },
+      "options": [          
+        {
+          "value": "flex-start",
+          "label": {
+            "fr": "Placé à gauche",
+            "es": "Colocado a la izquierda",
+            "en": "On the left"
+          }
+        },
+        {
+          "value": "center",
+          "label": {
+            "fr": "Centré",
+            "es": "Centrado",
+            "en": "In the center"
+          }
+        },
+        {
+          "value": "flex-end",
+          "label": {
+            "fr": "Placé à droite",
+            "es": "Colocados a la derecha",
+            "en": "On the right"
+          }
+        }
+
+      ],
+      "default":"center"
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation avancée",
+        "es": "Advanced CSS",
+        "en": "Advanced CSS"
+      }
+    },
+    {
+      "type": "text",
+      "id": "class",
+      "label": "CSS Class"
+    },
+    {
+      "type": "text",
+      "id": "id",
+      "label": "CSS Id"
+    }
+      ]
+    }
+  ]
+}
+{% endschema %}

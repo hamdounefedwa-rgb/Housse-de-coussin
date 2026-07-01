@@ -1,0 +1,1647 @@
+<div class="section-id-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="divider">
+  {% for block in section.blocks %}
+    {% case block.type %}
+  
+    {% when 'divider1' %}
+    <div class="divider-1">
+      <div style="border-bottom:{{ block.settings.border_size }}px {{ block.settings.border_type }} {{ block.settings.block_width_color }}"></div>
+    </div>
+    
+    <style>    
+   
+      .section-id-{{ section.id }} .divider-1 {  
+        min-height:{{ block.settings.section_height_sm }}px;      
+        max-width:{{ block.settings.section_max_width }};
+        margin: {{ block.settings.section_margin1_sm }}px auto {{ block.settings.section_margin2_sm }}px auto; 
+        padding: {{ block.settings.section_padding_top_sm }}px {{ block.settings.section_padding2_sm }}px {{ block.settings.section_padding_bottom_sm }}px {{ block.settings.section_padding2_sm }}px !important; 
+      }
+  
+      @media screen and (min-width: 1024px) {
+        .section-id-{{ section.id }} .divider-1 {  
+          min-height:{{ block.settings.section_height }}px;
+          margin: {{ block.settings.section_margin1 }}px auto {{ block.settings.section_margin2 }}px auto;       
+          padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding2 }}px {{ block.settings.section_padding_bottom }}px {{ block.settings.section_padding2 }}px !important; 
+        }
+      }
+  
+    </style>    
+        
+    {% when 'divider2' %}
+    <div class="divider-2"></div>
+    
+    <style>    
+   
+      .section-id-{{ section.id }} .divider-2 {  
+  
+        background: linear-gradient({{ block.settings.block_bgcolor_gradient_direction }}deg, 
+          {{ block.settings.block_bgcolor_gradient_1 }} {{ block.settings.block_bgcolor_gradient_1_percent_1 }}% {{ block.settings.block_bgcolor_gradient_1_percent_2 }}%, 
+          {{ block.settings.block_bgcolor_gradient_2 }} {{ block.settings.block_bgcolor_gradient_2_percent_1 }}% 100%);
+        min-height:{{ block.settings.section_height_sm }}px;      
+        max-width:{{ block.settings.section_max_width }};
+        margin: {{ block.settings.section_margin1_sm }}px auto {{ block.settings.section_margin2_sm }}px auto; 
+        padding: {{ block.settings.section_padding_top_sm }}px {{ block.settings.section_padding2_sm }}px {{ block.settings.section_padding_bottom_sm }}px {{ block.settings.section_padding2_sm }}px !important; 
+      }
+  
+      @media screen and (min-width: 1024px) {
+        .section-id-{{ section.id }} .divider-2 {  
+          min-height:{{ block.settings.section_height }}px;
+          margin: {{ block.settings.section_margin1 }}px auto {{ block.settings.section_margin2 }}px auto;       
+          padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding2 }}px {{ block.settings.section_padding_bottom }}px {{ block.settings.section_padding2 }}px !important; 
+        }
+      }
+  
+    </style>
+    
+    {% when 'divider3' %}
+    <div class="divider-3"></div>
+    
+    <style>    
+   
+      .section-id-{{ section.id }} .divider-3 {  
+        position:relative;
+        
+        {% unless block.settings.section_crop == "5" %} 
+        background: linear-gradient({{ block.settings.block_bgcolor_gradient_direction }}deg, 
+          {{ block.settings.block_bgcolor_gradient_1 }} {{ block.settings.block_bgcolor_gradient_1_percent_1 }}% {{ block.settings.block_bgcolor_gradient_1_percent_2 }}%, 
+          {{ block.settings.block_bgcolor_gradient_2 }} {{ block.settings.block_bgcolor_gradient_2_percent_1 }}% 100%);
+        {% endunless %}
+        
+        {% if block.settings.section_crop == "1" %}   
+        clip-path: polygon({{ block.settings.section_crop_range }}% 0, 0 100%, 100% 100%);
+  
+        {% elsif block.settings.section_crop == "2"  %} 
+        clip-path: polygon({{ block.settings.section_crop_range }}% 100%, 0 0, 100% 0);
+  
+        {% elsif block.settings.section_crop == "3"  %} 
+  
+        border-top-left-radius: 50% {{ block.settings.section_crop_range }}%;
+        border-top-right-radius: 50% {{ block.settings.section_crop_range }}%;
+  
+        {% elsif block.settings.section_crop == "4"  %} 
+        border-bottom-left-radius: 50% {{ block.settings.section_crop_range }}%;
+        border-bottom-right-radius: 50% {{ block.settings.section_crop_range }}%;      
+        {% endif %} 
+  
+        min-height:{{ block.settings.section_height_sm }}px;      
+        max-width:{{ block.settings.section_max_width }};
+        margin: {{ block.settings.section_margin1_sm }}px auto {{ block.settings.section_margin2_sm }}px auto; 
+        padding: {{ block.settings.section_padding_top_sm }}px {{ block.settings.section_padding2_sm }}px {{ block.settings.section_padding_bottom_sm }}px {{ block.settings.section_padding2_sm }}px !important; 
+      }
+  
+      {% if block.settings.section_crop == "5" %} 
+        .section-id-{{ section.id }} .divider-3 {
+          background: {{ block.settings.block_bgcolor_gradient_1 }};
+          z-index:-2;       
+        }
+        .section-id-{{ section.id }} .divider-3::before, .section-id-{{ section.id }} .divider-3::after {
+          content: "";
+          display: block;
+          position: absolute;
+          border-radius: 50% 100%;
+          z-index:-1;
+        }
+  
+        .section-id-{{ section.id }} .divider-3::before {
+          width: 55%;
+          height: 109%;
+          background-color: {{ block.settings.block_bgcolor_gradient_2 }};
+          right: -1.5%;
+          bottom: 60%;
+        }
+        .section-id-{{ section.id }} .divider-3::after {
+          width: 55%;
+          height: 100%;
+          background: {{ block.settings.block_bgcolor_gradient_1 }};   
+          left: -1.5%;
+          bottom: 40%;
+        }
+      {% endif %} 
+      
+      {% if block.settings.section_crop == "6" %} 
+        .section-id-{{ section.id }} .divider-3 {
+          background: {{ block.settings.block_bgcolor_gradient_1 }};
+          z-index:-2;
+          transform:rotateY(180deg);
+        }
+        .section-id-{{ section.id }} .divider-3::before, .section-id-{{ section.id }} .divider-3::after {
+          content: "";
+          display: block;
+          position: absolute;
+          border-radius: 100% 50%;
+          z-index:-1;        
+        }
+        .section-id-{{ section.id }} .divider-3::before {
+          width: 55%;
+          height: 109%;
+          background-color: {{ block.settings.block_bgcolor_gradient_2 }};
+          right: -1.5%;
+          top: 60%;
+        }
+        .section-id-{{ section.id }} .divider-3::after {
+          width: 55%;
+          height: 100%;
+          background: {{ block.settings.block_bgcolor_gradient_1 }};   
+          left: -1.5%;
+          top: 40%;
+        }
+      {% endif %}
+      @media screen and (min-width: 1024px) {
+        .section-id-{{ section.id }} .divider-3 {  
+          min-height:{{ block.settings.section_height }}px;
+          margin: {{ block.settings.section_margin1 }}px auto {{ block.settings.section_margin2 }}px auto;       
+          padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding2 }}px {{ block.settings.section_padding_bottom }}px {{ block.settings.section_padding2 }}px !important; 
+        }
+      }
+  
+    </style>
+    
+    {% when 'divider4' %}
+    <div class="divider-4">
+      {% if block.settings.image != blank %} 
+      <img class="lazyload sflazy"  
+           loading="lazy" 
+           src="{{ block.settings.image | img_url: settings.perf_img_lazy }}"
+           srcset="{{ block.settings.image | img_url: '400x' }} 400w, {{ block.settings.image | img_url: '600x' }} 600w, 
+                   {{ block.settings.image | img_url: '800x' }} 800w, {{ block.settings.image | img_url: '1200x' }} 1200w, 
+                   {{ block.settings.image | img_url: '1400x' }} 1400w, {{ block.settings.image | img_url: '1600x' }} 1600w, 
+                   {{ block.settings.image | img_url: '1800x' }} 1800w, {{ block.settings.image | img_url: '2000x' }} 2000w, 
+                   {{ block.settings.image | img_url: '2200x' }} 2200w" 
+           data-srcset="{{ block.settings.image | img_url: '400x' }} 400w, {{ block.settings.image | img_url: '600x' }} 600w, 
+                        {{ block.settings.image | img_url: '800x' }} 800w, {{ block.settings.image | img_url: '1200x' }} 1200w, 
+                        {{ block.settings.image | img_url: '1400x' }} 1400w, {{ block.settings.image | img_url: '1600x' }} 1600w, 
+                        {{ block.settings.image | img_url: '1800x' }} 1800w, {{ block.settings.image | img_url: '2000x' }} 2000w, 
+                        {{ block.settings.image | img_url: '2200x' }} 2200w" 
+          
+           data-widths="[400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200]"
+           alt="{{ block.settings.image.alt }}" 
+           width="{{ section.settings.image.width }}"
+         height="{{ section.settings.image.height }}" >  
+      
+      {% endif %}
+  
+      <style>    
+  
+        .section-id-{{ section.id }} .divider-4 {  
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          min-height:{{ block.settings.section_height_sm }}px;      
+          max-width:{{ block.settings.section_max_width }};
+          margin: {{ block.settings.section_margin1_sm }}px auto {{ block.settings.section_margin2_sm }}px auto; 
+          padding: {{ block.settings.section_padding_top_sm }}px {{ block.settings.section_padding2_sm }}px {{ block.settings.section_padding_bottom_sm }}px {{ block.settings.section_padding2_sm }}px !important; 
+        }
+        .section-id-{{ section.id }} .divider-4 img {
+          max-width:100%; 
+  
+        }
+  
+        @media screen and (min-width: 1024px) {
+          .section-id-{{ section.id }} .divider-4 {  
+            min-height:{{ block.settings.section_height }}px;
+            margin: {{ block.settings.section_margin1 }}px auto {{ block.settings.section_margin2 }}px auto;       
+            padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding2 }}px {{ block.settings.section_padding_bottom }}px {{ block.settings.section_padding2 }}px !important; 
+          }
+        }
+  
+      </style>
+    
+    </div>
+    
+    {% when 'divider5' %}
+    <div class="divider-5">{{ block.settings.html }}</div>
+    
+    <style>    
+   
+      .section-id-{{ section.id }} .divider-5 {  
+        min-height:{{ block.settings.section_height_sm }}px;      
+        max-width:{{ block.settings.section_max_width }};
+        margin: {{ block.settings.section_margin1_sm }}px auto {{ block.settings.section_margin2_sm }}px auto; 
+        padding: {{ block.settings.section_padding_top_sm }}px {{ block.settings.section_padding2_sm }}px {{ block.settings.section_padding_bottom_sm }}px {{ block.settings.section_padding2_sm }}px !important; 
+      }
+  
+      @media screen and (min-width: 1024px) {
+        .section-id-{{ section.id }} .divider-5 {  
+          min-height:{{ block.settings.section_height }}px;
+          margin: {{ block.settings.section_margin1 }}px auto {{ block.settings.section_margin2 }}px auto;       
+          padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding2 }}px {{ block.settings.section_padding_bottom }}px {{ block.settings.section_padding2 }}px !important; 
+        }
+      }
+  
+    </style>
+  
+    {% endcase %}  
+    
+  {% endfor %}
+    
+  </div>
+  
+  <style>  
+    .section-id-{{ section.id }} { margin:-1px auto; }
+  </style>
+  
+  {% schema %}
+    {
+    "name": {
+      "fr": "Séparateurs",
+      "es": "Séparateurs",
+      "en": "Dividers"
+    }, 
+    "class": "section-divider",
+    "settings": [
+    {
+        "type": "paragraph",
+          "content": {
+          "fr": "[Tutoriel vidéo](https://youtu.be/WWQ_UOCt94w)",
+          "es": "[Tutoriel vidéo](https://youtu.be/xXSgrELB2js)",
+          "en": "[Video tutorial](https://youtu.be/xXSgrELB2js)"
+        }
+      },
+      {
+        "type":"header",
+        "content": {
+          "fr": "Important",
+          "es": "Important",
+          "en": "Important"
+        }
+      }, 
+      {
+        "type": "paragraph",
+        "content": {
+          "fr": "Certaines options nécessitent de cliquer sur Enregistrer afin de voir le changement",
+          "es": "Some options require clicking on Save to see the change",
+          "en": "Some options require clicking on Save to see the change"
+        }    
+      }
+      
+    ],
+    
+    "max_blocks": 5,
+    "blocks": [
+        {
+        "type": "divider1",
+        "name": {
+          "fr": "Basique",
+          "es": "Basique",
+          "en": "Basic"
+        },
+        "settings": [
+          {
+            "type": "select",
+            "id": "border_type",
+            "label": {
+              "fr": "Type",
+              "es": "Type",
+              "en": "Type"
+            },
+            "default": "solid",
+            "options": [
+              {
+                "value": "solid",
+                "label": {
+                  "fr": "Bordure pleine",
+                  "es": "Bordure pleine",
+                  "en": "Solid border"
+                }
+              },
+               {
+                "value": "dotted",
+                "label": {
+                  "fr": "Bordure en pointillets",
+                  "es": "Bordure en pointillets",
+                  "en": "Dotted border"
+                }
+              },
+              {
+                "value": "dashed",
+                "label": {
+                  "fr": "Bordure en tirets",
+                  "es": "Bordure en tirets",
+                  "en": "Dashed border"
+                }
+              }
+              
+            ]
+          },
+          {
+            "type":"header",
+            "content":{
+               "fr":"Mise en forme",
+               "es":"Layout",
+               "en":"Layout"
+            }
+          },
+          {
+            "type": "range",
+            "id": "border_size",
+            "min": 0,
+            "max": 50,
+            "step": 1,
+            "unit": "px",
+            "label": {
+              "fr": "Taille de la bordure",
+              "es": "Taille de la bordure",
+              "en": "Border size"
+            },
+            "default": 5
+          },
+          {
+            "type":"color",
+            "id":"block_width_color",       
+            "label":{
+               "fr":"Couleur",
+               "es":"Color",
+               "en":"Color"
+            },
+            "default":"#333333"
+          },
+          {
+             "type":"header",      
+             "content":{
+                "fr":"Espacements (Desktop)",
+                "es":"Spacings (Desktop)",
+                "en":"Spacings (Desktop)"
+             }
+           },
+           {  
+            "type":"text",
+            "id":"section_max_width",
+            "label": {
+              "fr": "Longueur max de la section (% ou px)",
+              "es": "Max width of the section (% ou px)",
+              "en": "Max width of the section (% ou px)"
+            },
+            "default":"100%"
+           },
+           {  
+             "type":"range",
+             "id":"section_height",
+             "min":0,
+             "max":900,
+             "step":10,
+             "unit":"px",
+             "label":{
+                "fr":"Hauteur de la forme",
+                "es":"Layout height",
+                "en":"Layout height"
+             },
+             "default":0
+           },
+  
+           {
+             "type":"range",
+             "id":"section_margin1",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur haut",
+                "es":"Margin top",
+                "en":"Margin top"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_margin2",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur bas",
+                "es":"Margin bottom",
+                "en":"Margin bottom"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_padding_top",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur haut",
+                "es":"Padding top",
+                "en":"Padding top"
+             },
+             "default":25
+           },
+           {
+             "type":"range",
+             "id":"section_padding_bottom",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur bas",
+                "es":"Padding bottom",
+                "en":"Padding bottom"
+             },
+             "default":25
+           },
+           {
+             "type":"range",
+             "id":"section_padding2",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur gauche et droite",
+                "es":"Padding left and right",
+                "en":"Padding left and right"
+             },
+             "default":25
+           },
+           {
+             "type":"header",      
+             "content":{
+                "fr":"Espacements (Mobile)",
+                "es":"Spacings (Mobile)",
+                "en":"Spacings (Mobile)"
+             }
+           },
+           {  
+             "type":"range",
+             "id":"section_height_sm",
+             "min":0,
+             "max":900,
+             "step":10,
+             "unit":"px",
+             "label":{
+                "fr":"Hauteur de la forme",
+                "es":"Layout height",
+                "en":"Layout height"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_margin1_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur haut",
+                "es":"Margin top",
+                "en":"Margin top"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_margin2_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur bas",
+                "es":"Margin bottom",
+                "en":"Margin bottom"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_padding_top_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur haut",
+                "es":"Padding top",
+                "en":"Padding top"
+             },
+             "default":15
+           },
+           {
+             "type":"range",
+             "id":"section_padding_bottom_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur bas",
+                "es":"Padding bottom",
+                "en":"Padding bottom"
+             },
+             "default":15
+           },
+           {
+             "type":"range",
+             "id":"section_padding2_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur gauche et droite",
+                "es":"Padding left and right",
+                "en":"Padding left and right"
+             },
+             "default":15
+           }
+        ]
+      },
+      {
+        "type": "divider2",
+        "name": {
+          "fr": "Background",
+          "es": "Background",
+          "en": "Background"
+        },
+      "settings": [
+           {
+              "type": "range",
+              "id": "block_bgcolor_gradient_direction",
+              "min": 0,
+              "max": 180,
+              "step": 2,
+              "unit": "deg",
+              "label": {
+                "fr": "Sens du dégradé",
+                "es": "Sens du dégradé",
+                "en": "Gradient direction"
+              },
+              "default": 90
+           },
+           {
+             "type":"color",
+             "id":"block_bgcolor_gradient_1",       
+             "label":{
+                "fr":"Fond - Couleur 1",
+                "es":"Fond - Couleur 1",
+                "en":"Background - Color 1"
+             },
+             "default":"#F0F0F0"
+           },     
+           {
+             "type":"color",
+             "id":"block_bgcolor_gradient_2",       
+             "label":{
+                "fr":"Fond - Couleur 2",
+                "es":"Fond - Couleur 2",
+                "en":"Background - Color 2"
+             },
+             "default":"#333333"
+           },
+           {
+              "type": "range",
+              "id": "block_bgcolor_gradient_1_percent_2",
+              "min": 0,
+              "max": 100,
+              "step": 1,
+              "unit": "%",
+              "label": {
+                "fr": "Proportion des couleurs",
+                "es": "Color ratio",
+                "en": "Color ratio"
+              },
+              "default": 0
+           },
+           {
+              "type": "range",
+              "id": "block_bgcolor_gradient_1_percent_1",
+              "min": 0,
+              "max": 100,
+              "step": 1,
+              "unit": "%",
+              "label": {
+                "fr": "Début du flou",
+                "es": "Début du flou",
+                "en": "Blur beginning"
+              },
+              "default": 0
+           },
+           {
+              "type": "range",
+              "id": "block_bgcolor_gradient_2_percent_1",
+              "min": 0,
+              "max": 100,
+              "step": 1,
+              "unit": "%",
+              "label": {
+                "fr": "Fin du flou ",
+                "es": "Fin du flou",
+                "en": "Blur ending"
+              },
+              "default": 100
+           },
+           {
+             "type":"header",      
+             "content":{
+                "fr":"Espacements (Desktop)",
+                "es":"Spacings (Desktop)",
+                "en":"Spacings (Desktop)"
+             }
+           },
+           {  
+            "type":"text",
+            "id":"section_max_width",
+            "label": {
+              "fr": "Longueur max de la section (% ou px)",
+              "es": "Max width of the section (% ou px)",
+              "en": "Max width of the section (% ou px)"
+            },
+            "default":"100%"
+           },
+           {  
+             "type":"range",
+             "id":"section_height",
+             "min":0,
+             "max":900,
+             "step":10,
+             "unit":"px",
+             "label":{
+                "fr":"Hauteur de la forme",
+                "es":"Layout height",
+                "en":"Layout height"
+             },
+             "default":0
+           },
+  
+           {
+             "type":"range",
+             "id":"section_margin1",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur haut",
+                "es":"Margin top",
+                "en":"Margin top"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_margin2",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur bas",
+                "es":"Margin bottom",
+                "en":"Margin bottom"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_padding_top",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur haut",
+                "es":"Padding top",
+                "en":"Padding top"
+             },
+             "default":25
+           },
+           {
+             "type":"range",
+             "id":"section_padding_bottom",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur bas",
+                "es":"Padding bottom",
+                "en":"Padding bottom"
+             },
+             "default":25
+           },
+           {
+             "type":"range",
+             "id":"section_padding2",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur gauche et droite",
+                "es":"Padding left and right",
+                "en":"Padding left and right"
+             },
+             "default":25
+           },
+           {
+             "type":"header",      
+             "content":{
+                "fr":"Espacements (Mobile)",
+                "es":"Spacings (Mobile)",
+                "en":"Spacings (Mobile)"
+             }
+           },
+           {  
+             "type":"range",
+             "id":"section_height_sm",
+             "min":0,
+             "max":900,
+             "step":10,
+             "unit":"px",
+             "label":{
+                "fr":"Hauteur de la forme",
+                "es":"Layout height",
+                "en":"Layout height"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_margin1_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur haut",
+                "es":"Margin top",
+                "en":"Margin top"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_margin2_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur bas",
+                "es":"Margin bottom",
+                "en":"Margin bottom"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_padding_top_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur haut",
+                "es":"Padding top",
+                "en":"Padding top"
+             },
+             "default":15
+           },
+           {
+             "type":"range",
+             "id":"section_padding_bottom_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur bas",
+                "es":"Padding bottom",
+                "en":"Padding bottom"
+             },
+             "default":15
+           },
+           {
+             "type":"range",
+             "id":"section_padding2_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur gauche et droite",
+                "es":"Padding left and right",
+                "en":"Padding left and right"
+             },
+             "default":15
+           }
+      ]       
+      },
+      {
+        "type": "divider3",
+        "name": {
+          "fr": "Forme",
+          "es": "Forme",
+          "en": "Form"
+        },
+        "settings": [
+          {
+            "type": "select",
+            "id": "section_crop",
+            "label": {
+              "fr": "Type de forme",
+              "es": "Type de forme",
+              "en": "Layout type"
+            },
+            "default": "0",
+            "options": [
+              {
+                "value": "0",
+                "label": {
+                  "fr": "Sans",
+                  "es": "None",
+                  "en": "None"
+                }
+              },
+              {
+                "value": "1",
+                "label": {
+                  "fr": "Triangle - haut",
+                  "es": "Triangle - top",
+                  "en": "Triangle - top"
+                }
+              },
+              {
+                "value": "2",
+                "label": {
+                  "fr": "Triangle - bas",
+                  "es": "Triangle - bottom",
+                  "en": "Triangle - bottom"
+                }
+              },
+              {
+                "value": "3",
+                "label": {
+                  "fr": "Arrondi - haut",
+                  "es": "Rounded - top",
+                  "en": "Rounded - top"
+                }
+              },
+              {
+                "value": "4",
+                "label": {
+                  "fr": "Arrondi - bas",
+                  "es": "Rounded - bottom",
+                  "en": "Rounded - bottom"
+                }
+              },
+              {
+                "value": "5",
+                "label": {
+                  "fr": "Vague - haut",
+                  "es": "Wave - top",
+                  "en": "Wave - top"
+                }
+              },
+              {
+                "value": "6",
+                "label": {
+                  "fr": "Vague - bas",
+                  "es": "Wave - bottom",
+                  "en": "Wave - bottom"
+                }
+              }
+            ]
+           },
+          {
+              "type": "range",
+              "id": "section_crop_range",
+              "min": 0,
+              "max": 100,
+              "step": 1,
+              "unit": "%",
+              "label": {
+                "fr": "Degré",
+                "es": "Dégré",
+                "en": "Degree"
+              },
+              "default": 50
+           },
+        {
+              "type": "range",
+              "id": "block_bgcolor_gradient_direction",
+              "min": 0,
+              "max": 180,
+              "step": 2,
+              "unit": "deg",
+              "label": {
+                "fr": "Sens du dégradé",
+                "es": "Sens du dégradé",
+                "en": "Gradient direction"
+              },
+              "default": 90
+           },
+           {
+             "type":"color",
+             "id":"block_bgcolor_gradient_1",       
+             "label":{
+                "fr":"Fond - Couleur 1 ou couleur de la vague",
+                "es":"Fond - Couleur 1 ou couleur de la vague",
+                "en":"Background - Color 1 or color of the wave"
+             },
+             "default":"#F0F0F0"
+           },     
+           {
+             "type":"color",
+             "id":"block_bgcolor_gradient_2",       
+             "label":{
+                "fr":"Fond - Couleur 2 ou couleur de rognage de la vague",
+                "es":"Fond - Couleur 2 ou couleur de rognage de la vague",
+                "en":"Background - Color 2 or color of the cropped zone"
+             },
+             "default":"#333333"
+           },
+           {
+              "type": "range",
+              "id": "block_bgcolor_gradient_1_percent_2",
+              "min": 0,
+              "max": 100,
+              "step": 1,
+              "unit": "%",
+              "label": {
+                "fr": "Proportion des couleurs",
+                "es": "Color ratio",
+                "en": "Color ratio"
+              },
+              "default": 0
+           },
+           {
+              "type": "range",
+              "id": "block_bgcolor_gradient_1_percent_1",
+              "min": 0,
+              "max": 100,
+              "step": 1,
+              "unit": "%",
+              "label": {
+                "fr": "Début du flou",
+                "es": "Blur beginning",
+                "en": "Blur beginning"
+              },
+              "default": 0
+           },
+           {
+              "type": "range",
+              "id": "block_bgcolor_gradient_2_percent_1",
+              "min": 0,
+              "max": 100,
+              "step": 1,
+              "unit": "%",
+              "label": {
+                "fr": "Fin du flou ",
+                "es": "Blur ending",
+                "en": "Blur ending"
+              },
+              "default": 100
+           },
+          {
+             "type":"header",      
+             "content":{
+                "fr":"Espacements (Desktop)",
+                "es":"Spacings (Desktop)",
+                "en":"Spacings (Desktop)"
+             }
+           },
+           {  
+            "type":"text",
+            "id":"section_max_width",
+            "label": {
+              "fr": "Longueur max de la section (% ou px)",
+              "es": "Max width of the section (% ou px)",
+              "en": "Max width of the section (% ou px)"
+            },
+            "default":"100%"
+           },
+           {  
+             "type":"range",
+             "id":"section_height",
+             "min":0,
+             "max":900,
+             "step":10,
+             "unit":"px",
+             "label":{
+                "fr":"Hauteur de la forme",
+                "es":"Layout height",
+                "en":"Layout height"
+             },
+             "default":50
+           },
+  
+           {
+             "type":"range",
+             "id":"section_margin1",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur haut",
+                "es":"Margin top",
+                "en":"Margin top"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_margin2",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur bas",
+                "es":"Margin bottom",
+                "en":"Margin bottom"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_padding_top",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur haut",
+                "es":"Padding top",
+                "en":"Padding top"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_padding_bottom",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur bas",
+                "es":"Padding bottom",
+                "en":"Padding bottom"
+             },
+             "default":25
+           },
+           {
+             "type":"range",
+             "id":"section_padding2",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur gauche et droite",
+                "es":"Padding left and right",
+                "en":"Padding left and right"
+             },
+             "default":0
+           },
+           {
+             "type":"header",      
+             "content":{
+                "fr":"Espacements (Mobile)",
+                "es":"Spacings (Mobile)",
+                "en":"Spacings (Mobile)"
+             }
+           },
+           {  
+             "type":"range",
+             "id":"section_height_sm",
+             "min":0,
+             "max":900,
+             "step":10,
+             "unit":"px",
+             "label":{
+                "fr":"Hauteur de la forme",
+                "es":"Layout height",
+                "en":"Layout height"
+             },
+             "default":50
+           },
+           {
+             "type":"range",
+             "id":"section_margin1_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur haut",
+                "es":"Margin top",
+                "en":"Margin top"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_margin2_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur bas",
+                "es":"Margin bottom",
+                "en":"Margin bottom"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_padding_top_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur haut",
+                "es":"Padding top",
+                "en":"Padding top"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_padding_bottom_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur bas",
+                "es":"Padding bottom",
+                "en":"Padding bottom"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_padding2_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur gauche et droite",
+                "es":"Padding left and right",
+                "en":"Padding left and right"
+             },
+             "default":0
+           }
+        ]
+      },
+      {
+        "type": "divider4",
+        "name": {
+          "fr": "Image",
+          "es": "Image",
+          "en": "Image"
+        },
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": {
+              "fr": "Image",
+              "es": "Imagen",
+              "en": "Image"
+            }          
+         },        
+          {
+             "type":"header",      
+             "content":{
+                "fr":"Espacements (Desktop)",
+                "es":"Spacings (Desktop)",
+                "en":"Spacings (Desktop)"
+             }
+           },
+           {  
+            "type":"text",
+            "id":"section_max_width",
+            "label": {
+              "fr": "Longueur max de la section (% ou px)",
+              "es": "Max width of the section (% ou px)",
+              "en": "Max width of the section (% ou px)"
+            },
+            "default":"100%"
+           },
+           {  
+             "type":"range",
+             "id":"section_height",
+             "min":0,
+             "max":900,
+             "step":10,
+             "unit":"px",
+             "label":{
+                "fr":"Hauteur de la forme",
+                "es":"Layout height",
+                "en":"Layout height"
+             },
+             "default":0
+           },
+  
+           {
+             "type":"range",
+             "id":"section_margin1",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur haut",
+                "es":"Margin top",
+                "en":"Margin top"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_margin2",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur bas",
+                "es":"Margin bottom",
+                "en":"Margin bottom"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_padding_top",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur haut",
+                "es":"Padding top",
+                "en":"Padding top"
+             },
+             "default":25
+           },
+           {
+             "type":"range",
+             "id":"section_padding_bottom",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur bas",
+                "es":"Padding bottom",
+                "en":"Padding bottom"
+             },
+             "default":25
+           },
+           {
+             "type":"range",
+             "id":"section_padding2",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur gauche et droite",
+                "es":"Padding left and right",
+                "en":"Padding left and right"
+             },
+             "default":25
+           },
+           {
+             "type":"header",      
+             "content":{
+                "fr":"Espacements (Mobile)",
+                "es":"Spacings (Mobile)",
+                "en":"Spacings (Mobile)"
+             }
+           },
+           {  
+             "type":"range",
+             "id":"section_height_sm",
+             "min":0,
+             "max":900,
+             "step":10,
+             "unit":"px",
+             "label":{
+                "fr":"Hauteur de la forme",
+                "es":"Layout height",
+                "en":"Layout height"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_margin1_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur haut",
+                "es":"Margin top",
+                "en":"Margin top"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_margin2_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur bas",
+                "es":"Margin bottom",
+                "en":"Margin bottom"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_padding_top_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur haut",
+                "es":"Padding top",
+                "en":"Padding top"
+             },
+             "default":15
+           },
+           {
+             "type":"range",
+             "id":"section_padding_bottom_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur bas",
+                "es":"Padding bottom",
+                "en":"Padding bottom"
+             },
+             "default":15
+           },
+           {
+             "type":"range",
+             "id":"section_padding2_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur gauche et droite",
+                "es":"Padding left and right",
+                "en":"Padding left and right"
+             },
+             "default":15
+           }
+        ]
+      },
+      {
+        "type": "divider5",
+        "name": {
+          "fr": "Personnalisé",
+          "es": "Personnalisé",
+          "en": "Personalized"
+        },
+        "settings": [
+          {
+            "type": "html",
+            "id": "html",
+            "label": {
+              "fr": "Code HTML",
+              "es": "Code HTML",
+              "en": "Code HTML"
+            }
+          },
+        
+          {
+             "type":"header",      
+             "content":{
+                "fr":"Espacements (Desktop)",
+                "es":"Spacings (Desktop)",
+                "en":"Spacings (Desktop)"
+             }
+           },
+           {  
+            "type":"text",
+            "id":"section_max_width",
+            "label": {
+              "fr": "Longueur max de la section (% ou px)",
+              "es": "Max width of the section (% ou px)",
+              "en": "Max width of the section (% ou px)"
+            },
+            "default":"100%"
+           },
+           {  
+             "type":"range",
+             "id":"section_height",
+             "min":0,
+             "max":900,
+             "step":10,
+             "unit":"px",
+             "label":{
+                "fr":"Hauteur de la forme",
+                "es":"Layout height",
+                "en":"Layout height"
+             },
+             "default":0
+           },
+  
+           {
+             "type":"range",
+             "id":"section_margin1",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur haut",
+                "es":"Margin top",
+                "en":"Margin top"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_margin2",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur bas",
+                "es":"Margin bottom",
+                "en":"Margin bottom"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_padding_top",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur haut",
+                "es":"Padding top",
+                "en":"Padding top"
+             },
+             "default":25
+           },
+           {
+             "type":"range",
+             "id":"section_padding_bottom",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur bas",
+                "es":"Padding bottom",
+                "en":"Padding bottom"
+             },
+             "default":25
+           },
+           {
+             "type":"range",
+             "id":"section_padding2",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur gauche et droite",
+                "es":"Padding left and right",
+                "en":"Padding left and right"
+             },
+             "default":25
+           },
+           {
+             "type":"header",      
+             "content":{
+                "fr":"Espacements (Mobile)",
+                "es":"Spacings (Mobile)",
+                "en":"Spacings (Mobile)"
+             }
+           },
+           {  
+             "type":"range",
+             "id":"section_height_sm",
+             "min":0,
+             "max":900,
+             "step":10,
+             "unit":"px",
+             "label":{
+                "fr":"Hauteur de la forme",
+                "es":"Layout height",
+                "en":"Layout height"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_margin1_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur haut",
+                "es":"Margin top",
+                "en":"Margin top"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_margin2_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Extérieur bas",
+                "es":"Margin bottom",
+                "en":"Margin bottom"
+             },
+             "default":0
+           },
+           {
+             "type":"range",
+             "id":"section_padding_top_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur haut",
+                "es":"Padding top",
+                "en":"Padding top"
+             },
+             "default":15
+           },
+           {
+             "type":"range",
+             "id":"section_padding_bottom_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur bas",
+                "es":"Padding bottom",
+                "en":"Padding bottom"
+             },
+             "default":15
+           },
+           {
+             "type":"range",
+             "id":"section_padding2_sm",
+             "min":0,
+             "max":350,
+             "step":5,
+             "unit":"px",
+             "label":{
+                "fr":"Espacement Intérieur gauche et droite",
+                "es":"Padding left and right",
+                "en":"Padding left and right"
+             },
+             "default":15
+           }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": {
+          "fr": "Séparateurs",
+          "es": "Séparateurs",
+          "en": "Dividers"
+        },     
+        "category": {
+          "fr": "Contenu",
+          "es": "Contenido",
+          "en": "Content"
+        }
+      }
+    ]
+  }
+  {% endschema %}
+  
+  
+  
+  

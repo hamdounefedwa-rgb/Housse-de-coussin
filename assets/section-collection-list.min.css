@@ -1,0 +1,26 @@
+@media screen and (min-width: 750px) {
+
+  .collection-list {
+    align-items: center;
+  }
+
+  .collection-list.desktop_layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .collection-list.desktop_layout .grid-item {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .collection-list.desktop_layout-left .grid-item:first-child,
+  .collection-list.desktop_layout-right .grid-item:first-child {
+    grid-row: 1/3;
+    grid-column: 1/span 2;
+  }
+
+  .collection-list.desktop_layout-right .grid-item:first-child {
+    grid-column: 2 / -1;
+  }
+}

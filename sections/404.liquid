@@ -1,0 +1,656 @@
+{% render 'breadcrumb' %}
+{% if section.blocks.size == 0 %}
+<div class="content text-center">
+  <div class="section-header section-header--center">
+    <h2 class="h1">{{ 'general.404.title' | t }}</h2>
+  </div>
+  
+  <p>{{ 'general.404.subtext_html' | t }}</p>
+</div>
+{% endif %}
+
+<div class="content wrapper">
+
+  {%- for block in section.blocks -%}
+
+    {%- case block.type -%} 
+
+    {%- when 'title' -%}        
+    <div class="section-header">
+    <h1 class="block-{{ block.id }} {{ block.settings.class }}">{% if block.settings.block_title != blank %}{{ block.settings.block_title }} {% else %} {{ 'general.404.title' | t }}{% endif %}</h1>
+    </div>
+
+    {%- when 'image' -%}       
+      <div> 
+        {% if block.settings.block_img %}  
+        <img 
+          loading="lazy"
+          width= "{{ block.settings.block_img.width }}"
+          height= "{{ block.settings.block_img.height }}"
+          src="{{ block.settings.block_img | image_url: width: block.settings.block_img.width }}"
+          alt="{{ block.settings.block_img.alt }}"
+          />  
+          {% endif %}
+      </div>
+
+    {%- when 'description' -%}  
+
+    <div class="rte block-{{ block.id }} {{ block.settings.class }}">
+      {% if block.settings.block_html %}{{ block.settings.block_html }} {% else %} <p>{{ 'general.404.subtext_html' | t }}</p> {% endif %}
+    </div> 
+
+    {%- endcase -%}  
+
+    {% render 'product-block-custom-css', elem: block %}
+
+  {%- endfor -%}      
+
+</div>
+
+{% schema %}
+{
+  "name":{
+     "fr":"Page",
+     "es":"Page",
+     "en":"Page"
+  },
+  "settings":[
+  {
+    "type":"header",
+    "content":{
+      "fr":"Personnalisation générique",
+      "es":"Generic customization",
+      "en":"Generic customization"
+    }
+  },   
+  {
+    "type": "paragraph",
+    "content": {
+      "fr": "Tutoriel vidéo: [Page](https://youtu.be/AgQr1hupOkY)",
+      "es": "Video tutorial: [Page](https://youtu.be/WPuG2RvBpl4)",
+      "en": "Video tutorial: [Page](https://youtu.be/WPuG2RvBpl4)"
+    }
+},
+{
+  "type": "paragraph",
+  "content": {
+    "fr": "Si vous personnalisez le modèle d'une page, nous conseillons d'en créer un autre afin de ne pas toucher au modèle générique - Pour ce faire, cliquez sur le menu déroulant ci-dessus (en haut au centre) pour ouvrir la liste des modèles et en créer un nouveau dans la catégorie de page concernée.",
+    "es": "If you are customizing a page Template, we recommend to create another one so that you don't touch the Generic Template - To do this click on the drop down menu above (top center) to open the templates list and create a new one in the concerned page category.",
+    "en": "If you are customizing a page Template, we recommend to create another one so that you don't touch the Generic Template - To do this click on the drop down menu above (top center) to open the templates list and create a new one in the concerned page category."
+  }
+}
+  ],
+  "blocks":[
+    {
+      "type":"title",
+      "name":"Titre ",
+      "limit":1,
+      "settings":[
+         
+        {
+            "type":"text",             
+            "id":"block_title",                       
+            "label":{
+              "fr":"Titre",
+              "es":"Title",
+              "en":"Title"
+            }
+        },    
+         {
+            "type":"header",
+            "content":{
+               "fr":"Personnalisation des couleurs",
+               "es":"Color customization",
+               "en":"Color customization"
+            }
+         },  
+         {
+          "type": "paragraph",
+          "content": {
+            "fr": "[Tutoriel vidéo](https://youtu.be/mX5vrnrv4_I)",
+            "es": "[Video tutorial](https://youtu.be/mX5vrnrv4_I)",
+            "en": "[Video tutorial](https://youtu.be/mX5vrnrv4_I)"
+          }
+        },
+          {
+            "type":"checkbox",
+            "id":"block_color_enable",
+            "label": {
+              "fr": "Activer",
+              "es": "Activate",
+              "en": "Activate"
+            },
+            "default":false
+         },
+          {
+            "type":"color",             
+            "id":"block_title_color",                       
+            "label":{
+              "fr":"Couleur du texte",
+              "es":"Text color",
+              "en":"Text color"
+            }
+         },       
+         {
+            "type":"header",
+            "content":{
+               "fr":"Personnalisation des tailles",
+               "es":"Size customization",
+               "en":"Size customization" 
+            }
+         },
+         {
+          "type": "paragraph",
+          "content": {
+            "fr": "[Tutoriel vidéo](https://youtu.be/ovHmpm105x8)",
+            "es": "[Video tutorial](https://youtu.be/ovHmpm105x8)",
+            "en": "[Video tutorial](https://youtu.be/ovHmpm105x8)"
+          }
+        },
+          {
+            "type":"checkbox",
+            "id":"block_size_enable",
+            "label": {
+              "fr": "Activer",
+              "es": "Activate",
+              "en": "Activate"
+            },
+            "default":false
+         },
+         
+         {
+            "type":"header",
+            "content":{
+               "fr":"Format Bureau",
+               "es":"Layout (Desktop)",
+               "en":"Layout (Desktop)"
+            }
+         },
+         {
+            "type":"range",
+            "id":"block_text_size",
+            "min":0,
+            "max":60,
+            "step":1,
+            "unit":"px",
+            "label":{
+              "fr":"Taille du texte",
+              "es":"Text size",
+              "en":"Text size"
+            },
+            "default":28
+         },
+         {
+            "type":"header",
+            "content":{
+               "fr":"Format Mobile",
+               "es":"Layout (Mobile)",
+               "en":"Layout (Mobile)"
+            }
+         },
+         {
+            "type":"range",
+            "id":"block_text_size_sm",
+            "min":0,
+            "max":60,
+            "step":1,
+            "unit":"px",
+            "label":{
+              "fr":"Taille du texte",
+              "es":"Text size",
+              "en":"Text size"
+            },
+            "default":21
+        },           
+         {
+            "type":"header",
+            "content":{
+               "fr":"Personnalisation de la disposition",
+               "es":"Spacing customization",
+               "en":"Spacing customization"
+            }
+         },
+         {
+          "type": "paragraph",
+          "content": {
+            "fr": "[Tutoriel vidéo](https://youtu.be/LLS1yEwaPsw)",
+            "es": "[Video tutorial](https://youtu.be/LLS1yEwaPsw)",
+            "en": "[Video tutorial](https://youtu.be/LLS1yEwaPsw)"
+          }
+        },
+         {
+      "type": "paragraph",
+      "content": {
+        "fr": "Les espacements sont séparés par des espaces avec 4 valeurs maximales - Haut Droit Bas Gauche - L'unité peut être le rem, px, % - Exemple: 20px 0px 20px 20px - [En savoir plus](https://developer.mozilla.org/fr/docs/Web/CSS/padding) ",
+        "es": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)",
+        "en": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)"
+        }
+    },
+         {
+            "type":"checkbox",
+            "id":"block_spacing_enable",
+            "label": {
+              "fr": "Activer",
+              "es": "Activate",
+              "en": "Activate"
+            },
+            "default":false
+         },
+         {
+            "type":"header",
+            "content":{
+               "fr":"Format Bureau",
+               "es":"Layout (Desktop)",
+               "en":"Layout (Desktop)"
+            }
+         },
+          {
+            "type":"checkbox",
+            "id":"block_center",
+            "label":{
+               "fr":"Centrer",
+               "es":"Center",
+               "en":"Center"
+            },
+            "default":false
+         },
+         {
+            "type":"text",
+            "id":"block_padding",
+            "label":"Espacements intérieur"
+         },
+         {
+            "type":"text",
+            "id":"block_margin",
+            "label":"Espacements extérieur"
+         },
+         {
+            "type":"header",
+            "content":{
+               "fr":"Format Mobile",
+               "es":"Layout (Mobile)",
+               "en":"Layout (Mobile)"
+            }
+         },
+          {
+            "type":"checkbox",
+            "id":"block_center_sm",
+            "label":{
+               "fr":"Centrer",
+               "es":"Center",
+               "en":"Center"
+            },
+            "default":false
+         },
+         {
+            "type":"text",
+            "id":"block_padding_sm",
+            "label":"Espacements intérieur"
+         },
+         {
+            "type":"text",
+            "id":"block_margin_sm",
+            "label":"Espacements extérieur"
+         },         
+         {
+            "type":"header",
+            "content":{
+               "fr":"Personnalisation avancée",
+               "es":"Advanced CSS",
+               "en":"Advanced CSS"
+            }
+         },
+         {
+            "type":"text",
+            "id":"class",
+            "label":"CSS Class"
+         },
+         {
+            "type":"text",
+            "id":"id",
+            "label":"CSS Id"
+         }
+      ]
+   },
+   {
+    "type":"image",
+    "name":"Image",
+    "limit":1,
+    "settings":[
+      {
+      "type": "image_picker",
+      "id": "block_img",
+      "label": {
+        "fr": "Image",
+        "es": "Image",
+        "en": "Image"
+      }          
+    } 
+    ]}, 
+   {
+      "type":"description",
+      "name":"Description",
+      "limit":1,
+      "settings":[
+        
+        {
+          "type": "html",
+          "id": "block_html",
+          "label": {
+            "fr": "Zone html",
+            "es": "Zone html",
+            "en": "Zone html"
+          }
+        },    
+        {
+            "type":"header",
+            "content":{
+              "fr":"Personnalisation des couleurs",
+              "es":"Color customization",
+              "en":"Color customization"
+            }
+        },  
+        {
+          "type": "paragraph",
+          "content": {
+            "fr": "[Tutoriel vidéo](https://youtu.be/mX5vrnrv4_I)",
+            "es": "[Video tutorial](https://youtu.be/mX5vrnrv4_I)",
+            "en": "[Video tutorial](https://youtu.be/mX5vrnrv4_I)"
+          }
+        },
+          {
+            "type":"checkbox",
+            "id":"block_color_enable",
+            "label": {
+              "fr": "Activer",
+              "es": "Activate",
+              "en": "Activate"
+            },
+            "default":false
+        },
+        {
+            "type":"color",             
+            "id":"block_title_color",   
+                  
+            "label":{
+              "fr":"Couleur des titres",
+              "es":"Titles color",
+              "en":"Titles color"
+            }
+        }, 
+          {
+            "type":"color",             
+            "id":"block_text_color",   
+                  
+            "label":{
+              "fr":"Couleur du texte",
+              "es":"Text color",
+              "en":"Text color"
+            }
+        },       
+        {
+            "type":"header",
+            "content":{
+              "fr":"Personnalisation des tailles",
+              "es":"Size customization",
+              "en":"Size customization" 
+            }
+        },
+        {
+          "type": "paragraph",
+          "content": {
+            "fr": "[Tutoriel vidéo](https://youtu.be/ovHmpm105x8)",
+            "es": "[Video tutorial](https://youtu.be/ovHmpm105x8)",
+            "en": "[Video tutorial](https://youtu.be/ovHmpm105x8)"
+          }
+        },
+          {
+            "type":"checkbox",
+            "id":"block_size_enable",
+            "label": {
+              "fr": "Activer",
+              "es": "Activate",
+              "en": "Activate"
+            },
+            "default":false
+        },
+        
+        {
+            "type":"header",
+            "content":{
+              "fr":"Format Bureau",
+              "es":"Layout (Desktop)",
+              "en":"Layout (Desktop)"
+            }
+        },
+        
+            {
+            "type": "text",
+            "id": "h2_size",
+            "label": {
+              "fr": "Taille du H2",
+              "es": "H2 font size",
+              "en": "H2 font size"
+            },
+            "default": "2.4rem"
+          },   
+            {
+            "type": "text",
+            "id": "h3_size",
+            "label": {
+              "fr": "Taille du H3",
+              "es": "H3 font size",
+              "en": "H3 font size"
+            },
+            "default": "2.1rem"
+          },   
+            {
+            "type": "text",
+            "id": "h4_size",
+            "label": {
+              "fr": "Taille du H4",
+              "es": "H4 font size",
+              "en": "H4 font size"
+            },
+            "default": "1.9rem"
+          },   
+            {
+            "type": "text",
+            "id": "h5_size",
+            "label": {
+              "fr": "Taille du H5",
+              "es": "H5 font size",
+              "en": "H5 font size"
+            },
+            "default": "1.7rem"
+          },   
+        {
+            "type":"range",
+            "id":"block_text_size",
+            "min":0,
+            "max":60,
+            "step":1,
+            "unit":"px",
+            "label":{
+              "fr":"Taille du texte",
+              "es":"Font size of text",
+              "en":"Font size of text"
+            },
+            "default":16
+        },
+        {
+            "type":"header",
+            "content":{
+              "fr":"Format Mobile",
+              "es":"Layout (Mobile)",
+              "en":"Layout (Mobile)"
+            }
+        },
+        
+            {
+            "type": "text",
+            "id": "h2_size_sm",
+            "label": {
+              "fr": "Taille du H2",
+              "es": "H2 font size",
+              "en": "H2 font size"
+            },
+            "default": "2.4rem"
+          },   
+            {
+            "type": "text",
+            "id": "h3_size_sm",
+            "label": {
+              "fr": "Taille du H3",
+              "es": "H3 font size",
+              "en": "H3 font size"
+            },
+            "default": "2.1rem"
+          },   
+            {
+            "type": "text",
+            "id": "h4_size_sm",
+            "label": {
+              "fr": "Taille du H4",
+              "es": "H4 font size",
+              "en": "H4 font size"
+            },
+            "default": "1.9rem"
+          },   
+            {
+            "type": "text",
+            "id": "h5_size_sm",
+            "label": {
+              "fr": "Taille du H5",
+              "es": "H5 font size",
+              "en": "H5 font size"
+            },
+            "default": "1.7rem"
+          },   
+        {
+            "type":"range",
+            "id":"block_text_size_sm",
+            "min":0,
+            "max":60,
+            "step":1,
+            "unit":"px",
+            "label":{
+              "fr":"Taille du texte",
+              "es":"Text size",
+              "en":"Text size"
+            },
+            "default":16
+        },           
+        {
+            "type":"header",
+            "content":{
+              "fr":"Personnalisation de la disposition",
+              "es":"Spacing customization",
+              "en":"Spacing customization"
+            }
+        },
+        {
+          "type": "paragraph",
+          "content": {
+            "fr": "[Tutoriel vidéo](https://youtu.be/LLS1yEwaPsw)",
+            "es": "[Video tutorial](https://youtu.be/LLS1yEwaPsw)",
+            "en": "[Video tutorial](https://youtu.be/LLS1yEwaPsw)"
+          }
+        },
+        {
+      "type": "paragraph",
+      "content": {
+        "fr": "Les espacements sont séparés par des espaces avec 4 valeurs maximales - Haut Droit Bas Gauche - L'unité peut être le rem, px, % - Exemple: 20px 0px 20px 20px - [En savoir plus](https://developer.mozilla.org/fr/docs/Web/CSS/padding) ",
+        "es": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)",
+        "en": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)"
+        }
+    },
+        {
+            "type":"checkbox",
+            "id":"block_spacing_enable",
+            "label": {
+              "fr": "Activer",
+              "es": "Activate",
+              "en": "Activate"
+            },
+            "default":false
+        },
+        {
+            "type":"header",
+            "content":{
+              "fr":"Format Bureau",
+              "es":"Layout (Desktop)",
+              "en":"Layout (Desktop)"
+            }
+        },
+          {
+            "type":"checkbox",
+            "id":"block_center",
+            "label":{
+              "fr":"Centrer",
+              "es":"Center",
+              "en":"Center"
+            },
+            "default":false
+        },
+        {
+            "type":"text",
+            "id":"block_padding",
+            "label":"Espacements intérieur"
+        },
+        {
+            "type":"text",
+            "id":"block_margin",
+            "label":"Espacements extérieur"
+        },
+        {
+            "type":"header",
+            "content":{
+              "fr":"Format Mobile",
+              "es":"Layout (Mobile)",
+              "en":"Layout (Mobile)"
+            }
+        },
+          {
+            "type":"checkbox",
+            "id":"block_center_sm",
+            "label":{
+              "fr":"Centrer",
+              "es":"Center",
+              "en":"Center"
+            },
+            "default":false
+        },
+        {
+            "type":"text",
+            "id":"block_padding_sm",
+            "label":"Espacements intérieur"
+        },
+        {
+            "type":"text",
+            "id":"block_margin_sm",
+            "label":"Espacements extérieur"
+        },         
+        {
+            "type":"header",
+            "content":{
+              "fr":"Personnalisation avancée",
+              "es":"Advanced CSS",
+              "en":"Advanced CSS"
+            }
+        },
+        {
+            "type":"text",
+            "id":"class",
+            "label":"CSS Class"
+        },
+        {
+            "type":"text",
+            "id":"id",
+            "label":"CSS Id"
+        }
+      ]
+  }
+  ]
+}
+{% endschema %}

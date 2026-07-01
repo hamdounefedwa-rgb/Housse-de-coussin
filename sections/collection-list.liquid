@@ -1,0 +1,1244 @@
+<link rel="stylesheet" href="{{ 'section-collection-list.min.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<div class="{% if section.settings.section_spaced %}section-spaced{% endif %}  
+  {% unless section.settings.block_color_enable %}color-scheme {{ section.settings.color_scheme }}{% endunless %} 
+  section-id-{{ section.id }} wow fadeIn " 
+  id="{{ section.settings.id }}" 
+  data-wow-duration="{{ settings.wow_effects_duration }}s" 
+  data-wow-delay="{{ settings.wow_effects_delay }}s">
+
+  <div class="{% if section.settings.full_page %} wrapper-full-page {% else %} wrapper{% endif %}">
+	
+  {% if section.settings.title_show %}
+  <div class="section-header section-header--layout-{{ section.settings.title_layout }}"> 
+    <{{ section.settings.title_hn }} class="h1 section-title text-center">{{ section.settings.title }}</{{ section.settings.title_hn }}>    
+  </div>
+  {% endif %}
+    
+  <div class="grid-uniform collection-list {% if section.settings.grid_scroll %} scroll-x {% endif %}
+    {% if section.settings.desktop_layout != 'normal' %} desktop_layout {% endif %} desktop_layout-{{ section.settings.desktop_layout }}  text-center collection-position-title-{{ section.settings.collections_list_placement_title }}" {% if section.settings.custom_section %}{% if section.settings.section_width_full %} style="max-width:100%;"{% endif %}{% endif %}>
+    {%- assign page_width = settings.page_width | replace: "px", "" -%}
+    {% if section.blocks.size > 0 %} 
+    
+    {% for block in section.blocks %}    
+
+      {%- liquid
+      case block.settings.width
+
+      when '25%'
+      assign size = page_width | divided_by: 4
+      assign image_size = size | minus: 20
+      assign block_width = 'one-quarter' 
+  
+      when '33%'    
+        assign size = page_width | divided_by: 3
+        assign image_size = size | minus: 20
+        assign block_width = 'one-third'
+  
+      when '50%'
+        assign size = page_width | divided_by: 2
+        assign image_size = size | minus: 20
+        assign block_width = 'one-half'  
+
+      when '66%'
+        assign size = page_width
+        assign image_size = size | minus: 20
+        assign block_width = 'two-thirds' 
+
+      when '75%'
+        assign size = page_width
+        assign image_size = size | minus: 20
+        assign block_width = 'three-quarters' 
+
+      when '100%'   
+        assign size = page_width
+        assign image_size = size | minus: 20
+        assign block_width = 'one-whole' 
+      endcase
+
+      if section.settings.desktop_layout == "left" or section.settings.desktop_layout == "right"
+        assign image_size = page_width
+      endif  
+
+      case block.settings.width_sm
+      when '33%'
+        assign block_width_sm = 'small--one-third'      
+        assign size_sm = 360 | divided_by: 3 
+        assign image_size_sm = size_sm | minus: 20
+      when '50%'
+        assign block_width_sm = 'small--one-half'      
+        assign size_sm = 360 | divided_by: 2 
+        assign image_size_sm = size_sm | minus: 20
+      when '100%'
+        assign block_width_sm = 'small--one-whole'
+        assign size_sm = 360  
+        assign image_size_sm = size_sm | minus: 20
+      endcase
+     
+      assign featured = block.settings.collection
+
+    -%}
+    
+    {% render 'featured-collection', desktop_layout: section.settings.desktop_layout, featured: featured, section: section, block: block, block_width: block_width, block_width_sm: block_width_sm, image_size: image_size, image_size_sm: image_size_sm %}
+    
+    {% endfor %}   
+    
+    {% else %}
+
+    <div class="grid-item ">
+      <p class="text-center">{{ 'homepage.featured_collections.no_collections_html' | t }}</p>
+    </div>    
+    {% endif %}                                       
+   
+  </div>
+
+  {% if section.settings.btn_show %}
+    <div class="section-btns"> <a href="/collections" class="btn {{ section.settings.btn_scheme }}">{{ 'homepage.featured_collections.more_categories' | t }}</a></div>
+  {% endif %}
+
+  </div>
+</div>   
+
+{% render 'section-custom-css', elem: section %}
+{% render 'section-collection-list-custom-css', elem: section %}
+                                           
+{% schema %}
+{
+  "name": {
+    "fr": "Liste des collections",
+    "es": "Lista de colecciones",
+    "en": "List of collections"
+  },
+  "class": "collection-list-section",
+  "max_blocks": 50,
+  "blocks" : [
+    {
+      "type": "collection",      
+      "name": {
+        "fr": "Collection",
+        "es": "Colección",
+        "en": "Collection"
+      },
+      "settings": [
+        {
+          "id": "collection",
+          "type": "collection",          
+          "label": {
+            "fr": "Collection",
+            "es": "Colección",
+            "en": "Collection"
+          },          
+          "info": {
+            "fr": "Image recommandée 600x600",
+            "es": "Talla de imagen recomendada 600x600",
+            "en": "Recommended image 600x600"
+          }
+          
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": {
+            "fr": "Reprendre la main sur l'image par default",
+            "es": "Will replace the default collection image",
+            "en": "Will replace the default collection image"
+          }          
+        }, 
+        
+         {
+          "type":"select",
+          "id":"width",
+          "label":{
+            "fr":"Largeur de la zone (desktop)",
+            "es":"Anchura de la zona (desktop)",
+            "en":"Zone width (desktop)"
+          },
+          "default":"33%",
+          "options":[
+            {
+              "value":"25%",
+              "label":"25%"
+            },
+            {
+              "value":"33%",
+              "label":"33%"
+            },
+            {
+              "value":"50%",
+              "label":"50%"
+            },
+            {
+              "value":"66%",
+              "label":"66%"
+            },
+            {
+              "value":"75%",
+              "label":"75%"
+            },
+            {
+              "value":"100%",
+              "label":"100%"
+            }
+          ]
+        },
+        {
+          "type":"select",
+          "id":"width_sm",
+          "label":{
+            "fr":"Largeur de la zone (mobile)",
+            "es":"Anchura de la zona (mobile)",
+            "en":"Zone width (mobile)" 
+          },
+          "default":"50%",
+          "options":[  
+            {
+              "value":"33%",
+              "label":"33%"
+            },          
+            {
+              "value":"50%",
+              "label":"50%"
+            },            
+            {
+              "value":"100%",
+              "label":"100%"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "settings": [
+      {
+        "type": "paragraph",
+        "content": {
+          "fr": "[Tutoriel vidéo](https://youtu.be/V6gJ1xV_WlU)",
+          "es": "[Video tutorial](https://youtu.be/bswiUWAsoao)",
+          "en": "[Video tutorial](https://youtu.be/bswiUWAsoao)"
+        }
+      },
+      {
+        "type":"checkbox",
+        "id":"title_show",
+        "label":{
+          "fr":"Afficher le titre",
+          "es":"Enable title",
+          "en":"Enable title"
+        },
+        "default":false
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": {
+          "fr": "Titre de la section",
+          "es": "Título de la sección",
+          "en": "Section title"
+        },
+        "default": {
+          "fr": "Nos collections",
+          "es": "Collections",
+          "en": "Collections"
+        }
+      },
+      {
+        "type": "select",
+        "id": "title_hn",
+        "label": {
+          "fr": "Balise Hn (SEO)",
+          "es": "Hn tag of section title (SEO)",
+          "en": "Hn tag of section title (SEO)"
+        },
+        "default": "h2",
+        "options": [
+          {
+            "value": "h2",
+            "label": "h2"
+          },
+          {
+            "value": "h3",
+            "label": "h3"
+          },
+          {
+            "value": "h4",
+            "label": "h4"
+          },
+          {
+            "value": "h5",
+            "label": "h5"
+          },
+          {
+            "value": "h6",
+            "label": "h6"
+          },
+      {
+            "value": "p",
+            "label": "p"
+          },
+          {
+            "value": "div",
+            "label": "div"
+          }
+        
+        ]
+      },
+      
+       {
+        "type":"checkbox",
+        "id":"btn_show",
+        "label":{
+          "fr":"Afficher le bouton toutes nos collections",
+          "es":"Enable button All collections",
+          "en":"Enable button All collections"
+        },
+        "default":false
+      },
+  
+      
+      
+  {
+    "type":"header",
+    "content":{
+      "fr":"Collection",
+      "es":"Collection",
+      "en":"Collection"
+    }
+  },
+  {
+    "type": "select",
+    "id": "block_title_hn",
+    "label": {
+      "fr": "Balise Hn des titres des collections (SEO)",
+      "es": "Hn tag of collections titles (SEO)",
+      "en": "Hn tag of collections titles (SEO)"
+    },
+    "default": "div",
+    "options": [
+      {
+        "value": "h2",
+        "label": "h2"
+      },
+      {
+        "value": "h3",
+        "label": "h3"
+      },
+      {
+        "value": "h4",
+        "label": "h4"
+      },
+      {
+        "value": "h5",
+        "label": "h5"
+      },
+      {
+        "value": "h6",
+        "label": "h6"
+      },
+      {
+        "value": "p",
+        "label": "p"
+      },
+      {
+        "value": "div",
+        "label": "div"
+      }
+    ]
+  },
+  {
+    "type": "select",
+    "id": "collections_list_placement_title",
+    "label": {
+      "fr": "Position des titres des collections",
+      "es": "Colocación del nombre de la colección",
+      "en": "Collection titles position"
+    },
+    "default": "0",
+    "options": [
+      {
+        "value": "5",          
+        "label": {
+          "fr": "Haut centré",
+          "es": "Top center",
+          "en": "Top center"
+        }
+      },
+      {
+        "value": "0",          
+        "label": {
+          "fr": "Milieu centré",
+          "es": "Imagen en el centro",
+          "en": "Middle center"
+        }
+      },
+      {
+        "value": "6",          
+        "label": {
+          "fr": "Bas centré",
+          "es": "Bottom center",
+          "en": "Bottom center"
+        }
+      },
+      {
+        "value": "3",          
+        "label": {
+          "fr": "Haut à gauche",
+          "es": "Top left",
+          "en": "Top left"
+        }
+      },
+      {
+        "value": "4",          
+        "label": {
+          "fr": "Haut à droite",
+          "es": "Top right",
+          "en": "Top right"
+        }
+      },
+      {
+        "value": "7",          
+        "label": {
+          "fr": "Bas à gauche",
+          "es": "Bottom left",
+          "en": "Bottom left"
+        }
+      },
+      {
+        "value": "8",          
+        "label": {
+          "fr": "Bas à droite",
+          "es": "Bottom right",
+          "en": "Bottom right"
+        }
+      },
+      
+      {
+        "value": "1",          
+        "label": {
+          "fr": "En bas image",
+          "es": "Imagen en la parte inferior ",
+          "en": "Below the image"
+        }
+      },
+      {
+        "value": "2",          
+        "label": {
+          "fr": "Invisible",
+          "es": "Invisible",
+          "en": "Invisible"
+        }
+      }                         
+    ]
+  },
+  {
+    "type":"header",
+    "content":{
+      "fr":"Mise en forme",
+      "es":"Layout",
+      "en":"Layout"
+    }
+  },
+ 
+  {
+    "type":"text",
+    "id":"block_image_radius_v2",     
+    "label":{
+      "fr":"Arrondi de l'image",
+      "es":"Rounded corners on image",
+      "en":"Rounded corners on image"
+    },
+    "default":"0px",
+    "info":"px or % (50% = perfect circle)"
+  }, 
+   {
+      "type": "range",
+      "id": "block_title_radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": {
+        "fr": "Arrondi du titre",
+        "es": "Rounded corners on title",
+        "en": "Rounded corners on title"
+      },
+      "default": 0
+   },
+   {
+      "type": "range",
+      "id": "block_title_rotate",
+      "min": 0,
+      "max": 90,
+      "step": 1,
+      "unit": "deg",
+      "label": {
+        "fr": "Rotation du titre",
+        "es": "Rotation of title",
+        "en": "Rotation of title"
+      },
+      "default": 0
+   },
+   {
+    "type":"select",
+    "id":"desktop_layout",
+    "label":{
+      "fr":"Templates",
+      "es":"Templates",
+      "en":"Templates"
+    },
+    "default":"normal",
+    "options":[
+      {
+        "value":"normal",          
+      "label":{
+          "fr":"Normal",
+          "es":"Normal",
+          "en":"Normal"
+        }
+      },
+      {
+        "value":"right",          
+        "label":{
+          "fr":"2 images à gauche + 1 image à droite",
+          "es":"2 images on the left + 1 image on the right",
+          "en":"2 images on the left + 1 image on the right"
+        }
+      },
+      {
+        "value":"left",          
+        "label":{
+          "fr":"1 image à gauche + 2 images à droite",
+          "es":"1 image on the left + 2 images on the right",
+          "en":"1 image on the left + 2 images on the right"
+        }
+      }      
+    ]
+  },  
+  {
+    "type": "checkbox",
+    "id": "grid_scroll",
+    "label": {
+      "fr": "Défilement Horizontal sur mobile",
+      "es": "Horizontal scroll (mobile)",
+      "en": "Horizontal scroll (mobile)"
+    },
+    "info": {
+      "fr": "Uniformiser les tailles des conteneurs des collections",
+      "es": "Standardize collections container sizes",
+      "en": "Standardize collections container sizes"
+    }
+  },
+   {
+    "type": "checkbox",
+    "id": "full_page",
+    "label": {
+      "fr": "Pleine page",
+      "es": "Full page",
+      "en": "Full page"
+    },
+    "default": false
+  },  
+  {
+     "type":"checkbox",
+     "id":"section_spaced",       
+     "label":{
+        "fr":"Espacer la section - Haut",
+        "es":"Add space - Above the section",
+        "en":"Add space - Above the section"
+     },
+     "default":true
+  },
+  {
+    "type": "select",
+    "id": "title_layout",
+    "label": {
+      "fr": "Modèle de titre",
+      "es": "Title layout",
+      "en": "Title layout"
+    },
+    "default": "1",
+    "options": [
+      {
+        "value": "0",
+        "label": {
+          "fr": "Modèle 1",
+          "es": "Layout 1",
+          "en": "Layout 1"
+        }
+      },
+      {
+        "value": "1",
+        "label": {
+          "fr": "Modèle 2",
+          "es": "Layout 2",
+          "en": "Layout 2"
+        }
+      },
+      {
+        "value": "2",
+        "label": {
+          "fr": "Modèle 3",
+          "es": "Layout 3",
+          "en": "Layout 3"
+        }
+      }
+     ]
+  },
+  {
+    "type": "select",
+    "id": "color_scheme",
+    "label": {
+      "fr": "Combinaison de couleurs",
+      "es": "Color combinations",
+      "en": "Color combinations"
+    },
+    "default": "color-scheme-none",
+    "options": [
+      {
+        "value": "color-scheme-none",
+        "label": {
+          "fr": "Sans",
+          "es": "None",
+          "en": "None"
+        }
+      },
+      {
+        "value": "color-scheme-1",
+        "label": {
+          "fr": "Combinaison 1",
+          "es": "Combination 1",
+          "en": "Combination 1"
+        }
+      },
+       {
+        "value": "color-scheme-2",
+        "label": {
+          "fr": "Combinaison 2",
+          "es": "Combination 2",
+          "en": "Combination 2"
+        }
+      },
+       {
+        "value": "color-scheme-3",
+        "label": {
+          "fr": "Combinaison 3",
+          "es": "Combination 3",
+          "en": "Combination 3"
+        }
+      },
+      {
+        "value": "color-scheme-inverse",
+        "label": {
+          "fr": "Inversé",
+          "es": "Inverted",
+          "en": "Inverted"
+        }
+      }
+    ]
+  }, 
+  {
+    "type": "select",
+    "id": "btn_scheme",
+    "label": {
+      "fr": "Style du bouton",
+      "es": "Button style",
+      "en": "Button style"
+    },
+    "default": "btn-primary",
+    "options": [
+    {
+      "value": "btn-inherit",        
+      "label": {
+        "fr": "Hérité",
+        "es": "Inherited",
+        "en": "Inherited"
+      }
+    },
+    {
+      "value": "btn-primary",        
+      "label": {
+        "fr": "Principal",
+        "es": "Primary",
+        "en": "Primary"
+      }
+    },
+    {
+      "value": "btn-secondary",        
+      "label": {
+        "fr": "Secondaire",
+        "es": "Secondary",
+        "en": "Secondary"
+      }
+    },
+    {
+      "value": "btn-third",
+      "label": {
+        "fr": "Transparent",
+        "es": "Transparent",
+        "en": "Transparent"
+      }        
+    }
+    ]
+  }, 
+     
+      {
+        "type": "header",
+        "content": {
+          "fr": "Personnalisation des couleurs",
+          "es": "Color customization",
+          "en": "Color customization"
+        }
+      },
+      {
+        "type": "paragraph",
+        "content": {
+          "fr": "[Tutoriel vidéo](https://youtu.be/mX5vrnrv4_I)",
+          "es": "[Video tutorial](https://youtu.be/mX5vrnrv4_I)",
+          "en": "[Video tutorial](https://youtu.be/mX5vrnrv4_I)"
+        }
+      },
+      {
+        "type": "paragraph",
+        "content": {
+        "fr": "Reprend la main sur les paramètres génériques du thème",
+        "es": "Will replace the generic customization from theme settings",
+        "en": "Will replace the generic customization from theme settings"
+        }
+      },
+      
+      {
+        "type": "header",
+        "content": {
+            "fr": "Section",
+            "es": "Section",
+            "en": "Section"
+        }
+      },
+      
+      {
+        "type": "checkbox",
+        "id": "block_color_enable",
+        "label": {
+          "fr": "Activer",
+          "es": "Activate",
+          "en": "Activate"
+        },
+        "default": false
+      },
+      
+     
+      {
+        "type":"color",
+        "id":"block_bgcolor",
+        "label":{
+          "fr":"Fond de la section",
+          "es":"Section background color",
+          "en":"Section background color"
+        },
+        "default":"#F0F0F0"
+      },
+      
+      {
+        "type":"image_picker",
+        "id":"block_image",
+        "label":{
+          "fr":"Image de fond (optionnel)",
+          "es":"Background image (optional)",
+          "en":"Background image (optional)"
+        },
+        "info":"1900px Min"
+      },
+      {
+        "type":"checkbox",
+        "id":"section_parallax",
+        "label":{
+          "fr":"Effet parallax",
+          "es":"Parallax effect",
+          "en":"Parallax effect"
+        },
+        "default":false
+      },
+      {
+        "type":"checkbox",
+        "id":"block_bgcolor_gradient",
+        "label":{
+          "fr":"Activer la prise en charge du dégradé",
+          "es":"Enable gradient",
+          "en":"Enable gradient"
+        },
+        "default":false
+      },
+      {
+        "type":"range",
+        "id":"block_bgcolor_gradient_direction",
+        "min":0,
+        "max":180,
+        "step":2,
+        "unit":"deg",
+        "label":{
+          "fr":"Sens du dégradé",
+          "es":"Gradient direction",
+          "en":"Gradient direction"
+        },
+        "default":90
+      },
+      {
+        "type":"color",
+        "id":"block_bgcolor_gradient_1",
+        "label":{
+          "fr":"Fond - Couleur 1",
+          "es":"Background - Color 1",
+          "en":"Background - Color 1"
+        },
+        "default":"#F0F0F0"
+      },
+      {
+        "type":"color",
+        "id":"block_bgcolor_gradient_2",
+        "label":{
+          "fr":"Fond - Couleur 2",
+          "es":"Background - Color 2",
+          "en":"Background - Color 2"
+        },
+        "default":"#333333"
+      },
+      {
+        "type":"range",
+        "id":"block_bgcolor_gradient_1_percent_2",
+        "min":0,
+        "max":100,
+        "step":1,
+        "unit":"%",
+        "label":{
+          "fr":"Proportion des couleurs",
+          "es":"Color ratio",
+          "en":"Color ratio"
+        },
+        "default":0
+      },
+      {
+        "type":"range",
+        "id":"block_bgcolor_gradient_1_percent_1",
+        "min":0,
+        "max":100,
+        "step":1,
+        "unit":"%",
+        "label":{
+          "fr":"Début du flou",
+          "es":"Blur beginning",
+          "en":"Blur beginning"
+        },
+        "default":0
+      },
+      {
+        "type":"range",
+        "id":"block_bgcolor_gradient_2_percent_1",
+        "min":0,
+        "max":100,
+        "step":1,
+        "unit":"%",
+        "label":{
+          "fr":"Fin du flou ",
+          "es":"Blur ending",
+          "en":"Blur ending"
+        },
+        "default":100
+      },
+      {
+        "type":"color",
+        "id":"section_shadow_color",
+        "label":{
+          "fr":"Ombre de la section",
+          "es":"Shadow color of the section",
+          "en":"Shadow color of the section"
+        },
+       
+        "default":"#000000"
+      },
+      {
+        "type":"range",
+        "id":"section_shadow_opacity",
+        "min":0,
+        "max":1,
+        "step":0.1,
+        "unit":"deg",
+        "label":{
+          "fr":"Degré d'opacité de la section",
+          "es":"Opacity of the section",
+          "en":"Opacity of the section"
+        },
+        "default":0.2
+      },
+      {
+        "type":"range",
+        "id":"section_shadow_size",
+        "min":0,
+        "max":100,
+        "step":1,
+        "unit":"px",
+        "label":{
+          "fr":"Taille de l'ombre de la section",
+          "es":"Shadow size of the section",
+          "en":"Shadow size of the section"
+        },
+        "default":0
+      },
+      {
+         "type":"color",
+         "id":"block_shadow_color",       
+         "label":{
+            "fr":"Ombre de l'image",
+            "es":"Shadow color of the image",
+            "en":"Shadow color of the image"
+         },
+         "default":"#000000"
+       },
+       {
+          "type": "range",
+          "id": "block_shadow_opacity",
+          "min": 0,
+          "max": 1,
+          "step": 0.1,
+          "unit": "deg",
+          "label": {
+            "fr": "Degré d'opacité de l'image",
+            "es": "Opacity of the image",
+            "en": "Opacity of the image"
+          },
+          "default": 0.2
+       },
+       {
+          "type": "range",
+          "id": "block_shadow_size",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": {
+            "fr": "Taille de l'ombre",
+            "es": "Shadow size and image area",
+            "en": "Shadow size and image area"
+          },
+          "info": {
+            "fr": "Décalage automatique de l'image pour permettre l'affichage de l'ombrage",
+            "es": "Automatically offsets the image to allow shading to be displayed",
+            "en": "Automatically offsets the image to allow shading to be displayed"
+          },
+          "default": 0
+       },
+
+       {
+        "type": "header",
+        "content": {
+            "fr": "Contenu",
+            "es": "Content",
+            "en": "Content"
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "colors_product_content",
+        "label": {
+          "fr": "Activer",
+          "es": "Activate",
+          "en": "Activate"
+        },
+        "default": false
+      },
+
+      {
+        "type": "color",
+        "id": "section_collection_color",
+        "label": {
+          "fr": "Texte Titres des collections",
+          "es": "Color del texto de las colecciones",
+          "en": "Collections text color"
+        },
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "section_collection_bgcolor",
+        "label": {
+          "fr": "Fond Titres des collections",
+          "es": "Fondo de los textos de la colección",
+          "en": "Collections text background color"
+        },
+        "default": "#111"
+      }, 
+      {
+        "type": "color",
+        "id": "section_collection_color_hover",
+        "label": {
+          "fr": "Survol Texte Titres des collections",
+          "es": "Hover Color del texto de las colecciones",
+          "en": "Hover Collections text color"
+        },
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "section_collection_bgcolor_hover",
+        "label": {
+          "fr": "Survol Fond Titres des collections",
+          "es": "Hover Fondo de los textos de la colección",
+          "en": "Hover Collections text background color"
+        },
+        "default": "#111"
+      },    
+      {
+        "type":"range",
+        "id":"section_collection_bgcolor_opacity",
+        "min":0,
+        "max":1,
+        "step":0.1,
+        "unit":"deg",
+        "label":{
+          "fr":"Degré d'opacité",
+          "es":"Title Opacity",
+          "en":"Title Opacity"
+        },
+        "default":0.8
+      }, 
+
+      {
+        "type": "header",
+        "content": {
+          "fr": "Personnalisation des tailles",
+          "es": "Size customization",
+          "en": "Size customization"
+        }
+      },
+      {
+        "type": "paragraph",
+        "content": {
+          "fr": "[Tutoriel vidéo](https://youtu.be/ovHmpm105x8)",
+          "es": "[Video tutorial](https://youtu.be/ovHmpm105x8)",
+          "en": "[Video tutorial](https://youtu.be/ovHmpm105x8)"
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "block_size_enable",
+        "label": {
+          "fr": "Activer",
+          "es": "Activate",
+          "en": "Activate"
+        },
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": {
+          "fr": "Format Bureau",
+          "es": "Layout (Desktop)",
+          "en": "Layout (Desktop)"
+        }
+      },  
+      
+      
+      
+      {
+        "type":"range",
+        "id":"block_title_size",
+        "min":0,
+        "max":60,
+        "step":1,
+        "unit":"px",
+        "label":{
+          "fr":"Taille du titre de la section",
+          "es":"Font size of section title",
+          "en":"Font size of section title"
+        },
+        "default":21
+      },
+      {
+        "type":"range",
+        "id":"block_collection_title_size",
+        "min":0,
+        "max":60,
+        "step":1,
+        "unit":"px",
+        "label":{
+          "fr":"Taille des titres des collections",
+          "es":"Font size of collections titles",
+          "en":"Font size of collections titles"
+        },
+        "default":21
+      },
+      
+      {
+        "type": "header",
+        "content": {
+          "fr": "Format Mobile",
+          "es": "Layout (Mobile)",
+          "en": "Layout (Mobile)"
+        }
+      },
+      {
+        "type":"range",
+        "id":"block_title_size_sm",
+        "min":10,
+        "max":60,
+        "step":1,
+        "unit":"px",
+        "label":{
+          "fr":"Taille du titre de la section",
+          "es":"Font size of section title",
+          "en":"Font size of section title"
+        },
+        "default":21
+      },
+      {
+        "type":"range",
+        "id":"block_collection_title_size_sm",
+        "min":10,
+        "max":60,
+        "step":1,
+        "unit":"px",
+        "label":{
+          "fr":"Taille des titres des collections",
+          "es":"Font size of collections titles",
+          "en":"Font size of collections titles"
+        },
+        "default":21
+      },
+      
+      {
+        "type": "header",
+        "content": {
+          "fr": "Personnalisation de la disposition",
+          "es": "Spacing customization",
+          "en": "Spacing customization"
+        }
+      },
+      {
+        "type": "paragraph",
+        "content": {
+          "fr": "[Tutoriel vidéo](https://youtu.be/LLS1yEwaPsw)",
+          "es": "[Video tutorial](https://youtu.be/LLS1yEwaPsw)",
+          "en": "[Video tutorial](https://youtu.be/LLS1yEwaPsw)"
+        }
+      },
+      {
+        "type": "paragraph",
+        "content": {
+          "fr": "Les espacements sont séparés par des espaces avec 4 valeurs maximales - Haut Droit Bas Gauche - L'unité peut être le rem, px, % - Exemple: 20px 0px 20px 20px - [En savoir plus](https://developer.mozilla.org/fr/docs/Web/CSS/padding) ",
+          "es": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)",
+          "en": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)"
+          }
+      },
+      {
+        "type": "checkbox",
+        "id": "block_spacing_enable",
+        "label": {
+          "fr": "Activer",
+          "es": "Activate",
+          "en": "Activate"
+        },
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "section_max_width",
+        "label": {
+          "fr": "Longueur max (% ou px)",
+          "es": "Max width (% ou px)",
+          "en": "Max width (% or px)"
+        }
+      },
+      {
+        "type": "header",
+        "content": {
+          "fr": "Format Bureau",
+          "es": "Layout (Desktop)",
+          "en": "Layout (Desktop)"
+        }
+      },
+      {
+        "type": "text",
+        "id": "block_padding",
+        "label": {
+        "fr": "Espacements intérieur",
+        "es": "Interior Spacing",
+        "en": "Interior Spacing"
+      }
+      },
+      {
+        "type": "text",
+        "id": "block_margin",
+        "label": {
+        "fr": "Espacements extérieur",
+        "es": "Exterior Spacing",
+        "en": "Exterior Spacing"
+      }
+      },
+      {
+        "type": "header",
+        "content": {
+          "fr": "Format Mobile",
+          "es": "Layout (Mobile)",
+          "en": "Layout (Mobile)"
+        }
+      },
+      {
+        "type": "text",
+        "id": "block_padding_sm",
+        "label": {
+        "fr": "Espacements intérieur",
+        "es": "Interior Spacing",
+        "en": "Interior Spacing"
+      }
+      },
+      {
+        "type": "text",
+        "id": "block_margin_sm",
+        "label": {
+        "fr": "Espacements extérieur",
+        "es": "Exterior Spacing",
+        "en": "Exterior Spacing"
+      }
+      },
+      {
+        "type": "header",
+        "content": {
+          "fr": "Personnalisation avancée",
+          "es": "Advanced CSS",
+          "en": "Advanced CSS"
+        }
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "CSS Class"
+      },
+      {
+        "type": "text",
+        "id": "id",
+        "label": "CSS Id"
+      }
+    ],
+    "presets": [
+      {      
+        "name": {
+          "fr": "Liste des collections",
+          "es": "Lista de colecciones",
+          "en": "List of collections"
+        },
+        
+        "category": {
+          "fr": "Liste d'éléments",
+          "es": "Lista de elementos",
+          "en": "List of items"
+        },
+        "blocks" : [
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          }
+        ]
+      }
+    ]
+}
+{% endschema %}

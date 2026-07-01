@@ -1,0 +1,456 @@
+<div class="section-id-{{ section.id }} {% if section.settings.section_spaced %}section-spaced{% endif %} {% unless section.settings.full_page %}wrapper {% endunless %}
+  videos-content {% unless section.settings.block_color_enable %}color-scheme {{ section.settings.color_scheme }}{% endunless %} {{ section.settings.class }}
+  {% unless section.settings.full_page %}wrapper {% endunless %}" 
+  id="{{ section.settings.id }}"  
+  data-section-id="{{ section.id }}" 
+  data-section-type="video">        
+  <div class="{% if section.settings.video_url_internal == "" %}video-wrapper{% endif %}">
+    {% if section.settings.video_url_internal != "" %}
+    <video width="100%" height="100%" loading="lazy" controls controlsList="nodownload" onclick="this.play()" src="{{ section.settings.video_url_internal }}" {% if section.settings.video_autoplay == true %}playsinline autoplay="true"{% endif %}></video>
+    {% else %}
+
+    {% unless section.settings.video_url == blank %}
+
+    {% if section.settings.video_url.type == "youtube" %}
+    <iframe loading="lazy" title="Vidéo youtube" src="//www.youtube.com/embed/{{ section.settings.video_url.id }}?rel=0&showinfo=0&vq=720{% if section.settings.video_autoplay == true %};autoplay=1{% endif %}" width="850" height="480" frameborder="0" allowfullscreen></iframe>
+    {% endif %}
+    {% if section.settings.video_url.type == "vimeo" %}
+    <iframe loading="lazy" title="Vidéo viméo" src="//player.vimeo.com/video/{{ section.settings.video_url.id }}?byline=0&portrait=0&badge=0{% if section.settings.video_autoplay == true %};autoplay=1{% endif %}" width="850" height="480" frameborder="0" allowfullscreen></iframe>
+    {% endif %}
+    {% endunless %}
+
+    {% endif %}    
+
+    {% if section.settings.video_url_internal == "" and section.settings.video_url == blank %}
+      <iframe src="https://www.youtube.com/embed/_9VUPq3SxOc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>    
+    {% endif %}
+
+  </div>
+</div>
+
+{% render 'section-custom-css', elem: section %}
+
+{% schema %}
+ 
+{
+
+  "name": {
+    "fr": "Vidéo",
+    "es": "Vídeo",
+    "en": "Video"
+  },
+ 
+ "settings":[  
+ {
+  "type": "paragraph",
+  "content": {
+    "fr": "[Tutoriel vidéo](https://youtu.be/noJVHbrvulk)",
+    "es": "[Video tutorial](https://youtu.be/ShZ_pk-R8A0)",
+    "en": "[Video tutorial](https://youtu.be/ShZ_pk-R8A0)"
+  }
+},
+    {
+      "type":"header",
+      "content": {
+        "fr": "Important",
+        "es": "Important",
+        "en": "Important"
+      }
+    }, 
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "Certaines options nécessitent de cliquer sur Enregistrer afin de voir le changement",
+        "es": "Some options require clicking on Save to see the change",
+        "en": "Some options require clicking on Save to see the change"
+      }    
+    },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "default": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc",
+      "label": {           
+        "fr": "Lien YouTube ou Vimeo",
+        "es": "Enlace YouTube o Vimeo",
+        "en": "Youtube or Vimeo link"
+      },
+      "accept": ["youtube", "vimeo"]       
+    },    
+    {
+      "type": "text",
+      "id": "video_url_internal",
+      "label": {
+        "fr": "Lien de la vidéo interne",
+        "es": "Enlace del video interno",
+        "en": "Internal video link"
+      }          
+    },
+    {
+      "type": "checkbox",
+      "id": "video_autoplay",
+      "label": {
+        "fr": "Lancer la vidéo directement (selon navigateurs)",
+        "es": "Iniciar el vídeo directamente (dependiendo de los navegadores)",
+        "en": "Autoplay video (depending on browsers)"
+      }
+    }, 
+    {
+       "type":"header",       
+       "content":{
+          "fr":"Mise en forme",
+          "es":"Content",
+          "en":"Content"
+       }
+    },
+    {
+      "type": "checkbox",
+      "id": "full_page",
+      "label": {
+        "fr": "Pleine page",
+        "es": "Full page",
+        "en": "Full page"
+      },
+      "default": false
+    },  
+    {
+       "type":"checkbox",
+       "id":"section_spaced",       
+       "label":{
+          "fr":"Espacer la section - Haut",
+          "es":"Add space - Above the section",
+          "en":"Add space - Above the section"
+       },
+       "default":true
+    },       
+   
+    {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation des couleurs",
+        "es": "Color customization",
+        "en": "Color customization"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "[Tutoriel vidéo](https://youtu.be/mX5vrnrv4_I)",
+        "es": "[Video tutorial](https://youtu.be/j8md1egrR_4)",
+        "en": "[Video tutorial](https://youtu.be/j8md1egrR_4)"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+      "fr": "Reprend la main sur les paramètres génériques du thème",
+      "es": "Will replace the generic customization from theme settings",
+      "en": "Will replace the generic customization from theme settings"
+      }
+    },
+
+    {
+      "type": "header",
+      "content": {
+          "fr": "Section",
+          "es": "Section",
+          "en": "Section"
+      }
+    },
+
+    {
+      "type": "checkbox",
+      "id": "block_color_enable",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },     
+     {
+       "type":"color",
+       "id":"block_bgcolor",       
+       "label":{
+          "fr":"Couleur de fond",
+          "es":"Background color",
+          "en":"Background color"
+       },
+       "default":"#ffffff"
+     },
+     {
+       "type":"image_picker",
+       "id":"block_image",       
+       "label":{
+          "fr":"Image de fond (optionnel)",
+          "es":"Background image (optional)",
+          "en":"Background image (optional)"
+       },
+       "info":"1900px Min"
+     },
+     {
+       "type":"checkbox",
+       "id":"section_parallax",      
+       "label":{
+          "fr":"Effet parallax",
+          "es":"Parallax effect",
+          "en":"Parallax effect"
+       },
+       "default":false
+     },
+     {
+       "type":"checkbox",
+       "id":"block_bgcolor_gradient",       
+       "label":{
+          "fr":"Activer la prise en charge du dégradé",
+          "es":"Enable gradient",
+          "en":"Enable gradient"
+       },
+       "default":false
+     },
+	   {
+        "type": "range",
+        "id": "block_bgcolor_gradient_direction",
+        "min": 0,
+        "max": 180,
+        "step": 2,
+        "unit": "deg",
+        "label": {
+          "fr": "Sens du dégradé",
+          "es": "Gradient direction",
+          "en": "Gradient direction"
+        },
+        "default": 90
+     },
+     {
+       "type":"color",
+       "id":"block_bgcolor_gradient_1",       
+       "label":{
+          "fr":"Fond - Couleur 1",
+          "es":"Background - Color 1",
+          "en":"Background - Color 1"
+       },
+       "default":"#F0F0F0"
+     },     
+     {
+       "type":"color",
+       "id":"block_bgcolor_gradient_2",       
+       "label":{
+          "fr":"Fond - Couleur 2",
+          "es":"Background - Color 2",
+          "en":"Background - Color 2"
+       },
+       "default":"#333333"
+     },
+     {
+        "type": "range",
+        "id": "block_bgcolor_gradient_1_percent_2",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "label": {
+          "fr": "Proportion des couleurs",
+          "es": "Color ratio",
+          "en": "Color ratio"
+        },
+        "default": 0
+     },
+     {
+        "type": "range",
+        "id": "block_bgcolor_gradient_1_percent_1",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "label": {
+          "fr": "Début du flou",
+          "es": "Blur beginning",
+          "en": "Blur beginning"
+        },
+        "default": 0
+     },
+     {
+        "type": "range",
+        "id": "block_bgcolor_gradient_2_percent_1",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "label": {
+          "fr": "Fin du flou ",
+          "es": "Blur ending",
+          "en": "Blur ending"
+        },
+        "default": 100
+     }, 
+     {
+       "type":"color",
+       "id":"section_shadow_color",       
+       "label":{
+          "fr":"Ombre de la section",
+          "es":"Shadow color of the section",
+          "en":"Shadow color of the section"
+       },
+       "default":"#000000"
+     },
+     {
+        "type": "range",
+        "id": "section_shadow_opacity",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "unit": "deg",
+        "label": {
+          "fr": "Degré d'opacité de la section",
+          "es": "Opacity of the section",
+          "en": "Opacity of the section"
+        },
+        "default": 0.2
+     },
+     {
+        "type": "range",
+        "id": "section_shadow_size",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": {
+          "fr": "Taille de l'ombre de la section",
+          "es": "Shadow size of the section",
+          "en": "Shadow size of the section"
+        },
+        "default": 0
+     },     
+     {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation de la disposition",
+        "es": "Spacing customization",
+        "en": "Spacing customization"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "[Tutoriel vidéo](https://youtu.be/LLS1yEwaPsw)",
+        "es": "[Video tutorial](https://youtu.be/Lv-3vaK-wNE)",
+        "en": "[Video tutorial](https://youtu.be/Lv-3vaK-wNE)"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "Les espacements sont séparés par des espaces avec 4 valeurs maximales - Haut Droit Bas Gauche - L'unité peut être le rem, px, % - Exemple: 20px 0px 20px 20px - [En savoir plus](https://developer.mozilla.org/fr/docs/Web/CSS/padding) ",
+        "es": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)",
+        "en": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)"
+        }
+    },
+    {
+      "type": "checkbox",
+      "id": "block_spacing_enable",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "section_max_width",
+      "label": {
+        "fr": "Longueur max (% ou px)",
+        "es": "Max width (% ou px)",
+        "en": "Max width (% or px)"
+      }
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Bureau",
+        "es": "Layout (Desktop)",
+        "en": "Layout (Desktop)"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_padding",
+      "label": {
+        "fr": "Espacements intérieur",
+        "es": "Interior Spacing",
+        "en": "Interior Spacing"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_margin",
+      "label": {
+        "fr": "Espacements extérieur",
+        "es": "Exterior Spacing",
+        "en": "Exterior Spacing"
+      }
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Mobile",
+        "es": "Layout (Mobile)",
+        "en": "Layout (Mobile)"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_padding_sm",
+      "label": {
+        "fr": "Espacements intérieur",
+        "es": "Interior Spacing",
+        "en": "Interior Spacing"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_margin_sm",
+      "label": {
+        "fr": "Espacements extérieur",
+        "es": "Exterior Spacing",
+        "en": "Exterior Spacing"
+      }
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation avancée",
+        "es": "Advanced CSS",
+        "en": "Advanced CSS"
+      }
+    },
+    {
+      "type": "text",
+      "id": "class",
+      "label": "CSS Class"
+    },
+    {
+      "type": "text",
+      "id": "id",
+      "label": "CSS Id"
+    }
+  ],
+  
+  "presets": [
+    {
+
+      "name": {
+        "fr": "Vidéo",
+        "es": "Vídeo",
+        "en": "Video"
+      },      
+      "category": {
+        "fr": "Média",
+        "es": "Medios",
+        "en": "Media"
+      }
+      
+    }
+  ]
+}
+{% endschema %}

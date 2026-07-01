@@ -1,0 +1,1260 @@
+
+<div class="section-id-{{ section.id }} cont-header noborder-{{ section.settings.type_header_border }} {{ section.settings.type_headers }} mobile-hide-top-{{ settings.mobile_topbar_disabled }}">
+  
+  {% if section.settings.type_headers == 'header1' or section.settings.type_headers == 'header5' %}
+  {% render 'header1' section: section %}
+  {% endif %}
+  {% if section.settings.type_headers == 'header2' or section.settings.type_headers == 'header3' or section.settings.type_headers == 'header4' %}
+  {% render 'header2' section: section %} 
+  {% endif %}
+
+</div> 
+
+{% assign imgMaxWidth = section.settings.logo_max_width | divided_by: section.settings.logo_max_width_onscroll %}
+<style>
+  @media screen and (min-width: 750px) {
+    .header-scroll-on .header-logo img {    
+      max-width: {{ imgMaxWidth }}px !important;
+    }
+  }
+</style>
+
+{% if section.settings.type_header_actived %}
+<script defer>
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    Shopify.onSticky(2);
+  });
+
+  const headerWrapper = document.querySelector('.cont-header');
+  let observer = new IntersectionObserver(entries => {
+    if(entries[0].boundingClientRect.y < 0) {
+      {% if section.settings.header_transparent and template == "index" %}
+      headerWrapper.classList.remove('header-transparent-true');
+      headerWrapper.classList.add('header-transparent-false');
+      
+      {% endif %} 
+      setTimeout(function() {
+        headerWrapper.classList.add('header-scroll-on') 
+      }, 500);
+     
+    } else {
+       {% if section.settings.header_transparent and template == "index" %}
+       headerWrapper.classList.add('header-transparent-true');
+       headerWrapper.classList.remove('header-transparent-false');
+       {% endif %} 
+       setTimeout(function() {
+         headerWrapper.classList.remove('header-scroll-on');
+       }, 100);       
+    }
+  });
+  observer.observe(document.querySelector("#pixel-to-watch"));
+</script>
+{% endif %} 
+
+{% if section.settings.header_transparent and template == "index" %}
+<script defer>  
+  if (window.matchMedia("(min-width: 1024px)").matches) {
+    const header = document.querySelector('#shopify-section-header'); 
+    const sectionHeader = document.querySelector('.section-id-header');
+    header.classList.remove('sticky');   
+
+    {% if section.settings.type_header_actived %}
+    let observer = new IntersectionObserver(entries => {
+      if (entries[0].boundingClientRect.y < 0) {
+        header.classList.add('sticky');
+        sectionHeader.classList.remove('header-transparent-true'); 
+      } else {
+        header.classList.remove('sticky');
+        sectionHeader.classList.add('header-transparent-true');
+      }
+    });
+    observer.observe(document.querySelector("#pixel-to-watch"));
+    {% endif %}
+  }
+</script>
+
+<style>
+  {% if section.settings.type_headers == 'header2' or section.settings.type_headers == 'header3' or section.settings.type_headers == 'header4' %}
+  {% if section.settings.header_transparent  and template == "index" %}  
+  @media screen and (min-width: 1024px) {  
+      .sticky .section-id-{{ section.id }} {      
+        background:var(--headerBackground);
+      }  
+      .sticky .section-id-{{ section.id }} .nav-bar  {
+        /*background-color: var(--colorNav); */
+      }      
+      .section-id-{{ section.id }}.header-transparent-true {
+        --headerText: {{ section.settings.color_header_transparent }} !important;
+      }
+      .section-id-{{ section.id }}.header-transparent-true {
+        {% if section.settings.type_header_actived %}position: fixed;{% else %}position: absolute;{% endif %}   
+        top:0;   
+        width: 100%;   
+        max-width: 100%;      
+        background: none !important;
+        border:none;
+        box-shadow:none;
+        color:{{ section.settings.color_header_transparent }} !important;
+      }    
+      .section-id-{{ section.id }}.header-transparent-true  header, .section-id-{{ section.id }}.header-transparent-true  .nav-bar {
+        background: none !important;    
+      }
+      .section-id-{{ section.id }} .logo-header, .section-id-{{ section.id }}.header-transparent-true .logo-header-transparent { 
+        display:inline-block;
+        width:auto;
+      }
+      .section-id-{{ section.id }}.header-transparent-true .logo-header, .section-id-{{ section.id }} .logo-header-transparent { 
+        display:none;
+      }
+      .section-id-{{ section.id }}.header-transparent-true .site-nav-first-level > a, .section-id-{{ section.id }}.header-transparent-true  .header-grid__links * {
+        color:{{ section.settings.color_header_transparent }} !important;
+        background:none;
+      }
+    
+      
+    } 
+  
+  {% endif %}  
+  {% endif %} 
+ 
+</style>
+{% endif %} 
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": {{ shop.name | json }},
+    {% if section.settings.logo %}
+      {% assign image_size = section.settings.logo.width | append: 'x' %}
+      "logo": {{ section.settings.logo | img_url: image_size | prepend: "https:" | json }},
+    {% endif %}
+    "sameAs": [
+      {{ settings.social_twitter_link | json }},
+      {{ settings.social_facebook_link | json }},
+      {{ settings.social_pinterest_link | json }},
+      {{ settings.social_instagram_link | json }},
+      {{ settings.social_tiktok_link | json }},
+      {{ settings.social_tumblr_link | json }},
+      {{ settings.social_snapchat_link | json }},
+      {{ settings.social_youtube_link | json }},
+      {{ settings.social_vimeo_link | json }}
+    ],
+    "url": {{ shop.url | append: page.url | json }}
+  }
+</script>
+
+{%- if request.page_type == 'index' -%}
+  {% assign potential_action_target = shop.url | append: routes.search_url | append: "?q={search_term_string}" %}
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ potential_action_target | json }},
+        "query-input": "required name=search_term_string"
+      },
+      "url": {{ shop.url | append: page.url | json }}
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{  
+  "name": {
+    "fr": "En-tête",
+    "es": "Header",
+    "en": "Header"
+  },
+  "class":"header-section",
+  "settings":[  
+	{
+    "type": "paragraph",
+    "content": {
+      "fr": "[Tutoriel vidéo](https://youtu.be/h_qikm6hdGs)",
+      "es": "[Video tutorial](https://youtu.be/p5aNgjCRRm0)",
+      "en": "[Video tutorial](https://youtu.be/p5aNgjCRRm0)"
+    }
+  },
+    {
+      "type":"header",
+      "content": {
+        "fr": "Important",
+        "es": "Important",
+        "en": "Important"
+      }
+    }, 
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "Certaines options nécessitent de cliquer sur Enregistrer afin de voir le changement",
+        "es": "Some options require clicking on Save to see the change",
+        "en": "Some options require clicking on Save to see the change"
+      }    
+    },
+    {  
+      "type":"select",
+      "id":"type_headers",
+      "label": {
+        "fr": "Choix du header",
+        "es": "Selección del header",
+        "en": "Header choice"
+      },
+      "options":[  
+        {  
+          "value":"header1",
+          "label": {
+            "fr": "Classique 1",
+            "es": "Clásico 1",
+            "en": "Classic 1"
+          }
+        },
+		{  
+          "value":"header5",
+          "label": {
+            "fr": "Classique 2",
+            "es": "Clásico 2",
+            "en": "Classic 2"
+          }
+        },
+        {  
+          "value":"header2",
+          "label": {
+            "fr": "Minimaliste 1",
+            "es": "Minimalista 1",
+            "en": "Minimalist 1"
+          }
+        },
+        {  
+          "value":"header4",
+          "label": {
+            "fr": "Minimaliste 2",
+            "es": "Minimalista 2",
+            "en": "Minimalist 2"
+          }
+        },
+        {  
+          "value":"header3",
+          "label": {
+            "fr": "Minimaliste 3",
+            "es": "Minimalista 3",
+            "en": "Minimalist 3"
+          }
+        }
+      ]
+    }, 
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "Choisir un header Minimaliste désactivera automatiquement les textes et images",
+        "es": "La elección de un encabezado Minimalista desactivará automáticamente los textos y las imágenes",
+        "en": "Choosing a minimalist header will disable automatically the texts and images"
+      }
+    },
+    {
+      "type":"header",
+      "content": {
+        "fr": "Bandeau haut du site",
+        "es": "Main bar above the header",
+        "en": "Main bar above the header"
+      }
+    },
+    {  
+      "type":"checkbox",
+      "id":"topheader_actived", 
+      "label": {
+        "fr": "Afficher le bandeau en haut du site",
+        "es": "Mostrar el banner en la parte superior de la página",
+        "en": "Display the bar above the header"
+      }
+    },
+    {  
+      "type":"text",
+      "id":"topheader_max_width",
+      "label": {
+        "fr": "Longueur max du bandeau",
+        "es": "longitud del banner",
+        "en": "Banner max length"
+      },
+      "default":"1170px"
+    },
+    {
+      "type": "select",
+      "id": "topheader-spacing",
+      "options": [      
+        {
+          "value": "spacing-0",
+          "label": "Aucun"
+        },
+        {
+          "value": "spacing-1",
+          "label": "Petit"
+        },
+        {
+          "value": "spacing-2",
+          "label": "Moyen"
+        },
+        {
+          "value": "spacing-3",
+          "label": "Large"
+        }
+      ],
+      "default": "spacing-1",
+      "label": "Espacement vertical"
+    }, 
+    {  
+      "type":"richtext",
+      "id":"topheader",
+      "label": {
+        "fr": "Texte du bandeau en haut de page",
+        "es": "Texto del banner en la parte superior de la página",
+        "en": "Text for the bar above the header"
+      },
+      "info": {
+        "fr": "55 caractères max",
+        "es": "55 caracteres max",
+        "en": "55 characters max"
+      }
+    }, 
+    {  
+      "type":"checkbox",
+      "id":"topheader_flash_infos",
+      "label": {
+        "fr": "Activer le slider via la zone HTML",
+        "es": "Enable slider via HTML block",
+        "en": "Enable slider via HTML block"
+      },
+      "default":false
+    },
+    {  
+      "type":"text",
+      "id":"topheader_flash_infos_autoplayspeed",
+      "label": {
+        "fr": "Temps de défilement (ms)",
+        "es": "Speed loop (ms)",
+        "en": "Speed loop (ms)"
+      },
+      "default":"5000"
+    },
+    {
+      "type": "html",
+      "id": "topheader_html",
+      "label": {
+        "fr": "Zone html",
+        "es": "Zone html",
+        "en": "Zone html"
+      },
+      "default": "<div class=\"flash-info\"><div>Flash Info 1</div></div><div class=\"flash-info\"><div>Flash Info 2</div></div><div class=\"flash-info\"><div>Flash Info 3</div></div>"
+    },
+    {  
+      "type":"link_list",
+      "id":"quick_access",
+      "label": {
+        "fr": "Menu Accès Rapide",
+        "es": "Quick access menu",
+        "en": "Quick access menu"
+      }      
+    }, 
+    {  
+      "type":"checkbox",
+      "id":"top_header_socials",
+      "label": {
+        "fr": "Afficher les réseaux sociaux",
+        "es": "Display social networks",
+        "en": "Display social networks"
+      },
+      "default":false
+    },
+    {  
+      "type":"header",
+      "content": {
+        "fr": "Options Génériques",
+        "es": "Opciones Genéricas",
+        "en": "General options"
+      }
+    },
+    {
+      "type": "select",
+      "id": "header-spacing",
+      "options": [      
+        {
+          "value": "spacing-0",
+          "label": "Aucun"
+        },
+        {
+          "value": "spacing-1",
+          "label": "Petit"
+        },
+        {
+          "value": "spacing-2",
+          "label": "Moyen"
+        },
+        {
+          "value": "spacing-3",
+          "label": "Large"
+        }
+      ],
+      "default": "spacing-1",
+      "label": "Espacement vertical"
+    }, 
+    {  
+      "type":"checkbox",
+      "id":"type_header_actived",
+      "label": {
+        "fr": "Header fixé au scroll",
+        "es": "Header fijado al scroll",
+        "en": "Fixed header on scroll"
+      },
+      "default":true
+    },
+    
+    {  
+      "type":"checkbox",
+      "id":"type_header_border",
+      "label": {
+        "fr": "Supprimer la bordure du bas du header",
+        "es": "Retirar el borde inferior del header",
+        "en": "Delete the border below the header"
+      },
+      "default":false
+    },
+    
+    {  
+      "type":"checkbox",
+      "id":"header_box_actived",
+      "label": {
+        "fr": "Afficher Lien compte et connexion",
+        "es": "Mostrar cuenta y inicio de sesión",
+        "en": "Display account and connection links"
+      }
+    },
+    {  
+      "type":"checkbox",
+      "id":"search_actived",
+      "label": {
+        "fr": "Masquer le moteur de recherche",
+        "es": "Ocultar el motor de búsqueda",
+        "en": "Hide the search engine bar"
+      }
+    },
+    
+    {  
+      "type":"text",
+      "id":"header_icon_user",
+      "label": {
+        "fr": "Icône Client",
+        "es": "Icono la cliente",
+        "en": "User icon"
+      },
+      "default":"<i class=\"fa fa-user\" aria-hidden=\"true\"></i>"
+    },
+	{  
+      "type":"text",
+      "id":"header_icon_cart",
+      "label": {
+        "fr": "Icône Panier",
+        "es": "Icono de la cesta",
+        "en": "Cart icon"
+      },
+      "default":"<i class=\"fa fa-shopping-cart\" aria-hidden=\"true\"></i>"
+    },
+    {  
+      "type":"header",
+      "content": {
+        "fr": "Logo",
+        "es": "Logo",
+        "en": "Logo"
+      }
+    },
+    {  
+      "type":"image_picker",
+      "id":"logo",
+      "label": {
+        "fr": "logo",
+        "es": "logo",
+        "en": "logo"
+      },
+      "info": {
+        "fr": "400px max",
+        "es": "400px max",
+        "en": "400px max"
+      }
+    },
+    {  
+      "type":"text",
+      "id":"logo_max_width",
+      "label": {
+        "fr": "Longueur du logo",
+        "es": "longitud del logo",
+        "en": "Logo length"
+      },
+      "default":"260" 
+    },
+    
+	{  
+      "type":"text",
+      "id":"logo_max_width_onscroll",
+      "label": {
+        "fr": "Valeur de Division de la longueur du logo au scroll et taille sur Mobile",
+        "es": "Division Value of the length of the logo to the scroll size on Mobile",
+        "en": "Division Value of the length of the logo to the scroll size on Mobile"
+      },
+      "default":"2"
+    },
+    {  
+      "type":"header",
+      "content": {
+        "fr": "SEO - H1 - Titre de la page d'accueil",
+        "es": "SEO - H1 - HOME PAGE TITLE",
+        "en": "SEO - H1 - HOME PAGE TITLE"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "Le H1 de la page d'accueil sera le nom de votre boutique renseigné dans Paramètres - Menu général - Nom de la boutique",
+        "es": "The H1 of the home page will be the name of your store entered in Settings - General - Store name",
+        "en": "The H1 of the home page will be the name of your store entered in Settings - General - Store name"
+      }
+    },
+	{
+      "type": "paragraph",
+      "content": {        
+        "fr": "Bonne pratique - Testez le H1 sur le site [outiref.fr](https:\/\/www.outiref.fr\/) qui est le seul outil fiable prenant en compte le alt de l'image comme H1. Les autres tools mentionneront le H1 vide alors qu'il est bien présent aux yeux de Google pour le référencement",
+        "es": "Good practice - Test the H1 on [outiref.fr](https:\/\/www.outiref.fr\/) which is the only reliable tool that takes into account the alt of the image as H1. The other tools will mention the empty H1 whereas it is well present in the eyes of Google for SEO.",
+        "en": "Best practices - Test the H1 on [outiref.fr](https:\/\/www.outiref.fr\/) which is the only reliable tool that takes into account the alt of the image as H1. The other tools will show the empty H1 whereas it is well present in the eyes of Google for SEO."
+       }
+    },
+    {  
+      "type":"link_list",
+      "id":"menu",
+      "label": {
+        "fr": "Menu principal",
+        "es": "Menu principal",
+        "en": "Main menu"
+      },
+      "default":"main-menu",
+      "info": {
+        "fr": "Menu classique + mobile, pour le mégamenu rendez vous dans theme settings",
+        "es": "Menú clásico + móvil, para el megamenú ir a los ajustes del tema",
+        "en": "Classic menu + mobile, for the mega menu go to theme settings"
+      }
+    },        
+    {  
+      "type":"select",
+      "id":"type_nav_position2",
+      "label": {
+        "fr": "Position du menu",
+        "es": "Posición del menú",
+        "en": "Menu position"
+      },
+      "options":[  
+        {  
+          "value":"0",
+          "label": {
+            "fr": "A droite",
+            "es": "A la derecha",
+            "en": "Right"
+          }
+        },
+        {  
+          "value":"1",
+          "label": {
+            "fr": "A gauche",
+            "es": "A la izquierda",
+            "en": "Left"
+          }
+        },
+        {  
+          "value":"2",
+          "label": {
+            "fr": "Centré",
+            "es": "Centrado",
+            "en": "Center"
+          }
+        }
+      ],
+      "default": "0"
+    }, 
+    {
+      "type":"select",
+      "id":"navbar_icon_1",
+      "label":{
+         "fr":"Icône - 1er lien",
+         "es":"Icon - primer enlace del primer nivel",
+         "en":"Icon - 1st link"
+      },
+      "options":[
+         {
+            "value":"0",
+            "label":{
+               "fr":"Aucun",
+               "es":"Ninguno",
+               "en":"None"
+            }
+         },
+         {
+            "value":"7",
+            "label":{
+               "fr":"Accueil",
+               "es":"Inicio",
+               "en":"Home"
+            }
+         },
+         {
+            "value":"1",
+            "label":{
+               "fr":"Burger",
+               "es":"Burger",
+               "en":"Burger"
+            }
+         },
+         {
+            "value":"2",
+            "label":{
+               "fr":"Contact",
+               "es":"Contacto",
+               "en":"Contact"
+            }
+         },
+         {
+            "value":"3",
+            "label":{
+               "fr":"FAQ",
+               "es":"PMF",
+               "en":"FAQ"
+            }
+         },
+         {
+            "value":"4",
+            "label":{
+               "fr":"Livraison",
+               "es":"Envíos",
+               "en":"Shipping"
+            }
+         },
+         {
+            "value":"5",
+            "label":{
+               "fr":"Paiement sécurisé",
+               "es":"Pago seguro",
+               "en":"Secure payment"
+            }
+         },
+         {
+            "value":"6",
+            "label":{
+               "fr":"Blog",
+               "es":"Blog",
+               "en":"Blog"
+            }
+         },
+         {
+            "value":"8",
+            "label":{
+               "fr":"Qui sommes nous",
+               "es":"¿Quiénes somos?",
+               "en":"Who are we?"
+            }
+         }
+      ]
+   },
+   {
+      "type":"select",
+      "id":"navbar_icon_2",
+      "label":{
+         "fr":"Icône - 2ème lien",
+         "es":"Icon - 2º enlace",
+         "en":"Icon - 2nd link"
+      },
+      "options":[
+         {
+            "value":"0",
+            "label":{
+               "fr":"Aucun",
+               "es":"Ninguno",
+               "en":"None"
+            }
+         },
+         {
+            "value":"7",
+            "label":{
+               "fr":"Accueil",
+               "es":"Inicio",
+               "en":"Home"
+            }
+         },
+         {
+            "value":"1",
+            "label":{
+               "fr":"Burger",
+               "es":"Burger",
+               "en":"Burger"
+            }
+         },
+         {
+            "value":"2",
+            "label":{
+               "fr":"Contact",
+               "es":"Contacto",
+               "en":"Contact"
+            }
+         },
+         {
+            "value":"3",
+            "label":{
+               "fr":"FAQ",
+               "es":"PMF",
+               "en":"FAQ"
+            }
+         },
+         {
+            "value":"4",
+            "label":{
+               "fr":"Livraison",
+               "es":"Envíos",
+               "en":"Shipping"
+            }
+         },
+         {
+            "value":"5",
+            "label":{
+               "fr":"Paiement sécurisé",
+               "es":"Pago seguro",
+               "en":"Secure payment"
+            }
+         },
+         {
+            "value":"6",
+            "label":{
+               "fr":"Blog",
+               "es":"Blog",
+               "en":"Blog"
+            }
+         },
+         {
+            "value":"8",
+            "label":{
+               "fr":"Qui sommes nous",
+               "es":"¿Quiénes somos?",
+               "en":"Who are we?"
+            }
+         }
+      ]
+   },
+   {
+      "type":"select",
+      "id":"navbar_icon_3",
+      "label":{
+         "fr":"Icône - 3ème lien",
+         "es":"Icon - 3º enlace",
+         "en":"Icon - 3rd link"
+      },
+      "options":[
+         {
+            "value":"0",
+            "label":{
+               "fr":"Aucun",
+               "es":"Ninguno",
+               "en":"None"
+            }
+         },
+         {
+            "value":"7",
+            "label":{
+               "fr":"Accueil",
+               "es":"Inicio",
+               "en":"Home"
+            }
+         },
+         {
+            "value":"1",
+            "label":{
+               "fr":"Burger",
+               "es":"Burger",
+               "en":"Burger"
+            }
+         },
+         {
+            "value":"2",
+            "label":{
+               "fr":"Contact",
+               "es":"Contacto",
+               "en":"Contact"
+            }
+         },
+         {
+            "value":"3",
+            "label":{
+               "fr":"FAQ",
+               "es":"PMF",
+               "en":"FAQ"
+            }
+         },
+         {
+            "value":"4",
+            "label":{
+               "fr":"Livraison",
+               "es":"Envíos",
+               "en":"Shipping"
+            }
+         },
+         {
+            "value":"5",
+            "label":{
+               "fr":"Paiement sécurisé",
+               "es":"Pago seguro",
+               "en":"Secure payment"
+            }
+         },
+         {
+            "value":"6",
+            "label":{
+               "fr":"Blog",
+               "es":"Blog",
+               "en":"Blog"
+            }
+         },
+         {
+            "value":"8",
+            "label":{
+               "fr":"Qui sommes nous",
+               "es":"¿Quiénes somos?",
+               "en":"Who are we?"
+            }
+         }
+      ]
+   },
+   {
+      "type":"select",
+      "id":"navbar_icon_4",
+      "label":{
+         "fr":"Icône - Icône 4ème",
+         "es":"Icon - 4º enlace",
+         "en":"Icon - 4th link"
+      },
+      "options":[
+         {
+            "value":"0",
+            "label":{
+               "fr":"Aucun",
+               "es":"Ninguno",
+               "en":"None"
+            }
+         },
+         {
+            "value":"7",
+            "label":{
+               "fr":"Accueil",
+               "es":"Inicio",
+               "en":"Home"
+            }
+         },
+         {
+            "value":"1",
+            "label":{
+               "fr":"Burger",
+               "es":"Burger",
+               "en":"Burger"
+            }
+         },
+         {
+            "value":"2",
+            "label":{
+               "fr":"Contact",
+               "es":"Contacto",
+               "en":"Contact"
+            }
+         },
+         {
+            "value":"3",
+            "label":{
+               "fr":"FAQ",
+               "es":"PMF",
+               "en":"FAQ"
+            }
+         },
+         {
+            "value":"4",
+            "label":{
+               "fr":"Livraison",
+               "es":"Envíos",
+               "en":"Shipping"
+            }
+         },
+         {
+            "value":"5",
+            "label":{
+               "fr":"Paiement sécurisé",
+               "es":"Pago seguro",
+               "en":"Secure payment"
+            }
+         },
+         {
+            "value":"6",
+            "label":{
+               "fr":"Blog",
+               "es":"Blog",
+               "en":"Blog"
+            }
+         },
+         {
+            "value":"8",
+            "label":{
+               "fr":"Qui sommes nous",
+               "es":"¿Quiénes somos?",
+               "en":"Who are we?"
+            }
+         }
+      ]
+   },
+   {
+      "type":"select",
+      "id":"navbar_icon_5",
+      "label":{
+         "fr":"Icône - 5ème lien",
+         "es":"Icon - 5º enlace",
+         "en":"Icon - 5th link"
+      },
+      "options":[
+         {
+            "value":"0",
+            "label":{
+               "fr":"Aucun",
+               "es":"Ninguno",
+               "en":"None"
+            }
+         },
+         {
+            "value":"7",
+            "label":{
+               "fr":"Accueil",
+               "es":"Inicio",
+               "en":"Home"
+            }
+         },
+         {
+            "value":"1",
+            "label":{
+               "fr":"Burger",
+               "es":"Burger",
+               "en":"Burger"
+            }
+         },
+         {
+            "value":"2",
+            "label":{
+               "fr":"Contact",
+               "es":"Contacto",
+               "en":"Contact"
+            }
+         },
+         {
+            "value":"3",
+            "label":{
+               "fr":"FAQ",
+               "es":"PMF",
+               "en":"FAQ"
+            }
+         },
+         {
+            "value":"4",
+            "label":{
+               "fr":"Livraison",
+               "es":"Envíos",
+               "en":"Shipping"
+            }
+         },
+         {
+            "value":"5",
+            "label":{
+               "fr":"Paiement sécurisé",
+               "es":"Pago seguro",
+               "en":"Secure payment"
+            }
+         },
+         {
+            "value":"6",
+            "label":{
+               "fr":"Blog",
+               "es":"Blog",
+               "en":"Blog"
+            }
+         },
+         {
+            "value":"8",
+            "label":{
+               "fr":"Qui sommes nous",
+               "es":"¿Quiénes somos?",
+               "en":"Who are we?"
+            }
+         }
+      ]
+   },
+   {
+      "type":"select",
+      "id":"navbar_icon_6",
+      "label":{
+         "fr":"Icône - 6ème lien",
+         "es":"Icon - 6º enlace",
+         "en":"Icon - 6th link"
+      },
+      "options":[
+         {
+            "value":"0",
+            "label":{
+               "fr":"Aucun",
+               "es":"Ninguno",
+               "en":"None"
+            }
+         },
+         {
+            "value":"7",
+            "label":{
+               "fr":"Accueil",
+               "es":"Inicio",
+               "en":"Home"
+            }
+         },
+         {
+            "value":"1",
+            "label":{
+               "fr":"Burger",
+               "es":"Burger",
+               "en":"Burger"
+            }
+         },
+         {
+            "value":"2",
+            "label":{
+               "fr":"Contact",
+               "es":"Contact",
+               "en":"Contact"
+            }
+         },
+         {
+            "value":"3",
+            "label":{
+               "fr":"FAQ",
+               "es":"PMF",
+               "en":"FAQ"
+            }
+         },
+         {
+            "value":"4",
+            "label":{
+               "fr":"Livraison",
+               "es":"Envíos",
+               "en":"Shipping"
+            }
+         },
+         {
+            "value":"5",
+            "label":{
+               "fr":"Paiement sécurisé",
+               "es":"Pago seguro",
+               "en":"Secure payment"
+            }
+         },
+         {
+            "value":"6",
+            "label":{
+               "fr":"Blog",
+               "es":"Blog",
+               "en":"Blog"
+            }
+         },
+         {
+            "value":"8",
+            "label":{
+               "fr":"Qui sommes nous",
+               "es":"¿Quiénes somos?",
+               "en":"Who are we?"
+            }
+         }
+      ]
+   },    
+    {  
+      "type":"header",
+      "content": {
+        "fr": "Options En-têtes Classiques",
+        "es": "Opciones headers clásicos",
+        "en": "Classic header options"
+      }
+    }, 
+    {  
+      "type":"checkbox",
+      "id":"type_header_texts_actived",
+      "label": {
+        "fr": "Activer les textes des icônes",
+        "es": "Enable Texts of icons",
+        "en": "Enable Texts of icons"
+      },
+      "default":true
+    },
+    {       
+      "type":"image_picker",
+      "id":"image_header",
+      "label": {
+        "fr": "Image dans le header classique",
+        "es": "Imagen en el header clásico",
+        "en": "Image in the classic header"
+      },
+      "info": {
+        "fr": "400px max",
+        "es": "400px max",
+        "en": "400px max"
+      }
+    },
+    {  
+      "type":"text",
+      "id":"image_header_max_width",
+      "label": {
+        "fr": "longueur de l'image",
+        "es": "longitud de la imagen",
+        "en": "Image length"
+      },
+      "default":"260"
+    },
+    {  
+      "type":"select",
+      "id":"image_header_position",
+      "label": {
+        "fr": "Position de l'image",
+        "es": "Posición de la imagen",
+        "en": "Image position"
+      },
+      "options":[  
+        {  
+          "value":"0",
+          "label": {
+            "fr": "A droite",
+            "es": "A la derecha",
+            "en": "Right"
+          }
+        },
+        {  
+          "value":"1",
+          "label": {
+            "fr": "A gauche",
+            "es": "Left",
+            "en": "Left"
+          }
+        }            
+      ]
+    },
+    {  
+      "type":"richtext",
+      "id":"header_message2",
+      "label": {
+        "fr": "Texte au dessus du moteur de recherche et panier",
+        "es": "Texto sobre el motor de búsqueda y el carrito",
+        "en": "Text above the search and cart icons"
+      },
+      "info": {
+        "fr": "Uniquement sur le header classique - 55 caractères max",
+        "es": "Sólo en el Header clásico - 55 caracteres como máximo",
+        "en": "Only on the classic header - 55 characters max"
+      }
+    },      
+    {  
+      "type":"richtext",
+      "id":"header_message",
+      "label": {
+        "fr": "Texte à côté du logo",
+        "es": "Texto al lado del logotipo",
+        "en": "Text next to the logo"
+      },
+      "info": {
+        "fr": "Uniquement sur le header classique - 55 caractères max",
+        "es": "Sólo en el Header clásico - 55 caracteres como máximo",
+        "en": "Only on the classic header - 55 characters max"
+      }
+    },
+    {  
+      "type":"checkbox",
+      "id":"header_message_center",
+      "label": {
+        "fr": "Centrer le texte à côté du logo",
+        "es": "Centrar el texto junto al logotipo",
+        "en": "Center the text next to the logo"
+      }
+  },
+  {
+    "type":"header",
+    "content":{
+       "fr":"Header transparent - Accueil",
+       "es":"Transparent header - homepage",
+       "en":"Transparent header - homepage"
+    },  
+    "info":{
+       "fr":"Uniquement sur les minimalistes - Superposition sur le carrousel d'image",
+       "es":"Only on minimalists - Overlay on the image carousel",
+       "en":"Only on minimalists - Overlay on the image carousel"
+    }
+ },
+ {
+    "type":"checkbox",
+    "id":"header_transparent",
+    "label":{
+       "fr":"Activer",
+       "es":"Activate",
+       "en":"Activate"
+    }
+ },
+ {
+    "type":"color",
+    "id":"color_header_transparent",
+    "label":{
+       "fr":"Liens et icônes",
+       "es":"Links and icons",
+       "en":"Links and icons"
+    },
+    "default":"#fff"
+ },
+  {  
+    "type":"image_picker",
+    "id":"logo2",
+    "label": {
+      "fr": "logo",
+      "es": "logo",
+      "en": "Logo"
+    },
+    "info": {
+      "fr": "400px max",
+      "es": "400px max",
+      "en": "400px max"
+    }
+  },
+  {  
+    "type":"text",
+    "id":"logo2_max_width",
+    "label": {
+      "fr": "Longueur du logo",
+      "es": "longitud del logo",
+      "en": "Logo length"
+    },
+    "default":"260" 
+  },
+  {
+    "type":"header",
+    "content": {
+      "fr": "Couleurs",
+      "es": "Colors",
+      "en": "Colors"
+    }
+  },
+  {
+    "type": "paragraph",
+      "content": {
+      "fr": "La gestion des couleurs dans Paramètres de thèmes - Couleurs - En-tête",
+      "es": "Colors in Theme settings - Colors - Header",
+      "en": "Colors in Theme settings - Colors - Header"
+    }
+  }
+  ]
+}
+{% endschema %}
