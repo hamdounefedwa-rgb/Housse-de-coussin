@@ -1,0 +1,8 @@
+<script>     
+  var tempsChargementWifi = window.performance.now() / 1000;
+  console.log("This page loads in "+tempsChargementWifi.toFixed(1)+"s in Wifi 2.4gHz");   
+  window.addEventListener('load', (event) => {       
+    var tempsChargement4g = (Date.now() - window.performance.timing.navigationStart) / 1000;
+    console.log("This page loads in "+tempsChargement4g.toFixed(1)+"s in 4G");         
+  });   
+</script>

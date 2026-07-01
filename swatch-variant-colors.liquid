@@ -1,0 +1,56 @@
+{%- liquid
+  assign option_index = 0
+  assign max_size_colors = 4
+  assign maxVariants = 0
+  assign variants_colors = settings.swatch_color_colors | split: ';' 
+%}
+
+<div class="swatch">
+  {%- for option in product.options_with_values -%}
+  {% assign swatchDowncase = option.name | downcase %}
+  {% if swatchDowncase == "color" or swatchDowncase == "colors" or swatchDowncase == "couleur" or swatchDowncase == "couleurs" %}
+  {%- for value in option.values limit:max_size_colors  -%}  
+  {% assign value = variant.options[option_index] %}
+    {% unless values contains value %}
+      {% assign values = values | join: ',' %}
+      {% assign values = values | append: ',' | append: value %} 
+      {% assign values = values | split: ',' %}    
+      <div data-value="{{ value | escape }}" class="swatch-element swatch-element-{{ option_index }} {{ value | handle }}">{{ value | escape }}</div>  
+    {% endunless %}
+  {%- endfor -%}
+  {%- for value in option.values -%}  
+  {% assign maxVariants = maxVariants | plus: 1 %}  
+  {%- endfor -%}
+  {% endif %}
+  {%- endfor -%}
+  {% if maxVariants > max_size_colors %}
+  <div class="more-variant-colors" style="display: inline-flex;">
+    +{{ maxVariants | minus: max_size_colors }}
+  </div> 
+  {% endif %}
+</div>
+
+{% for text_row in variants_colors %}
+  {% assign text_row_array = text_row | split: '|' %}
+  {% assign color_name = text_row_array[0] | lstrip | handleize %}
+  {% assign color_hex = text_row_array[1] | lstrip %} 
+  {% assign color_hex2 = text_row_array[2] | lstrip %}
+
+  <style>
+    .product-grid-item .swatch .{{ color_name }} {
+      box-shadow: 0 0 3px rgb(0 0 0 / 30%);
+    }
+    {% if color_hex contains 'http' %} 
+      .swatch .{{ color_name }} { background: url({{ color_hex }}) no-repeat; background-size:100%; width:20px; min-width:20px !important; height:20px !important; border-radius:{{ settings.swatch_color_design }}px; font-size:0; text-indent:-9999px; }
+    {% else %}
+      {% if text_row_array.size == 3 %}  
+        .swatch .{{ color_name }}  { background: linear-gradient(to left, {{ color_hex2 }} 50%, {{ color_hex }} 50%); width:20px; min-width:20px !important; height:20px !important; border-radius:{{ settings.swatch_color_design }}px; font-size:0; text-indent:-9999px; }
+      {% else %}
+        .swatch .{{ color_name }}  { background:{{ color_hex }}; width:20px; min-width:20px !important; height:20px !important; border-radius:{{ settings.swatch_color_design }}px; font-size:0; text-indent:-9999px; }
+      {% endif %}
+    {% endif %}
+  </style>
+{% endfor %}
+
+
+

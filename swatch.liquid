@@ -1,0 +1,106 @@
+
+{% if swatch %}
+
+{% assign found_option = false %}
+{% assign is_color = true %}
+{% assign option_index = 0 %}
+
+{% for option in product.options %}
+{% if option == swatch %}
+{% assign found_option = true %}
+{% assign option_index = forloop.index0 %}
+<style>
+  label[for="product-select-option-{{ option_index }}"] { display: none; }
+  #product-select-option-{{ option_index }} { display: none; }
+  #product-select-option-{{ option_index }} + .custom-style-select-box { display: none !important; }
+</style>  
+<script defer>
+  document.addEventListener("DOMContentLoaded", () => {
+    let wrapper = document.querySelectorAll('.selector-wrapper')[{{ option_index }}];
+    if(wrapper) {
+      wrapper.style.display = "none";
+    }
+  });
+</script>
+{% assign downcased_option = swatch | downcase %}
+{% if settings.swatch_color %}
+{% if downcased_option contains 'color' or downcased_option contains 'couleur' %}   
+{% assign is_color = true %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endfor %}
+
+{% if found_option %}
+
+{% if swatch != "Title" %}
+<div class="swatch clearfix" data-option-index="{{ option_index }}">
+  <div class="header">{{ swatch }}</div>
+  <div class="swatch-inner">
+  {% assign values = '' %}
+  {% for variant in product.variants %}
+  {% assign value = variant.options[option_index] %}
+  {% unless values contains value %}
+  {% assign values = values | join: ',' %}
+  {% assign values = values | append: ',' | append: value %} 
+  {% assign values = values | split: ',' %}
+ 
+  <div data-value="{{ value | escape }}" class="swatch-element swatch-element-{{ option_index }} {{ value | handle }}" data-variant-stock="{{ variant.inventory_quantity }}" data-sku="{{ variant.sku }}">
+    {% if settings.swatch_color_tooltips %}
+    <div class="tooltip">{{ value }}</div>
+    {% endif %}
+    <input id="swatch-{{ option_index }}-{{ value | handle }}" type="radio" name="option-{{ option_index }}" class="input-radio" data-variant-id="{{ variant.id }}" value="{{ value | escape }}"{% if forloop.first %} checked{% endif %} />
+    {% if is_color %}
+    <label for="swatch-{{ option_index }}-{{ value | handle }}" {% unless variant.available %} class="disabled" {% endunless %}>
+      {{ value }}          
+    </label>
+  
+    {% else %}
+    <label for="swatch-{{ option_index }}-{{ value | handle }}" {% unless variant.available %} class="disabled" {% endunless %}>
+      {{ value }}          
+    </label>
+    {% endif %}
+  </div>
+   
+  {% endunless %}
+  
+  {% endfor %}
+  </div>
+
+</div>
+{% endif %}
+{% endif %}
+
+{% endif %}
+{% if settings.swatch_color %}
+
+{% assign swatch_color_colors2 = settings.swatch_color_colors | split: ';' %}
+
+<style>
+  {% for text_row in swatch_color_colors2 %}
+  {% assign text_row_array = text_row | split: '|' %}
+  {% assign color_name = text_row_array[0] | lstrip | handleize %}
+  {% assign color_hex = text_row_array[1] | lstrip %} 
+  {% assign color_hex2 = text_row_array[2] | lstrip %}
+  
+  {% if color_hex contains 'http' %} 
+ 
+  .swatch .{{ color_name }} label { background: url({{ color_hex }}) no-repeat; background-size:100%; width:40px; min-width:40px !important; height:40px !important; border-radius:{{ settings.swatch_color_design }}px; font-size:0; text-indent:-9999px; }
+  {% else %}
+  
+  {% if text_row_array.size == 3 %}  
+	.swatch .{{ color_name }} label { background: linear-gradient(to left, {{ color_hex2 }} 50%, {{ color_hex }} 50%); width:40px; min-width:40px !important; height:40px !important; border-radius:{{ settings.swatch_color_design }}px; font-size:0; text-indent:-9999px; }
+  {% else %}
+	.swatch .{{ color_name }} label { background:{{ color_hex }}; width:40px; min-width:40px !important; height:40px !important; border-radius:{{ settings.swatch_color_design }}px; font-size:0; text-indent:-9999px; }
+  {% endif %}
+  
+  {% endif %}
+  
+  {% endfor %}
+  .swatch label {
+    position:relative;
+  }
+  
+</style>
+{% endif %}
+

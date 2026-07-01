@@ -1,0 +1,106 @@
+
+<script defer>
+  
+  {% if settings.product_selector_type == "0" %}
+
+  /*function callback() { 
+    if ((document.querySelectorAll(".product-meta .h1 s").length > 0)){
+      document.querySelector('.show-saved-amount-true').classList.add('show-amount'); 
+      document.querySelector('.show-saved-amount-true').classList.remove('hide-amount');       
+    }
+    else {            
+      document.querySelector('.show-saved-amount-true').classList.add('hide-amount'); 
+      document.querySelector('.show-saved-amount-true').classList.remove('show-amount');
+    }
+  }
+  
+  {% if settings.product_image_first_img %} 
+    const template = document.querySelector('div').querySelector("[data-section-slider-id]")
+    const sliderId = "#"+template.eq(0).attr('id');
+  {% endif %}
+  const inputs = document.querySelectorAll('.swatch input');
+
+  inputs.forEach(input => {
+    let nbVisits, optionIndex, optionValue, form, sel, selectedIndex, optionSelected;
+
+    input.addEventListener('change', function() {      
+     
+      nbVisits = document.querySelector('.section-product-single').setAttribute('data-first-variant-image', "1");
+      optionIndex = input.closest('.swatch').getAttribute('data-option-index');
+      optionValue = input.value;
+      form = input.closest('form');
+      sel = form.querySelectorAll('.single-option-selector')[optionIndex];
+      optionSelected = sel.querySelector(`[value="${input.value}"]`);
+      optionSelected.selected = true;
+      sel.dispatchEvent(new Event('change'));
+      callback();      
+
+    })
+  });  
+
+ 
+  }*/
+
+  jQuery(function() { 
+
+    const template = $('div').find("[data-section-slider-id]");
+    const sliderId = "#"+template.eq(0).attr('id');
+
+    jQuery('.swatch :radio').change(function() { 
+      // let nbVisits = document.querySelector('.section-product-single').setAttribute('data-first-variant-image', "1");
+      let optionIndex = jQuery(this).closest('.swatch').attr('data-option-index');
+      let optionValue = jQuery(this).val();   
+      let skuWrapper = document.querySelector('.product-sku'); 
+      if(skuWrapper) {
+        skuWrapper.textContent = this.parentNode.dataset.sku;
+      }
+      jQuery(this)
+      .closest('form')
+      .find('.single-option-selector')
+      .eq(optionIndex)
+      .val(optionValue)
+      .trigger('change');
+      if (($(".product-meta .h1 s").length > 0)){
+        $('.show-saved-amount-true').addClass('show-amount'); 
+        $('.show-saved-amount-true').removeClass('hide-amount'); 
+      }
+      else {            
+        $('.show-saved-amount-true').addClass('hide-amount'); 
+        $('.show-saved-amount-true').removeClass('show-amount');
+      }
+    });
+  });
+
+  let urlParams = (new URL(document.location)).searchParams;
+  let variantUrl = urlParams.get('variant');
+  if(variantUrl) {
+    document.querySelectorAll('.swatch .input-radio').forEach(item => {
+      if(item.dataset.variantId == variantUrl) {
+        item.checked = true;
+        return 
+      }
+    });
+  }
+
+  
+  /*var selectCallback = function(variant, selector) {
+    if (variant) {
+      var form = jQuery('#' + selector.domIdPrefix).closest('form');
+      for (var i=0,length=variant.options.length; i<length; i++) {
+        var radioButton = form.find('.swatch[data-option-index="' + i + '"] :radio[value="' + variant.options[i] +'"]');
+        if (radioButton.size()) {
+          radioButton.get(0).checked = true;
+        }
+      }
+    }
+  }*/
+  
+ /* document.addEventListener("DOMContentLoaded", (event) => {
+    setTimeout(function() {
+      let nbVisits = document.querySelector('.section-product-single').setAttribute('data-first-variant-image', "1");
+    }, 1000);    
+  });  */
+
+  {% endif %}      
+
+</script> 

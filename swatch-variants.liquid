@@ -1,0 +1,75 @@
+
+
+
+{% assign found_option = false %}
+{% assign is_image = false %}
+{% assign option_index = 0 %}
+
+{% for option in product.options %}
+{% if option == swatch %}
+{% assign found_option = true %}
+{% assign option_index = forloop.index0 %}
+<style>
+  label[for="product-select-option-{{ option_index }}"] { display: none; }
+  #product-select-option-{{ option_index }} { display: none; }
+  #product-select-option-{{ option_index }} + .custom-style-select-box { display: none !important; }
+</style>  
+<script defer>
+  document.addEventListener("DOMContentLoaded", () => {
+    let wrapper = document.querySelectorAll('.selector-wrapper')[{{ option_index }}];
+    if(wrapper) {
+      wrapper.style.display = "none";
+    }
+  });
+</script>
+{% assign downcased_option = swatch | downcase %}
+
+{% if settings.swatch_image %} 
+{% assign is_image = true %}
+{% assign labels = settings.swatch_image_labels | downcase  %}
+{% endif %}
+
+{% endif %}
+{% endfor %}
+
+{% if found_option %}
+
+{% if swatch != "Title" %}
+<div class="swatch clearfix" data-option-index="{{ option_index }}">
+  <div class="header">{{ swatch }}</div>
+  <div class="swatch-inner">
+  {% assign values = '' %}
+  {% for variant in product.variants %}
+  {% assign value = variant.options[option_index] %}
+  {% unless values contains value %}
+  {% assign values = values | join: ',' %}
+  {% assign values = values | append: ',' | append: value %} 
+  {% assign values = values | split: ',' %}
+ 
+  <div data-value="{{ value | escape }}" class="swatch-element swatch-element-{{ option_index }} {{ value | handle }}" data-variant-stock="{{ variant.inventory_quantity }}" data-sku="{{ variant.sku }}">
+    {% if settings.swatch_color_tooltips %}
+    <div class="tooltip">{{ value }}</div>
+    {% endif %}
+    <input id="swatch-{{ option_index }}-{{ value | handle }}" type="radio" name="option-{{ option_index }}" class="input-radio" data-variant-id="{{ variant.id }}" value="{{ value | escape }}"{% if forloop.first %} checked{% endif %} />
+  
+    {% if downcased_option contains labels %}
+
+      <label data-variant-image="{{ variant.featured_image | image_url: width: 100 }}" for="swatch-{{ option_index }}-{{ value | handle }}" {% unless variant.available %} class="disabled" {% endunless %}>
+        <img src="{{ variant.featured_image | image_url: width: 100 }}" alt="" />
+      </label>
+    {% else %}
+      <label for="swatch-{{ option_index }}-{{ value | handle }}" {% unless variant.available %} class="disabled" {% endunless %}>
+        {{ value }}          
+      </label>
+    {% endif %}
+    
+  </div>
+   
+  {% endunless %}
+  
+  {% endfor %}
+  </div>
+
+</div>
+{% endif %}
+{% endif %}

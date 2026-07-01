@@ -1,0 +1,77 @@
+{% if product.variants.size > 1 %}  
+
+<script defer>
+
+(function($) { 
+  
+ var variantImages = {},
+ thumbnails,
+ variant,
+ variantImage,
+ optionValue;
+ {% for variant in product.variants %}
+   variant = {{ variant | json }};
+   if ( typeof variant.featured_image !== 'undefined' && variant.featured_image !== null ) {
+    
+     variantImage = variant.featured_image.src.split('?')[0].replace(/http(s)?:/,'');
+  
+     variantImages[variantImage] = variantImages[variantImage] || {};
+     {% for option in product.options %}
+       {% assign option_value = variant.options[forloop.index0] %}
+       {% assign option_key = 'option-' | append: forloop.index0 %}
+       if (typeof variantImages[variantImage][{{ option_key | json }}] === 'undefined') {
+         variantImages[variantImage][{{ option_key | json }}] = {{ option_value | json }};
+       }
+       else {
+         var oldValue = variantImages[variantImage][{{ option_key | json }}];
+         if ( oldValue !== null && oldValue !== {{ option_value | json }} ) {
+           variantImages[variantImage][{{ option_key | json }}] = null;
+         }
+       }
+     {% endfor %}
+   }
+ {% endfor %}
+ $(function() {   
+
+  /* const labels = document.querySelectorAll('.swatch-inner label');
+   labels.forEach(item => {
+     item.addEventListener('click', function() {
+        document.querySelector('.section-product-single').setAttribute('data-page-count', "1");
+     });
+  }); */
+
+   thumbnails = $('.slider-product-thumbnails .slick-slide').not(':first');     
+     if (thumbnails.length > 0) {
+     thumbnails.bind('click', function(e) {
+       
+      let nbVisits = document.querySelector('.section-product-single').setAttribute('data-page-count', "1");
+    
+      e.preventDefault();
+   
+      let image = $(this).children().attr('src').split('?')[0].replace(/(_thumb\.)|(_small\.)|(_compact\.)|(_medium\.)|(_large\.)|(_grande\.)/,'.');
+
+      
+      if (typeof variantImages[image] !== 'undefined') {
+        {% for option in product.options %}
+          optionValue = variantImages[image]['option-{{ forloop.index0 }}'];
+          if (optionValue !== null && $('.single-option-selector:eq({{ forloop.index0 }}) option').filter(function() { return $(this).text() === optionValue }).length) {
+            {% if settings.product_selector_type == "1" %}
+              $('.single-option-selector:eq({{ forloop.index0 }})').val(optionValue).trigger('change');
+            {% else %}
+              $( ".swatch input" ).each(function( index ) {
+                if($(this).val() == optionValue) {
+                  $(this).prop('checked', true);
+                }else { }
+              }); 
+           {% endif %}
+         }
+       {% endfor %}
+      }
+    });
+   }
+ });
+})(jQuery);  
+
+</script>
+
+{% endif %}   
