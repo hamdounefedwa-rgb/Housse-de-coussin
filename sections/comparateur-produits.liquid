@@ -1,0 +1,747 @@
+
+{% assign handle = section.settings.handle %}
+{% assign checkCollection = false %}
+
+{% for c in product.collections %}
+{% if c.handle == handle %}
+{% assign checkCollection = true %}
+{% endif %}
+{% endfor %}
+
+<div class="{% if section.settings.section_spaced %}section-spaced{% endif %}" {% if template == "product" and checkCollection == false %} style="display:none"{% endif %}>
+  <div class="{% unless section.settings.block_color_enable %}color-scheme {{ section.settings.color_scheme }}{% endunless %} 
+    section-id-{{ section.id }} image-with-text-section layout-{{ section.settings.grid }} layout-sm-{{ section.settings.layout }} {{ section.settings.class }}" 
+    id="{{ section.settings.id }}" 
+    data-section-id="{{ section.id }}" 
+    data-section-type="featured-comparateur">
+    <div class="{% if section.settings.full_page %} wrapper-full-page {% else %} wrapper{% endif %}" 
+    {% if section.settings.faq_text_center %}style="text-align:center"{% endif %}
+     > 
+    
+    <div class="section-header section-header--layout-{{ section.settings.title_layout }}">
+      {% if section.settings.title != blank %}
+      <{{ section.settings.title_hn }} class="h1 {{ section.settings.title_hn }} section-header--left section-title">{{ section.settings.title | escape }}</{{ section.settings.title_hn }}>
+      {% endif %}         
+    </div> 
+
+    {% if section.settings.text != blank %}
+    <div class="rte-setting featured-row__subtext">{{ section.settings.text }}</div>
+    {% endif %}
+    {% if section.settings.html != blank %}
+    <div>{{ section.settings.html }}</div>
+    {% endif %}  
+
+    {% if section.settings.link %}
+      <a href="{{ section.settings.link }}" class="item slide-link btn btn--small">
+        {{ section.settings.linktext | escape }}               
+      </a> 
+    {% endif %}  
+
+    {% if template == "product" %}
+      <div class="currentProduct" style="display:none" data-image="{{ product.featured_image | image_url: width: 100 }}" data-metafields={{ product.metafields.custom.schema }}>{{ product.title }}</div>
+    {% endif %}
+
+    <div class="products-comparison" >
+      <div class="cont-form">
+        <form id="productFilter">
+          <i class="fa fa-search" aria-hidden="true"></i>
+          <input type="text" placeholder="Rechercher une raquette" id="filterInput">     
+        </form>
+         <div class="message"></div>
+        <div id="productList" class="productList" >
+
+          {% paginate collections[handle].products by 2000 %}
+            {% for product in collections[handle].products reversed %}
+              <div class="product" style="display:none" data-image="{{ product.featured_image | image_url: width: 100 }}" data-metafields={{ product.metafields.custom.schema }}>{{ product.title }}</div>
+            {% endfor %}
+          {% endpaginate %}
+
+        </div>
+      </div>
+      <div id="productsInfos" class="productsInfos"></div>
+     
+      <canvas id="myChart"></canvas>
+    </div>
+
+    <div class="player-infos">
+      {% if section.settings.image != blank %}    
+        <img
+          srcset=" {%- if section.settings.image.width >= 100 -%}{{ section.settings.image | image_url: width: 100 }} 100w,{%- endif -%}
+          {%- if section.settings.image.width >= 200 -%}{{ section.settings.image | image_url: width: 200 }} 200w{%- endif -%} "          
+          src="{{ section.settings.image | image_url: width: settings.perf_img_lazy }}"
+          alt="{{ section.settings.image.alt | escape }}"        
+          width="200"
+          height="200"       
+          loading= "lazy" 
+          class="player-infos-img"
+          style="border-radius: {{ section.settings.block_image_radius_v2 }}" />  
+      {% endif %}
+      {% if section.settings.text2 != blank %}
+        <div class="rte-setting player-infos-text"><blockquote>{{ section.settings.text2 }}</blockquote></div>
+      {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+    <script defer>
+
+      /* 
+      {"Puissance":100,"Confort":100,"Spin":100,"Contrôle":100,"Tolérance":100,"Maniabilité":100}
+
+      LangShopSDK.on("ready", function(){
+        var language = LangShopSDK.getCurrentLanguage();
+      });
+
+      */
+
+      var language = 'FR';
+
+      console.log(language);
+
+      let label1 = 'Puissance';
+      let label2 = 'Confort';
+      let label3 = 'Spin';
+      let label4 = 'Contrôle';
+      let label5 = 'Tolérance';
+      let label6 = 'Maniabilité';
+
+      if(language !== "FR") {
+        console.log('non fr');
+      }
+      
+      const labels = [label1, label2, label3, label4, label5, label6]
+
+      const filterInput = document.querySelector("#filterInput");
+      const productList = document.querySelector("#productList");
+      const productListBtn = document.querySelectorAll(".productList button");
+      const productFilter = document.querySelector("#productFilter");
+      const productsInfos = document.querySelector("#productsInfos");
+      const products = productList.querySelectorAll(".product");
+      const currentProduct = document.querySelector(".currentProduct");
+      const canvas = document.querySelector('canvas');
+      const playerInfos = document.querySelector('.player-infos');
+      const productsArray = [];      
+
+      let errorMessage;
+
+      filterInput.focus();
+      canvas.style.display = "none";
+      playerInfos.style.display = "none";   
+
+      // const chartColors = ['RGBA(255,0,0,0.3)', 'RGBA(0,255,0,0.3)', 'RGBA(0,0,255,0.3)', 'RGBA(0,0,0,0.3)'];
+      // const chartColors = ['RGBA(255,0,0,0.3)', 'RGBA(0,255,0,0.3)', 'RGBA(0,0,255,0.3)', 'RGBA(255,100,0,0.3)'];
+
+      const chartColors = [
+        
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(3,107,177,0.3)',
+        'rgba(249,181,0,0.3)',
+        'rgba(192,81,96,0.3)',
+        'rgba(54,54,56,0.3)',
+      ];
+      
+
+      const chartBorderColors = ['rgba(255,99,132,0.9)', 'rgba(54,162,235,0.9)', 'rgba(255,206,86,0.9)', 'rgba(153,102,255,0.9)'];
+
+      var chartOptions = {}
+      if(window.matchMedia("(max-width: 600px)").matches) {
+        console.log('small')
+        chartOptions = {
+          scale: {
+            ticks: {
+              beginAtZero: true,
+            },        
+            pointLabels: {
+              fontSize: 5
+            },
+            ticks: {
+              beginAtZero: true,
+              fontSize: 6
+            } 
+          },
+          legend: {
+            display: false,
+          },      
+          r: {
+            pointLabels: {
+              font: {
+                size: 2
+              }
+            }
+          }
+        }
+      }
+      else {
+        chartOptions = {
+          scale: {
+            ticks: {
+              beginAtZero: true,
+            },        
+            pointLabels: {
+              fontSize: 13
+            },
+            ticks: {
+              beginAtZero: true,
+              fontSize: 16
+            }                    
+          },
+          legend: {
+            display: false,
+          },      
+          r: {
+            pointLabels: {
+              font: {
+                size: 3
+              }
+            }
+          }
+        }
+      }
+      
+
+      let myChart = null;
+
+      productFilter.addEventListener("submit", event => event.preventDefault());
+
+      filterInput.addEventListener("input", () => {
+        productList.style.display = 'block';
+        
+        const filterValue = filterInput.value;
+        if (filterValue.length < 3) return;
+        products.forEach(product => { 
+          if(product.textContent.toLowerCase().includes(filterValue.toLowerCase())) {
+            console.log('titi')
+             product.style.display = "block";
+             productList.classList.add('show');
+          } else {
+            product.style.display =  "none";
+            productList.classList.add('none');
+          }
+         
+        });
+      });
+
+      productList.addEventListener("click", event => {
+        productList.style.display = 'none';
+        const productData = getProductData(event.target);
+
+        if (!productsArray.some(x => x.title == productData.title)) productsArray.push(productData);
+        productsInfos.innerHTML = '';
+        insertProductsInformation();
+        filterInput.value = "";
+        filterInput.focus();
+        canvas.style.display = "block";
+        playerInfos.style.display = "flex";
+      });
+
+
+      function getProductData(productNode) {
+        try {
+          document.querySelector('.message').textContent = '';
+          return {
+            title: productNode.textContent,
+            image: productNode.dataset.image,
+            metafields: JSON.parse(productNode.dataset.metafields)
+          };
+        } catch (error) {
+          errorMessage = `Ce produit n'a pas encore été testé`;
+          console.log(errorMessage);    
+          showMessage(errorMessage);   
+        }       
+      }
+
+      function showMessage(message) {
+        document.querySelector('.message').textContent = message;
+      }
+
+      /* If product page */
+
+      {% if template == "product" %}
+      productsArray.push({
+        title: currentProduct.textContent,
+        image: currentProduct.dataset.image,
+        metafields: JSON.parse(currentProduct.dataset.metafields)
+      });
+      console.log('product'); 
+      insertProductsInformation();
+      canvas.style.display = "block";
+      playerInfos.style.display = "flex";
+      {% else %}
+      console.log('pas dans fiche produit'); 
+      {% endif %}
+
+      console.log(productsArray);
+
+      function createProductList(product, i) {
+        let div = document.createElement('div');
+        let divInner = document.createElement('div');
+        div.style.backgroundColor = chartColors[i];
+        let btn = document.createElement('button');
+        let img = document.createElement('img');
+        img.src = product.image;
+        img.width = 50;
+        img.alt = "";
+        console.log(img);
+        divInner.textContent = product.title;
+        btn.textContent = "x";
+        btn.dataset.id = i;
+        productsInfos.appendChild(div);
+        div.appendChild(img);
+        div.appendChild(divInner);
+        div.appendChild(btn);
+
+        btn.addEventListener("click", function() {
+          let index = productsArray.findIndex(x => x.title === product.title);
+          productsArray.splice(index, 1);
+          productsInfos.innerHTML = "";
+          insertProductsInformation();
+          filterInput.focus();
+          console.log(productsArray.length);
+          if (productsArray.length === 0) {
+            canvas.style.display = "none";
+            playerInfos.style.display = "none";
+          }
+        });
+
+        i++;
+      }
+      
+      function insertProductsInformation() {
+        const ctx = document.getElementById("myChart").getContext("2d");
+        let myChart = new Chart(ctx, {
+          type: 'radar',
+          options: chartOptions    
+        });
+        let i;
+
+        productsArray.forEach((product, i) => {
+            
+          createProductList(product, i);
+
+          myChart.data.labels = Object.keys(product.metafields);
+          myChart.data.datasets.push({
+            label: product.title,
+            data: Object.values(product.metafields),
+            backgroundColor: chartColors[i],
+            borderColor: [chartBorderColors[i]],    
+            borderWidth: window.matchMedia("(max-width: 600px)").matches ? 1 : 2,
+            pointBorderColor: chartBorderColors[i],
+            pointRadius: window.matchMedia("(max-width: 600px)").matches ? 2 : 5,
+          });     
+        
+        });
+
+        myChart.update();
+        console.log(myChart);
+      }
+      
+
+    </script>
+
+    <style>  
+
+      .section-comparateur .wrapper {
+        max-width:1400px;
+      }
+     
+      .products-comparison {        
+        position:relative;         
+      }
+
+      .section-comparateur .h1 {
+        text-transform:uppercase;
+      }
+     
+      .products-comparison .cont-form {
+        position:relative;
+        margin:1rem auto 7px auto;
+        max-width:500px;       
+      }  
+
+      .products-comparison  form {
+        margin:0;
+      } 
+
+      .products-comparison .cont-form i {
+        position:absolute;
+        top:15px;
+        left:10px;
+        color:#666;
+      }
+
+      .message {
+        color:red;
+        text-align:left;
+        font-style:italic;
+        font-size:13px;
+        min-height:10px;
+        margin-top:5px;
+      }
+
+      .products-comparison .cont-form input {
+        padding-left:35px;
+        margin:0;
+      }
+
+      .productList {
+        font-size:12px;
+ 
+      
+        background:#FFF;
+        position:absolute;
+        z-index:9999;
+        top:50px;
+        text-align:left;
+      }
+
+      .productList.show {       
+         padding:7px 11px;
+        border:1px solid #999;        
+      }
+
+      .productList > div {
+        cursor:pointer;
+        padding:5px 0;
+      }
+
+      .productsInfos {
+        font-size:11px;
+        display:flex;
+        gap:7px;
+        margin-bottom:2rem;
+        justify-content:center;
+        flex-wrap:wrap;       
+      }
+
+      .productsInfos > div {
+        display:flex;     
+        align-items:center;
+        gap:1rem;
+        border:1px solid #AAA;
+        line-height:1.2;
+
+      }
+      .productsInfos button {            
+        background:none;
+        border:none;
+        border-left:1px solid #AAA;
+        text-align:center;
+        width:20px;
+        height:100%;
+        padding:0;
+        font-size:14px;   
+      }  
+      .productsInfos button:hover {
+        opacity:0.9;
+      } 
+    
+      .player-infos {
+        padding:7px 15px;
+        box-shadow:0 0 10px rgba(000,000,000,0.3);
+        display:flex;
+        gap:1rem;
+        align-items:center;
+        max-width:500px;
+        margin:2rem auto;
+        font-size:15px;
+      }
+
+      .player-infos img {
+        max-width:80px;
+        height:auto;
+      }
+      .player-infos blockquote, .player-infos p {
+        line-height:1.2;
+        margin:0;
+        text-align:left;
+      }
+
+      .btn--small {
+        margin-bottom:7px;
+      }
+
+      @media only screen and (max-width: 600px) {
+        #myChart {
+          margin:80px 0 80px 0;
+          scale:1.7;
+        }        
+        .productsInfos > div {
+          display:flex;
+          flex:1 0 40%;
+        }
+        .productsInfos button {  
+          display: flex;
+          flex: 1 0 auto;
+          align-items: center;
+          justify-content: center;        
+        }  
+        .player-infos {
+          padding:5px;
+        }
+        .player-infos img {
+          max-width:60px;      
+        }
+        .player-infos blockquote, .player-infos p {
+          font-size:90%;
+        }
+      }
+
+    </style>
+   </div>
+  </div>
+</div>
+
+{% render 'section-custom-css', elem: section %}
+
+{% schema %}
+{
+  "name": {
+    "fr": "Comparateur de produits",    
+    "en": "Comparateur de produits"
+  },
+  "class": "section-comparateur",
+  "settings": [	     
+       {
+      "type": "text",
+      "id": "handle",
+      "label": {
+        "fr": "Collection handle",
+        "es": "Collection handle",
+        "en": "Collection handle"
+      },
+      "default": {
+        "fr": "nouveautes",
+        "es": "nouveautes",
+        "en": "nouveautes"
+      }
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": {
+        "fr": "Titre",
+        "es": "Título",
+        "en": "Title"
+      },
+      "default": {
+        "fr": "Comparateur de raquettes",
+        "es": "Comparateur de raquettes",
+        "en": "Comparateur de raquettes"
+      }
+    },
+    {
+      "type": "select",
+      "id": "title_hn",
+      "label": {
+        "fr": "Balise Hn (SEO)",
+        "es": "Hn tag (SEO)",
+        "en": "Hn tag (SEO)"
+      },
+      "default": "h2",
+      "options": [
+        {
+          "value": "h2",
+          "label": "h2"
+        },
+        {
+          "value": "h3",
+          "label": "h3"
+        },
+		{
+          "value": "h4",
+          "label": "h4"
+        },
+		{
+          "value": "h5",
+          "label": "h5"
+        },
+		{
+          "value": "h6",
+          "label": "h6"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": {
+        "fr": "Texte",
+        "es": "Texto",
+        "en": "Text"
+      },
+      "default": {
+        "fr": "<p>Compare ta future raquette avec d'autres modèles (4 max)</p>",
+        "es": "<p>Compare ta future raquette avec d'autres modèles (4 max)</p>",
+        "en": "<p>Compare ta future raquette avec d'autres modèles (4 max)</p>"
+      }
+    },
+    {
+      "type": "html",
+      "id": "html",
+      "label": {
+        "fr": "Zone HTML",
+        "es": "HTML Zone",
+        "en": "HTML Zone"
+      }
+    }, 
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": {
+        "fr": "Image du joueur",
+        "es": "Imagen palyer",
+        "en": "Image player"
+      },
+      "info": {
+        "fr": "Taille recommandée 1000x500",
+        "es": "Tailla recomendada 1000x500",
+        "en": "Recommended size 1000x500"
+      }
+    },  
+     {
+      "type": "richtext",
+      "id": "text2",
+      "label": {
+        "fr": "Texte",
+        "es": "Texto",
+        "en": "Text"
+      },
+      "default": {
+        "fr": "<p>Testé et noté par François Authier, ex n°1 français</p>",
+        "es": "<p>Testé et noté par François Authier, ex n°1 français</p>",
+        "en": "<p>Testé et noté par François Authier, ex n°1 français</p>"
+      }
+    },  
+    {
+      "type": "url",
+      "id": "link",
+      "label": {
+        "fr": "Lien",
+        "es": "Enlace",
+        "en": "Link"
+      }
+    },    
+    {
+          "type": "text",
+          "id": "linktext",
+          "label": {
+            "fr": "Texte du bouton",
+            "es": "Texto del boton",
+            "en": "Button text"
+          },
+          "default": {
+            "fr": "En savoir plus",
+            "es": "Para saber más sobre el tema",
+            "en": "Learn more"
+          }
+        },
+    {
+       "type":"header",       
+       "content":{
+          "fr":"Mise en forme",
+          "es":"Content",
+          "en":"Content"
+       }
+    },
+    {
+      "type":"text",
+      "id":"block_image_radius_v2",     
+      "label":{
+        "fr":"Arrondi de l'image",
+        "es":"Rounded corners on image",
+        "en":"Rounded corners on image"
+      },
+      "default":"0px",
+      "info":"px or % (50% = perfect circle)"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_page",
+      "label": {
+        "fr": "Pleine page",
+        "es": "Full page",
+        "en": "Full page"
+      },
+      "default": true
+    },  
+    {
+       "type":"checkbox",
+       "id":"section_spaced",       
+       "label":{
+          "fr":"Espacer la section - Haut",
+          "es":"Add space - Above the section",
+          "en":"Add space - Above the section"
+       },
+       "default":true
+    },
+    {
+       "type":"checkbox",
+       "id":"faq_text_center",       
+       "label":{
+          "fr":"Centrer les éléments",
+          "es":"Center the content",
+          "en":"Center the content"
+       },
+       "default":true
+    },
+    {
+      "type": "select",
+      "id": "title_layout",
+      "label": {
+        "fr": "Modèle de titre",
+        "es": "Title layout",
+        "en": "Title layout"
+      },
+      "default": "2",
+      "options": [
+        {
+          "value": "0",
+          "label": {
+            "fr": "Modèle 1",
+            "es": "Model 1",
+            "en": "Model 1"
+          }
+        },
+        {
+          "value": "1",
+          "label": {
+            "fr": "Modèle 2",
+            "es": "Model 2",
+            "en": "Model 2"
+          }
+        },
+        {
+          "value": "2",
+          "label": {
+            "fr": "Modèle 3",
+            "es": "Model 3",
+            "en": "Model 3"
+          }
+        }
+       ]
+    }    
+    
+  ],
+  "presets": [
+    {
+      "name": {
+        "fr": "Comparateur de produits",
+        "es": "Comparateur de produits",
+        "en": "Comparateur de produits"
+      },     
+      "category": {
+        "fr": "Contenu",
+        "es": "Contenido",
+        "en": "Content"
+      }
+    }
+  ]
+}
+{% endschema %}
+
+

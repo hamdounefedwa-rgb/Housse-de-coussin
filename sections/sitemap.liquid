@@ -1,0 +1,94 @@
+<div class="sitemap grid-uniform ">
+  
+  {% if section.settings.sitemap_products_enable %}
+  <div class="grid-item small--one-half medium--one-third large--one-third">    
+    <h2>{{ 'sitemap.products_title' | t }}</h2>
+    <ul>
+      {% paginate collections.all.products by 2000 %}
+      {% for product in collections.all.products %}
+      {% if product.collections.size < 2000 %}
+      <li>{{ product.title | link_to: product.url }}</li>
+      {% endif %}
+      {% endfor %}
+      {% endpaginate %}
+    </ul>
+  </div>
+  {% endif %}
+  {% if section.settings.sitemap_collections_enable %}
+  <div class="grid-item small--one-half medium--one-third large--one-third">
+    <h2>{{ 'sitemap.collections_title' | t }}</h2>
+    <ul>
+      {% for collection in collections %}      
+      <li>{{ collection.title | link_to: collection.url }}</li>     
+      {% endfor %}
+
+    </ul>
+  </div>
+  {% endif %}
+  {% if section.settings.sitemap_blog_enable %}
+  <div class="grid-item small--one-half medium--one-third large--one-third">
+    <h2>{{ 'sitemap.articles_title' | t }}</h2>    
+    
+    {% assign blog_handles = section.settings.sitemap_blog_name | split: ";" %}       
+
+    {% for blog_handle in blog_handles %}
+      
+      <h3 class="h4" style="text-transform:initial;">{{ blog_handle }}</h3>
+      <ul>
+      {% for article in blogs[blog_handle].articles limit: 2000 %}
+      <li>{{ article.title | link_to: article.url }}</li> 
+      {% endfor %} 
+      </ul>
+    {% endfor %}     
+  </div> 
+  {% endif %}
+</div>
+
+{% schema %}
+  {
+    "name": {
+    "fr": "Plan du site",
+    "es": "SITEMAP",
+    "en": "SITEMAP"
+  },
+    "settings": [
+    {
+      "type": "checkbox",
+      "id": "sitemap_products_enable",
+      "label": {
+        "fr": "Activer la liste des produits",
+        "es": "Activer la liste des produits",
+        "en": "Activate list of products"
+      },
+      "default" : true
+    },
+	{
+      "type": "checkbox",
+      "id": "sitemap_collections_enable",
+      "label": {
+        "fr": "Activer la liste des collections",
+        "es": "Activer la liste des collections",
+        "en": "Activate list of collections"
+      },
+      "default" : true
+    },
+    {
+      "type": "checkbox",
+      "id": "sitemap_blog_enable",
+      "label": {
+        "fr": "Activer la liste des blogs et articles",
+        "es": "Activer la liste des blogs et articles",
+        "en": "Activate list of blogs and articles"
+      },
+      "default" : true
+    },
+    {
+      "type": "text",
+      "id": "sitemap_blog_name",
+      "label": "blog à lister",
+      "info": "nom de votre blog dans l'url par defaut 'news' - si vous en avez plusieurs, séparez les par un ;",
+      "default": "news"
+    }
+  ]
+  }
+{% endschema %}

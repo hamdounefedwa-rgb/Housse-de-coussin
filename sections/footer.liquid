@@ -1,0 +1,1203 @@
+
+{% capture theme_settings_link %}<a href="/admin/themes/{{ theme.id }}/settings">{{ 'layout.footer.theme_settings' | t }}</a>{% endcapture %}
+
+<footer class="site-footer section-id-{{ section.id }} small--text-center
+  {% if section.settings.section_spaced %}section-spaced{% endif %} 
+   {{ section.settings.class }}">
+  <div class="{% if section.settings.full_page %} wrapper-full-page {% else %} wrapper{% endif %}">
+  <div class="grid-uniform">
+  
+    {% for block in section.blocks %} 
+
+    {% case block.settings.width %}
+    {% when '16%' %}
+    {%- assign block_width = 'small--one-whole two-twelfths' -%}
+    {% when '20%' %}
+    {%- assign block_width = 'small--one-whole one-fifth' -%}
+    {% when '25%' %}
+    {%- assign block_width = 'small--one-whole one-quarter' -%}
+    {% when '33%' %}
+    {%- assign block_width = 'small--one-whole one-third' -%}
+    {% when '50%' %}
+    {%- assign block_width = 'small--one-whole one-half' -%}
+    {% when '66%' %}
+    {%- assign block_width = 'small--one-whole two-thirds' -%}
+    {% when '75%' %}
+    {%- assign block_width = 'small--one-whole three-quarters' -%}
+    {% when '100%' %}
+    {%- assign block_width = 'one-whole' -%}
+    {% endcase %}
+
+    <div class="grid-item {{ block_width }} vertical-align-{{ block.settings.vertical_align }} accordion__test">
+      {% if block.settings.title %}
+      <p class="h5 block-title accordion__title">{{ block.settings.title | escape }}</p>
+      {% endif %}
+
+      {% case block.type %}
+
+      {% when 'menu' %}
+      <ul>
+        {% for link in linklists[block.settings.menu].links %}
+        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {% else %}
+        {% capture theme_settings_footer_linklist_path %}<strong>Footer</strong> > <strong>Quick links link list</strong>{% endcapture %}
+        {{ 'layout.footer.instructions_for_linklist_html' | t: theme_settings_link: theme_settings_link, theme_settings_footer_linklist_path: theme_settings_footer_linklist_path }}
+        {% endfor %}
+      </ul>
+
+      {% when 'text' %}
+      <div class="collapse panel">
+        {% if block.settings.tracking != blank or block.settings.phone != blank or block.settings.phone != blank %}
+        <p>
+          {% endif %}
+          {% if block.settings.tracking != blank %}
+          <i class="fa fa-truck" aria-hidden="true"></i> {{ block.settings.tracking }}<br />
+          {% endif %}
+          {% if block.settings.phone != blank %}
+          <i class="fa fa-phone" aria-hidden="true"></i> {{ block.settings.phone }}<br />
+          {% endif %}
+          {% if block.settings.mail != blank %}
+          <i class="fa fa-envelope" aria-hidden="true"></i> {{ block.settings.mail }}<br />
+          {% endif %}
+          {% if block.settings.tracking != blank or block.settings.phone != blank or block.settings.phone != blank %}
+        </p>
+        {% endif %}
+        {% if block.settings.richtext != blank %}
+        {{ block.settings.richtext }}
+        {% endif %}
+        {% if block.settings.html != blank %}
+        {{ block.settings.html }}
+        {% endif %}
+      </div>
+
+      {% when 'newsletter' %}
+      <div class="collapse panel">      
+        {% if block.settings.newsletter_text != blank %}
+        {{ block.settings.newsletter_text }}
+        {% endif %}
+        {% render 'newsletter-form' %}
+      </div>
+      
+      {% when 'image' %}
+      {% if block.settings.logo_footer != blank %}
+
+      {% capture image_size %}{{ block.settings.logo_footer_max_width | escape }}x{% endcapture %}
+
+      <img class="footer-logo" style="max-width:{{ block.settings.logo_footer_max_width | escape }}px"       
+           loading="lazy"
+           width= "{{ block.settings.logo_footer.width }}"
+           height= "{{ block.settings.logo_footer.height }}"
+           src="{{ block.settings.logo_footer | img_url: settings.perf_img_lazy }}"           
+           srcset="{{ block.settings.logo_footer | img_url: image_size }} {{ block.settings.logo_footer_max_width }}w"
+           alt="{{ block.settings.logo_footer.alt | default: shop.name }}"
+           />
+      {% endif %}
+
+      {% endcase %}
+    </div>
+    {% endfor %}
+
+  </div>
+
+  {% if section.settings.social_enabled or section.settings.legal_menu != blank %}
+  <hr class="hr--small">
+  {% endif %}
+
+  <div class="grid {% if section.settings.legal_menu != blank %} grid-flex {% endif %}">
+    {% if section.settings.legal_menu != blank %}
+    <div class="grid-item small--one-whole{% if section.settings.social_enabled %} large--two-half{% else %}  text-center{% endif %}">
+
+      <ul class="legal-links inline-list">
+        {% for link in linklists[section.settings.legal_menu].links %}
+        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% if section.settings.social_enabled %}
+    <div class="grid-item{% if section.settings.legal_menu != blank %} small--one-whole large--two-half text-right{% else %} one-whole text-center{% endif %}">
+      <ul class="inline-list social-icons">
+        {% render 'social-icons' %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+  <hr class="hr--small">
+  <div class="grid grid-flex footer-bottom ">
+    <div class="grid-item {% unless shop.enabled_payment_types == empty %} large--two-half{% endunless %}">
+      <ul class="legal-links inline-list">
+        <li>
+          &copy; {{ 'now' | date: "%Y" }} {{ shop.name | link_to: '/' }}- {{ 'layout.footer.all_rights_reserved' | t }}
+        </li>              
+      </ul>
+    </div>
+    {% unless shop.enabled_payment_types == empty %}
+    <div class="grid-item no-marge">          
+      <div class="payment_methods">
+        {% if settings.payment_applepay == true %}
+        {% assign payment_icons_available = 'amazon_payments,apple_pay,american_express,bitcoin,cirrus,dankort,diners_club,discover,dogecoin,dwolla,forbrugsforeningen,interac,jcb,litecoin,maestro,master,paypal,visa' | split: ',' %}
+        {% else %}
+        {% if settings.payment_paypal == true %}            
+        {% assign payment_icons_available = 'amazon_payments,american_express,bitcoin,cirrus,dankort,diners_club,discover,dogecoin,dwolla,forbrugsforeningen,interac,jcb,litecoin,maestro,master,paypal,visa' | split: ',' %}
+        {% else %}            
+        {% assign payment_icons_available = 'amazon_payments,american_express,bitcoin,cirrus,dankort,diners_club,discover,dogecoin,dwolla,forbrugsforeningen,interac,jcb,litecoin,maestro,master,visa' | split: ',' %}
+        {% endif %}
+        {% endif %}           
+
+        {% for type in shop.enabled_payment_types %}
+        {% if payment_icons_available contains type %}
+        <img src="{{ type | payment_type_img_url }}" width="50" height="29" alt="{{ type | replace: "_", " " | capitalize }}" loading="lazy">
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endunless %}
+  </div>   
+    </div> 
+</footer>
+<div id="sflc" data-sflc="{{ shop.metafields.global.sflc }}"></div>
+{% render 'search-modal' %}
+
+{% render 'section-custom-css', elem: section %}
+{% render 'section-footer-custom-css', elem: section %}
+
+{% schema %}
+{
+  "name": {
+    "fr": "Pied de page",
+    "es": "Footer",
+    "en": "Footer"
+  },
+  "class": "footer-section",
+  "max_blocks": 9,
+  "blocks": [
+    {
+      "type": "menu",
+      "name": {
+        "fr": "Menu",
+        "es": "Menu",
+        "en": "Menu"
+      },
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": {
+            "fr": "Titre",
+            "es": "Titre",
+            "en": "Title"
+          },
+          "default": {
+            "fr": "Liens rapides",
+            "es": "Liens rapides",
+            "en": "Quick links"
+          }
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": {
+            "fr": "Menu",
+            "es": "Menu",
+            "en": "Menu"
+          }
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": {
+            "fr": "Largeur du conteneur",
+            "es": "Container width",
+            "en": "Container width"
+          },
+          "default": "16%",
+          "options": [
+            {
+              "value": "16%",
+              "label": "16%"
+            },
+            {
+              "value": "20%",
+              "label": "20%"
+            },
+            {
+              "value": "25%",
+              "label": "25%"
+            },
+            {
+              "value": "33%",
+              "label": "33%"
+            },
+            {
+              "value": "50%",
+              "label": "50%"
+            },
+            {
+              "value": "66%",
+              "label": "66%"
+            },
+            {
+              "value": "75%",
+              "label": "75%"
+            },
+            {
+              "value": "100%",
+              "label": "100%"
+            }
+          ]
+        }
+      ]
+    },      
+    {
+      "type": "image",
+      "name": {
+        "fr": "Image Logo",
+        "es": "Im age Logo",
+        "en": "Logo image"
+      },
+     
+      "settings": [           
+        {  
+          "type":"image_picker",
+          "id":"logo_footer",
+          "label": {
+            "fr": "Image du footer",
+            "es": "Image du footer",
+            "en": "Footer image"
+          },
+          "info": {
+            "fr": "300px max",
+            "es": "300px max",
+            "en": "300px max"
+          }
+        },
+        {  
+          "type":"text",
+          "id":"logo_footer_max_width",
+          "label": {
+            "fr": "longueur du logo",
+            "es": "longueur du logo",
+            "en": "Logo length"
+          },
+          "default":"150"
+        },
+        {
+        "type": "checkbox",
+          "id": "vertical_align",
+          "label": {
+            "fr": "Alignement vertical",
+            "es": "Vertical align",
+            "en": "Vertical align"
+          },
+          "default": false
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": {
+            "fr": "Largeur du conteneur",
+            "es": "Container width",
+            "en": "Container width"
+          },
+          "default": "16%",
+          "options": [
+            {
+              "value": "16%",
+              "label": "16%"
+            },
+            {
+              "value": "20%",
+              "label": "20%"
+            },
+            {
+              "value": "25%",
+              "label": "25%"
+            },
+            {
+              "value": "33%",
+              "label": "33%"
+            },
+            {
+              "value": "50%",
+              "label": "50%"
+            },
+            {
+              "value": "66%",
+              "label": "66%"
+            },
+            {
+              "value": "75%",
+              "label": "75%"
+            },
+            {
+              "value": "100%",
+              "label": "100%"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "type": "text",
+      "name": {
+        "fr": "Zone de texte",
+        "es": "Zona de texto",
+        "en": "Text zone"
+      },
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": {
+            "fr": "Titre",
+            "es": "Título",
+            "en": "Title"
+          },
+          "default": {
+            "fr": "Titre de la zone",
+            "es": "Título de la zona",
+            "en": "Zone title"
+          }
+        },
+        {
+          "type": "richtext",
+          "id": "richtext",
+          "label": {
+            "fr": "Texte",
+            "es": "Texto",
+            "en": "Text"
+          },
+          "default": {
+            "fr": "<p>Si vous avez des questions ou un besoin particulier n'hésitez pas à nous contacter par mail à contact@nomdusite.com</p>",
+            "es": "<p>Zona de texto con informaciónes sobre su tienda.</p>",
+            "en": "<p>Text zone for information about your shop.</p>"
+          }
+        },
+        {
+          "type": "html",
+          "id": "html",
+          "label": {
+            "fr": "Zone HTML",
+            "es": "HTML code",
+            "en": "HTML code"
+          }
+        },
+		   {
+          "type": "paragraph",
+          "content": {
+            "fr": "Videz les champs pour supprimer l'affichage",
+            "es": "Vaciar los campos para suprimir la pantalla",
+            "en": "Empty the fields to disable them"
+          }
+        },
+		   {
+          "type": "text",
+          "id": "mail",
+          "label": {
+            "fr": "Email",
+            "es": "Email",
+            "en": "Email"
+          },
+		  "default":"contact@nomdusite.com"          
+        },
+		{
+          "type": "text",
+          "id": "phone",
+          "label": {
+            "fr": "Téléphone",
+            "es": "Teléfono",
+            "en": "Phone"
+          },
+		  "default":"Bientôt disponible"
+        },
+		{
+          "type": "text",
+          "id": "tracking",
+          "label": {
+            "fr": "Suivre ma commande",
+            "es": "rastrear mi pedido",
+            "en": "Track my order"
+          },
+		  "default":" <a href=\"/pages/suivre-ma-commande\">Suivre ma commande</a>"          
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": {
+            "fr": "Largeur de la zone",
+            "es": "Anchura de la zona",
+            "en": "Zone width"
+          },
+          "default": "50%",
+          "options": [
+            {
+              "value": "16%",
+              "label": "16%"
+            },
+            {
+              "value": "20%",
+              "label": "20%"
+            },
+            {
+              "value": "25%",
+              "label": "25%"
+            },
+            {
+              "value": "33%",
+              "label": "33%"
+            },
+            {
+              "value": "50%",
+              "label": "50%"
+            },
+            {
+              "value": "66%",
+              "label": "66%"
+            },
+            {
+              "value": "75%",
+              "label": "75%"
+            },
+            {
+              "value": "100%",
+              "label": "100%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": {
+        "fr": "Abonnement Newsletter",
+        "es": "Abono a la Newsletter",
+        "en": "Newsletter subscription"
+      },
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": {
+            "fr": "Titre",
+            "es": "Título",
+            "en": "Title"
+          },
+          "default": "Newsletter"
+        },
+        {
+          "type": "paragraph",
+          "content": {
+            "fr": "Les clients inscrits auront un compte actif sur votre boutique. [View customers](/admin/customers?query=&accepts_marketing=1)",
+            "es": "Los clientes registrados tendrán una cuenta activa en su tienda. [View customers](/admin/customers?query=&accepta_marketing=1)",
+            "en": "Subscribed customers will have an active account on your store. [View customers](/admin/customers?query=&accepts_marketing=1)"
+          }
+        },
+        {
+          "type": "richtext",
+          "id": "newsletter_text",
+          "label": {
+            "fr": "Texte",
+            "es": "Texto",
+            "en": "Text"
+          },
+          "default": {
+            "fr": "<p>Restez informé en vous inscrivant à notre newsletter</p>",
+            "es": "<p>Manténgase informado suscribiéndose a nuestra newsletter</p>",
+            "en": "<p>Get the latest news by subscribing to our newsletter</p>"
+          }
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": {
+            "fr": "Largeur de la zone",
+            "es": "Anchura de la zona",
+            "en": "Zone width"
+          },
+          "default": "33%",
+          "options": [
+            {
+              "value": "16%",
+              "label": "16%"
+            },
+            {
+              "value": "20%",
+              "label": "20%"
+            },
+            {
+              "value": "25%",
+              "label": "25%"
+            },
+            {
+              "value": "33%",
+              "label": "33%"
+            },
+            {
+              "value": "50%",
+              "label": "50%"
+            },
+            {
+              "value": "66%",
+              "label": "66%"
+            },
+            {
+              "value": "75%",
+              "label": "75%"
+            },
+            {
+              "value": "100%",
+              "label": "100%"
+            }
+          ]
+        }
+      ]
+    }
+    
+  ],
+  "settings": [
+	{
+    "type": "paragraph",
+    "content": {
+      "fr": "[Tutoriel vidéo](https://youtu.be/s74h3jfSTIk)",
+      "es": "[Video tutorial](https://youtu.be/-fB5mhyVF64)",
+      "en": "[Video tutorial](https://youtu.be/-fB5mhyVF64)"
+    }
+  },
+    {
+      "type": "checkbox",
+      "id": "full_page",
+      "label": {
+        "fr": "Pleine page",
+        "es": "Full page",
+        "en": "Full page"
+      },
+      "default": false
+    },
+    {
+      "type":"checkbox",
+      "id":"section_spaced",       
+      "label":{
+        "fr":"Espacer la section - Haut",
+        "es":"Add space - Above the section",
+        "en":"Add space - Above the section"
+      }
+    },
+  
+    {
+      "type": "checkbox",
+      "id": "social_enabled",
+      "label": {
+        "fr": "Activer les icônes des réseaux sociaux",
+        "es": "Activer les icônes des réseaux sociaux",
+        "en": "Activate social media icons"
+      }
+    },
+    {
+      "type": "link_list",
+      "id": "legal_menu",
+      "label": {
+        "fr": "Menu à côté des icônes",
+        "es": "Menu",
+        "en": "Menu"
+      }
+    },
+    {
+      "type": "text",
+      "id": "legal_menu_no_follow",
+      "label": {
+        "fr": "Liens en nofollow",
+        "es": "Links nofollow",
+        "en": "Exterior Spacing"
+      }
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation des couleurs",
+        "es": "Color customization",
+        "en": "Color customization"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "[Tutoriel vidéo](https://youtu.be/mX5vrnrv4_I)",
+        "es": "[Video tutorial](https://youtu.be/j8md1egrR_4)",
+        "en": "[Video tutorial](https://youtu.be/j8md1egrR_4)"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+      "fr": "Reprend la main sur les paramètres génériques du thème",
+      "es": "Will replace the generic customization from theme settings",
+      "en": "Will replace the generic customization from theme settings"
+      }
+    },
+    
+    {
+      "type": "header",
+      "content": {
+          "fr": "Section",
+          "es": "Section",
+          "en": "Section"
+      }
+    },
+    
+    {
+      "type": "checkbox",
+      "id": "block_color_enable",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+     
+     {
+       "type":"color",
+       "id":"block_bgcolor",       
+       "label":{
+          "fr":"Couleur de fond",
+          "es":"Background color",
+          "en":"Background color"
+       },
+       "default":"#111111"
+     },
+     {
+       "type":"image_picker",
+       "id":"block_image",       
+       "label":{
+          "fr":"Image de fond (optionnel)",
+          "es":"Background image (optional)",
+          "en":"Background image (optional)"
+       },
+       "info":"1900px Min"
+     },
+     {
+       "type":"checkbox",
+       "id":"section_parallax",      
+       "label":{
+          "fr":"Effet parallax",
+          "es":"Parallax effect",
+          "en":"Parallax effect"
+       },
+       "default":false
+     },
+     {
+       "type":"checkbox",
+       "id":"block_bgcolor_gradient",       
+       "label":{
+          "fr":"Activer la prise en charge du dégradé",
+          "es":"Enable gradient",
+          "en":"Enable gradient"
+       },
+       "default":false
+     },
+	 {
+        "type": "range",
+        "id": "block_bgcolor_gradient_direction",
+        "min": 0,
+        "max": 180,
+        "step": 2,
+        "unit": "deg",
+        "label": {
+          "fr": "Sens du dégradé",
+          "es": "Gradient direction",
+          "en": "Gradient direction"
+        },
+        "default": 90
+     },
+     {
+       "type":"color",
+       "id":"block_bgcolor_gradient_1",       
+       "label":{
+          "fr":"Fond - Couleur 1",
+          "es":"Background - Color 1",
+          "en":"Background - Color 1"
+       },
+       "default":"#F0F0F0"
+     },     
+     {
+       "type":"color",
+       "id":"block_bgcolor_gradient_2",       
+       "label":{
+          "fr":"Fond - Couleur 2",
+          "es":"Background - Color 2",
+          "en":"Background - Color 2"
+       },
+       "default":"#333333"
+     },
+     {
+        "type": "range",
+        "id": "block_bgcolor_gradient_1_percent_2",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "label": {
+          "fr": "Proportion des couleurs",
+          "es": "Color ratio",
+          "en": "Color ratio"
+        },
+        "default": 0
+     },
+     {
+        "type": "range",
+        "id": "block_bgcolor_gradient_1_percent_1",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "label": {
+          "fr": "Début du flou",
+          "es": "Blur beginning",
+          "en": "Blur beginning"
+        },
+        "default": 0
+     },
+     {
+        "type": "range",
+        "id": "block_bgcolor_gradient_2_percent_1",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "label": {
+          "fr": "Fin du flou ",
+          "es": "Blur ending",
+          "en": "Blur ending"
+        },
+        "default": 100
+     },
+          
+     {
+       "type":"color",
+       "id":"section_shadow_color",       
+       "label":{
+          "fr":"Ombre de la section",
+          "es":"Shadow color of the section",
+          "en":"Shadow color of the section"
+       },
+       "default":"#000000"
+     },
+     {
+        "type": "range",
+        "id": "section_shadow_opacity",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "unit": "deg",
+        "label": {
+          "fr": "Degré d'opacité de la section",
+          "es": "Opacity of the section",
+          "en": "Opacity of the section"
+        },
+        "default": 0.2
+     },
+     {
+        "type": "range",
+        "id": "section_shadow_size",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": {
+          "fr": "Taille de l'ombre de la section",
+          "es": "Shadow size",
+          "en": "Shadow size"
+        },
+        "default": 0
+     },  
+
+     {
+      "type": "header",
+      "content": {
+          "fr": "Contenu",
+          "es": "Content",
+          "en": "Content"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "colors_product_content",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+
+    {
+      "type":"color",
+      "id":"block_title_color",       
+      "label":{
+         "fr":"Titres",
+         "es":"Titles",
+         "en":"Titles"
+      },
+      "default":"#dddddd"
+    },
+    {
+      "type":"color",
+      "id":"block_color",       
+      "label":{
+         "fr":"Textes & liens",
+         "es":"Text & links",
+         "en":"Text & links"
+      },
+      "default":"#dddddd"
+    },
+    {
+      "type":"color",
+      "id":"block_form_field_color",       
+      "label":{
+         "fr":"Texte du champ",
+         "es":"Email field text",
+         "en":"Email field text"
+      },
+      "default":"#333"
+    },
+    {
+      "type":"color",
+      "id":"block_form_field_bg_color",       
+      "label":{
+         "fr":"Fond du champ",
+         "es":"Email field background",
+         "en":"Email field background"
+      },
+      "default":"#444"
+    },
+    {
+      "type":"color",
+      "id":"block_form_input_color",       
+      "label":{
+         "fr":"Texte du bouton",
+         "es":"Button text",
+         "en":"Button text"
+      },
+      "default":"#FFF"
+    },
+    {
+      "type":"color",
+      "id":"block_form_input_bg_color",       
+      "label":{
+         "fr":"Fond du bouton",
+         "es":"Button background",
+         "en":"Button background"
+      },
+      "default":"#777"
+    },
+    {
+      "type":"color",
+      "id":"block_icons_color",       
+      "label":{
+         "fr":"Icônes",
+         "es":"Icons",
+         "en":"Icons"
+      },
+      "default":"#333333"
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation des tailles",
+        "es": "Size customization",
+        "en": "Size customization"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "[Tutoriel vidéo](https://youtu.be/ovHmpm105x8)",
+        "es": "[Video tutorial](https://youtu.be/i4PZ8W99KYA)",
+        "en": "[Video tutorial](https://youtu.be/i4PZ8W99KYA)"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "block_size_enable",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Bureau",
+        "es": "Layout (Desktop)",
+        "en": "Layout (Desktop)"
+      }
+    },  
+    {
+      "type":"range",
+      "id":"block_title_size",
+      "min":10,
+      "max":60,
+      "step":1,
+      "unit":"px",
+      "label":{
+        "fr":"Taille des titres",
+        "es":"Font size of titles",
+        "en":"Font size of titles"
+      },
+      "default":18
+    },
+    {
+      "type":"range",
+      "id":"block_text_size",
+      "min":10,
+      "max":60,
+      "step":1,
+      "unit":"px",
+      "label":{
+        "fr":"Taille des textes",
+        "es":"Font size of text",
+        "en":"Font size of text"
+      },
+      "default":15
+    },
+    {
+      "type":"range",
+      "id":"block_form_field_size",
+      "min":10,
+      "max":60,
+      "step":1,
+      "unit":"px",
+      "label":{
+        "fr":"Taille du champ mail",
+        "es":"Font size of email field",
+        "en":"Font size of email field"
+      },
+      "default":15
+    },
+    {
+      "type":"range",
+      "id":"block_form_btn_size",
+      "min":10,
+      "max":60,
+      "step":1,
+      "unit":"px",
+      "label":{
+        "fr":"Taille du bouton",
+        "es":"Font size of button",
+        "en":"Font size of button"
+      },
+      "default":18
+    },
+    {
+      "type":"range",
+      "id":"block_icons_size",
+      "min":10,
+      "max":60,
+      "step":1,
+      "unit":"px",
+      "label":{
+        "fr":"Taille des icônes",
+        "es":"Font size of icons",
+        "en":"Font size of icons"
+      },
+      "default":35
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Mobile",
+        "es": "Layout (Mobile)",
+        "en": "Layout (Mobile)"
+      }
+    },
+    {
+      "type":"range",
+      "id":"block_title_size_sm",
+      "min":10,
+      "max":60,
+      "step":1,
+      "unit":"px",
+      "label":{
+        "fr":"Taille des titres",
+        "es":"Font size of titles",
+        "en":"Font size of titles"
+      },
+      "default":18
+    },
+    {
+      "type":"range",
+      "id":"block_text_size_sm",
+      "min":10,
+      "max":60,
+      "step":1,
+      "unit":"px",
+      "label":{
+        "fr":"Taille des textes",
+        "es":"Font size of text",
+        "en":"Font size of text"
+      },
+      "default":15
+    },
+    {
+      "type":"range",
+      "id":"block_form_field_size_sm",
+      "min":10,
+      "max":60,
+      "step":1,
+      "unit":"px",
+      "label":{
+        "fr":"Taille du champ mail",
+        "es":"Font size of email field",
+        "en":"Font size of email field"
+      },
+      "default":15
+    },
+    {
+      "type":"range",
+      "id":"block_form_btn_size_sm",
+      "min":10,
+      "max":60,
+      "step":1,
+      "unit":"px",
+      "label":{
+        "fr":"Taille du bouton",
+        "es":"Font size of button",
+        "en":"Font size of button"
+      },
+      "default":18
+    },
+    {
+      "type":"range",
+      "id":"block_icons_size_sm",
+      "min":10,
+      "max":60,
+      "step":1,
+      "unit":"px",
+      "label":{
+        "fr":"Taille des icônes",
+        "es":"Font size of icons",
+        "en":"Font size of icons"
+      },
+      "default":35
+    },
+     {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation de la disposition",
+        "es": "Spacing customization",
+        "en": "Spacing customization"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "[Tutoriel vidéo](https://youtu.be/LLS1yEwaPsw)",
+        "es": "[Video tutorial](https://youtu.be/Lv-3vaK-wNE)",
+        "en": "[Video tutorial](https://youtu.be/Lv-3vaK-wNE)"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "Les espacements sont séparés par des espaces avec 4 valeurs maximales - Haut Droit Bas Gauche - L'unité peut être le rem, px, % - Exemple: 20px 0px 20px 20px - [En savoir plus](https://developer.mozilla.org/fr/docs/Web/CSS/padding) ",
+        "es": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)",
+        "en": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)"
+        }
+    },
+    {
+      "type": "checkbox",
+      "id": "block_spacing_enable",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "section_max_width",
+      "label": {
+        "fr": "Longueur max (% ou px)",
+        "es": "Max width (% ou px)",
+        "en": "Max width (% or px)"
+      }
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Bureau",
+        "es": "Layout (Desktop)",
+        "en": "Layout (Desktop)"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_padding",
+      "label": {
+        "fr": "Espacements intérieur",
+        "es": "Interior Spacing",
+        "en": "Interior Spacing"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_margin",
+      "label": {
+        "fr": "Espacements extérieur",
+        "es": "Exterior Spacing",
+        "en": "Exterior Spacing"
+      }
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Mobile",
+        "es": "Layout (Mobile)",
+        "en": "Layout (Mobile)"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_padding_sm",
+      "label": {
+        "fr": "Espacements intérieur",
+        "es": "Interior Spacing",
+        "en": "Interior Spacing"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_margin_sm",
+      "label": {
+        "fr": "Espacements extérieur",
+        "es": "Exterior Spacing",
+        "en": "Exterior Spacing"
+      }
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation avancée",
+        "es": "Advanced CSS",
+        "en": "Advanced CSS"
+      }
+    },
+    {
+      "type": "text",
+      "id": "class",
+      "label": "CSS Class"
+    },
+    {
+      "type": "text",
+      "id": "id",
+      "label": "CSS Id"
+    }
+  ]
+  
+}
+{% endschema %}

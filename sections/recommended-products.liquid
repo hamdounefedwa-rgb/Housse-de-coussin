@@ -1,0 +1,396 @@
+
+<div id="section-id-{{ section.id }}"
+class="section-collection section-id-{{ section.id }} {% unless section.settings.full_page %}wrapper {% endunless %}" 
+data-section-id="{{ section.id }}" 
+data-section-type="product-section"   
+data-title-height="{{ section.settings.grid_crop_title }}" 
+data-title-height-sm="{{ section.settings.grid_crop_title_sm }}" 
+data-title-truncate="{{ section.settings.title_truncate }}" 
+data-title-truncate-sm="{{ section.settings.title_truncate_sm }}">
+
+{% assign image_size = '300' %}
+
+{% if section.settings.related_products_enable %}
+<div class="cont-related">
+  {% assign grid_item_width = 'large--one-fifth medium--one-third small--one-half' %}
+  {% render 'related-products', grid_item_width: grid_item_width, image_size: image_size %}
+</div>
+{% endif %}
+{% if section.settings.custom_collection_enable %}
+<div class="cont-related custom-collection">
+  {% assign grid_item_width = 'large--one-fifth medium--one-third small--one-half' %}
+  {% render 'related-custom-collection', grid_item_width: grid_item_width, image_size: image_size %}
+</div>
+{% endif %}
+</div>
+
+<style> 
+.cont-related { 
+  padding:var(--gutter) var(--gutter-half);    
+  
+}
+.full-page .cont-related {
+  max-width:var(--page-width); 
+  margin:0 auto;
+}
+.cont-related .grid-uniform { 
+  text-align: center;
+}
+
+.cont-related .sale-tag {
+  font-size: 13px;
+  padding: 4px 6px;
+}
+.cont-related .slick-prev:after, .cont-related .slick-next:after {  
+  font-size:45px;
+}
+.section-id-{{ section.id }} .cont-related .grid-uniform .slick-track { 
+  display:flex;
+  justify-content:{{ section.settings.section_flex_align_items }};
+  align-items:{{ section.settings.section_flex_align_items }}; 
+} 
+.cont-related .product-grid-item .btn { 
+  margin-top: 1rem;
+}
+</style>
+
+{% schema %}
+{
+"name": {
+"fr": "Produits recommandés",
+"es": "Producto",
+"en": "Related products"
+},
+"class":"recommended-products featured-collection",
+"settings": [
+{
+  "type":"header",
+  "content": {
+    "fr": "Collection spécifique & Produits recommandés",
+    "es": "Productos recomendados",
+    "en": "Custom collection & Related products"
+  }
+},
+{
+  "type":"checkbox",
+  "id":"custom_collection_enable",
+  "label": {
+    "fr": "Afficher la collection specifique",
+    "es": "Display a specific collection of your choice",
+    "en": "Display a specific collection of your choice"
+  }
+},
+{
+  "type": "collection",
+  "id": "custom_collection",
+  "label": {
+    "fr": "Collection",
+    "es": "Collección",
+    "en": "Collection"
+  }
+},   
+{
+  "type":"checkbox",
+  "id":"related_products_enable",
+  "label": {
+    "fr": "Afficher les produits recommandés",
+    "es": "Mostrar los Productos recomendados",
+    "en": "Display related products"
+  },
+  "default": true
+},
+{
+  "type":"checkbox",
+  "id":"title_center",
+  "label": {
+    "fr": "Centrer les titres des sections",
+    "es": "Center the sections titles",
+    "en": "Center the sections titles"
+  },
+  "default": true
+},
+{
+  "type":"select",
+  "id":"section_flex_align_items",
+  "label":{
+    "fr":"Alignement vertical des éléments",
+    "es":"Vertical alignment of the content",
+    "en":"Vertical alignment of the content"
+  },
+  "default":"flex-start",
+  "options":[
+    {
+      "value":"flex-start",
+      "label":"Sans"
+    },
+    {
+      "value":"center",
+      "label":"Centré"
+    },
+    {
+      "value":"flex-end",
+      "label":"En bas"
+    }
+    
+  ]
+},
+{
+  "type":"header",
+  "content": {
+    "fr": "Vignette du produit",
+    "es": "Product Thumbnail",
+    "en": "Product Thumbnail"
+  }
+}, 
+{
+  "type":      "range",
+  "id":        "title_truncate",
+  "min":       5,
+  "max":        200,
+  "step":       5,
+  "unit":       "uni",
+  "label": {
+    "fr": "Nombre de caractères Max du titre des vignettes",
+    "es": "Número de caracteres en el título de las miniaturas",
+    "en": "Max number of characters for thumbnail title"
+  },
+  "default":   200
+},
+{
+  "type":      "range",
+  "id":        "title_truncate_sm",
+  "min":       5,
+  "max":        200,
+  "step":       5,
+  "unit":       "uni",
+  "label": {
+    "fr": "Nombre de caractères Max du titre des vignettes (mobile)",
+    "es": "Número de caracteres en el título de las miniaturas (mobile)",
+    "en": "Max number of characters for thumbnail title (mobile)"
+  },
+  "default":   200
+},
+{
+  "type": "range",
+  "id": "grid_crop_title",
+  "label": {
+    "fr": "Hauteur de la zone du titre (desktop)",
+    "es": "Altura del área del título (desktop)",
+    "en": "Title zone height (desktop)"
+  },
+  "min": 20,
+  "max": 120,
+  "step": 5,
+  "unit":       "px",
+  "default": 35                
+},
+{
+  "type": "range",
+  "id": "grid_crop_title_sm",
+  "label": {
+    "fr": "Hauteur de la zone du titre (mobile)",
+    "es": "Altura del área del título (mobile)",
+    "en": "Title zone height (mobile)"
+  },
+  "min": 20,
+  "max": 120,
+  "step": 5,
+  "unit":       "px",
+  "default": 35                
+},
+{
+  "type": "select",
+  "id": "reviews_tabs_apps",
+  "label": {
+    "fr": "Notation (Application d'avis)",
+    "es": "Rating (Reviews apps)",
+    "en": "Rating (Reviews apps)"
+  },
+  "options": [
+    {
+      "value": "none",
+      "label": {
+        "fr": "Aucune",
+        "es": "No",
+        "en": "None"
+      }
+    },
+    {
+      "value": "loox",
+      "label": "Loox"
+    },
+    {
+      "value": "ryviu",
+      "label": "Ryviu"
+    },
+    {
+      "value": "pr",
+      "label": "Product reviews"
+    },
+    {
+      "value": "alireviews",
+      "label": "Alireviews"
+    },
+    {
+      "value": "judgeme",
+      "label": "Judge me"
+    }
+  ]
+},
+
+{
+      "type":"header",
+      "content": {
+        "fr": "Options",
+        "es": "Options",
+        "en": "Options"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "not_showing_sold_out_products",
+      "label": {
+        "fr": "Masquer les produits épuisés",
+        "es": "No mostrar los productos agotados",
+        "en": "Not showing sold out produts"
+      },
+      "default": false
+    },
+    {
+     "type": "checkbox",
+     "id": "thumbnails_center",
+   
+     "label": {
+       "fr": "Centrer les éléments",
+       "es": "Center the elements",
+       "en": "Center the elements"
+     },
+     "default": true
+   },
+   
+     { 
+      "type": "checkbox",
+      "id": "price_text",
+      "label": {
+        "fr": "Afficher le à partir de",
+        "es": "Mostrar el desde",
+        "en": "Display From... for prices"
+      },
+      "default": false     
+    },
+    {
+      "type": "checkbox",
+      "id": "product_show_saved_amount2",
+   
+      "label": {
+        "fr": "Afficher l'économie gagnée",
+        "es": "Mostrar el ahorro conseguido",
+        "en": "Display the savings amount"
+      },
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "product_show_compare_at_price2",
+      "label": {
+        "fr": "Afficher le prix barré",
+        "es": "Mostrar el precio tachado",
+        "en": "Display compare at price"
+      },
+      "default": true
+    },
+   
+    {
+      "type": "checkbox",
+      "id": "product_show_badge",
+      "label": {
+        "fr": "Afficher le badge promo",
+        "es": "Mostrar el circulo de promoción",
+        "en": "Display promo badge"
+      },
+      "default": false
+    },
+{
+   "type": "select",
+   "id": "btn_choice",
+   "label": {
+     "fr": "Choix du bouton",
+     "es": "Selección del botón",
+     "en": "Button type"
+   },
+   "default": "0",
+   "options": [
+     {
+       "value": "0",
+       "label": {
+         "fr": "Pas de bouton",
+         "es": "Pas de bouton",
+         "en": "No button"
+       }
+     },
+     {
+       "value": "1",
+       "label": {
+         "fr": "Voir le produit",
+         "es": "Ver el producto",
+         "en": "See the product"
+       }
+     },
+     {
+       "value": "2",
+       "label": {
+         "fr": "Ajouter au panier",
+         "es": "Añadir al carrito",
+         "en": "Add to cart"
+       }
+     }                  
+   ]
+ }, 
+{
+    "type": "select",
+    "id": "btn_scheme",
+    "label": {
+      "fr": "Style du bouton",
+      "es": "Button style",
+      "en": "Button style"
+    },
+    "default": "btn-primary",
+    "options": [
+    {
+      "value": "btn-inherit",        
+      "label": {
+        "fr": "Hérité",
+        "es": "Inherited",
+        "en": "Inherited"
+      }
+    },
+    {
+      "value": "btn-primary",        
+      "label": {
+        "fr": "Principal",
+        "es": "Primary",
+        "en": "Primary"
+      }
+    },
+    {
+      "value": "btn-secondary",        
+      "label": {
+        "fr": "Secondaire",
+        "es": "Secondary",
+        "en": "Secondary"
+      }
+    },
+    {
+      "value": "btn-third",
+      "label": {
+        "fr": "Transparent",
+        "es": "Transparent",
+        "en": "Transparent"
+      }        
+    }
+    ]
+  }
+
+]
+}
+{% endschema %}

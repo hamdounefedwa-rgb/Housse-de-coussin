@@ -1,0 +1,995 @@
+
+<link rel="stylesheet" href="{{ 'section-faq.min.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'section-faq.min.css' | asset_url | stylesheet_tag }}</noscript>
+
+{% if section.settings.faq_first_elem_disabled %}
+{% assign loopFirst = 0 %}
+{% else %}
+{% assign loopFirst = 1 %}
+{% endif %}
+
+<div class="{% if section.settings.section_spaced %}section-spaced{% endif %} {% if section.settings.full_page %} wrapper-full-page {% else %} wrapper{% endif %} {% unless section.settings.block_color_enable %}color-scheme {{ section.settings.color_scheme }}{% endunless %} 
+  {% if section.settings.faq_text_center %}text-center{% endif %} home-faq section-id-{{ section.id }} wow slideInUp {{ section.settings.class }}" 
+  id="{{ section.settings.id }}" 
+  data-wow-duration="{{ settings.wow_effects_duration }}s " 
+  data-wow-delay="{{ settings.wow_effects_delay }}s" 
+  data-section-id="{{ section.id }}" 
+  data-section-type="faq" >
+  
+  <div id="faq" class="faq">
+    
+ 
+    <div class="section-header section-header--layout-{{ section.settings.title_layout }}">
+      {% if section.settings.title != blank %}
+      <{{ section.settings.title_hn }} class="h1 {{ section.settings.title_hn }} section-header--left section-title">{{ section.settings.title | escape }}</{{ section.settings.title_hn }}>
+      {% endif %}        
+      
+    </div> 
+    {% if section.settings.text != blank %}
+      <div class="rte gutter"> 
+        {{ section.settings.text }}
+      </div>
+      {% endif %}
+
+   
+      <div id="accordion" class="accordion" role="tablist" aria-multiselectable="true">
+        
+        {% for block in section.blocks %}
+         
+          {% case block.type %}
+            {%- when 'category' -%}
+            <{{ block.settings.category_hn }} class="faq-category">
+              {{ block.settings.category | escape }}
+            </{{ block.settings.category_hn }}>           
+           
+            {%- when 'text' -%}
+            <div class="panel">  
+              <div class="panel-heading accordion__title {% if loopFirst == 1 %}{% if forloop.first == true %}active{% endif %}{% endif %}" role="tab" id="headingOne-{{ block.id }}">
+                <{{ block.settings.block_title_hn }} class="panel-title h4" {% if loopFirst == 0 %}class="collapsed"{% endif %}{% if loopFirst == 1 %}{% if forloop.first == false %}class="collapsed"{% endif %}{% endif %} href="#collapseOne-{{ block.id }}" aria-expanded="true" aria-controls="collapseOne-{{ block.id }}">            
+                  <i></i>{{ block.settings.home-faq-title | escape }}
+                </{{ block.settings.block_title_hn }}>
+              </div>
+              <div id="collapseOne-{{ block.id }}" class="panel-collapse collapse {% if loopFirst == 1 %}{% if forloop.first == true %}in{% endif %}{% endif %}" role="tabpanel" aria-label="{{ block.id }}">
+                <div class="panel-body">                
+                  {{ block.settings.text }}               
+                  {% if block.settings.html != blank %}{{ block.settings.html }}{% endif %}
+                </div>
+              </div>          
+            </div>
+
+          {%- endcase -%}
+       
+        {% endfor %}
+      </div>   
+  </div>
+</div>
+
+{% render 'section-custom-css', elem: section %}
+{% render 'section-faq-custom-css', elem: section %} 
+
+{% schema %}
+{
+  "name": {
+    "fr": "FAQ",
+    "es": "PMF",
+    "en": "FAQ"
+  },
+  "max_blocks": 30,
+  "class": "section-faq", 
+  "blocks" : [
+    {
+      "type": "category",
+      "name": "Catégorie",
+    
+      "settings": [
+        {
+          "type": "text",
+          "id": "category",
+          "default": "Catégorie",
+          "label": "Catégorie"
+        },
+        {
+          "type": "select",
+          "id": "category_hn",
+          "label": {
+            "fr": "Balise Hn (SEO)",
+            "es": "Hn tag (SEO)",
+            "en": "Hn tag (SEO)"
+          },
+          "default": "h3",
+          "options": [
+            {
+              "value": "h2",
+              "label": "h2"
+            },
+            {
+              "value": "h3",
+              "label": "h3"
+            },
+            {
+              "value": "h4",
+              "label": "h4"
+            },
+            {
+              "value": "h5",
+              "label": "h5"
+            },
+            {
+              "value": "h6",
+              "label": "h6"
+            },
+            {
+              "value": "p",
+              "label": "p"
+            },
+            {
+              "value": "div",
+              "label": "div"
+            },
+            {
+              "value": "span",
+              "label": "span"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": {
+        "fr": "Question & Réponse",
+        "es": "Question and answer",
+        "en": "Question and answer"
+      },
+      "settings": [        
+        {
+          "type": "text",
+          "id": "home-faq-title",
+
+          "default": {
+            "fr": "Question",
+            "es": "Pregunta",
+            "en": "Question"
+          },
+
+          "label": {
+            "fr": "Titre de la question",
+            "es": "Título de la pregunta",
+            "en": "Question title"
+          }
+        },
+        {
+          "type": "select",
+          "id": "block_title_hn",
+          "label": {
+            "fr": "Balise Hn du titre (SEO)",
+            "es": "Hn tag of title (SEO)",
+            "en": "Hn tag of title (SEO)"
+          },
+          "default": "h3",
+          "options": [
+            {
+              "value": "h2",
+              "label": "h2"
+            },
+            {
+              "value": "h3",
+              "label": "h3"
+            },
+            {
+              "value": "h4",
+              "label": "h4"
+            },
+            {
+              "value": "h5",
+              "label": "h5"
+            },
+            {
+              "value": "h6",
+              "label": "h6"
+            },
+            {
+              "value": "p",
+              "label": "p"
+            },
+            {
+              "value": "div",
+              "label": "div"
+            }
+          ]
+        },
+        
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": {
+            "fr": "<p>Texte de la réponse</p>",
+            "es": "<p>Texto de la respuesta</p>",
+            "en": "<p>Answer text</p>"
+          },
+
+          "label": {
+            "fr": "Texte de la réponse",
+            "es": "Texto de la respuesta",
+            "en": "Answer text"
+          }
+        },
+        {
+          "type": "html",
+          "id": "html",
+          "label": {
+            "fr": "Code HTML",
+            "es": "Code HTML",
+            "en": "Code HTML"
+          }
+        }
+        
+      ]
+    }
+  ],
+  "settings": [
+	{
+    "type": "paragraph",
+    "content": {
+      "fr": "[Tutoriel vidéo](https://youtu.be/nMdLq4MCmEM)",
+      "es": "[Video tutorial](https://youtu.be/bKk7_oLlYm8)",
+      "en": "[Video tutorial](https://youtu.be/bKk7_oLlYm8)"
+    }
+  },
+    {
+      "type":"header",
+      "content": {
+        "fr": "Important",
+        "es": "Important",
+        "en": "Important"
+      }
+    }, 
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "Certaines options nécessitent de cliquer sur Enregistrer afin de voir le changement",
+        "es": "Some options require clicking on Save to see the change",
+        "en": "Some options require clicking on Save to see the change"
+      }    
+    },
+    
+    {
+      "type": "text",
+      "id": "title",
+      "label": {
+        "fr": "Titre",
+        "es": "Section title",
+        "en": "Section title"
+      },
+      "default": {
+        "fr": "FAQ",
+        "es": "PMF",
+        "en": "FAQ"
+      }
+    },
+    
+    
+    {
+      "type": "select",
+      "id": "title_hn",
+      "label": {
+        "fr": "Balise Hn du titre de la section (SEO)",
+        "es": "Hn tag of section title (SEO)",
+        "en": "Hn tag of section title (SEO)"
+      },
+      "default": "h2",
+      "options": [
+        {
+          "value": "h2",
+          "label": "h2"
+        },
+        {
+          "value": "h3",
+          "label": "h3"
+        },
+        {
+          "value": "h4",
+          "label": "h4"
+        },
+        {
+          "value": "h5",
+          "label": "h5"
+        },
+        {
+          "value": "h6",
+          "label": "h6"
+        },
+        {
+          "value": "p",
+          "label": "p"
+        },
+        {
+          "value": "div",
+          "label": "div"
+        }
+      ]
+    },
+    {
+      "type":"richtext",
+      "id":"text",
+      "label": {
+        "fr": "Texte infos supplémentaires",
+        "es": "Texto de información adicional",
+        "en": "Additional infos text"
+      }
+    },
+	{
+       "type":"checkbox",
+       "id":"faq_first_elem_disabled",       
+       "label":{
+          "fr":"Fermer le 1er onglet ouvert par default",
+          "es":"Cerrar la primera pestaña abierta por defecto",
+          "en":"Close the 1st tab by default"
+       },
+       "default":false
+    },
+    {
+      "type":"header",
+      "content":{
+        "fr":"Mise en forme",
+        "es":"Layout",
+        "en":"Layout"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "full_page",
+      "label": {
+        "fr": "Pleine page",
+        "es": "Full page",
+        "en": "Full page"
+      },
+      "default": false
+    }, 
+    {
+       "type":"checkbox",
+       "id":"section_spaced",       
+       "label":{
+          "fr":"Espacer la section - Haut",
+          "es":"Add space - Above the section",
+          "en":"Add space - Above the section"
+       },
+       "default":true
+    },
+    {
+       "type":"checkbox",
+       "id":"faq_text_center",       
+       "label":{
+          "fr":"Centrer les éléments",
+          "es":"Center the content",
+          "en":"Center the content"
+       },
+       "default":false
+    },
+    {
+      "type": "select",
+      "id": "title_layout",
+      "label": {
+        "fr": "Modèle de titre",
+        "es": "Title layout",
+        "en": "Title layout"
+      },
+      "default": "0",
+      "options": [
+        {
+          "value": "0",
+          "label": {
+            "fr": "Modèle 1",
+            "es": "Model 1",
+            "en": "Model 1"
+          }
+        },
+        {
+          "value": "1",
+          "label": {
+            "fr": "Modèle 2",
+            "es": "Model 2",
+            "en": "Model 2"
+          }
+        },
+        {
+          "value": "2",
+          "label": {
+            "fr": "Modèle 3",
+            "es": "Model 3",
+            "en": "Model 3"
+          }
+        }
+       ]
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": {
+        "fr": "Combinaison de couleurs",
+        "es": "Color combinations",
+        "en": "Color combinations"
+      },
+      "default": "color-scheme-none",
+      "options": [
+        {
+          "value": "color-scheme-none",
+          "label": {
+            "fr": "Sans",
+            "es": "None",
+            "en": "None"
+          }
+        },
+        {
+          "value": "color-scheme-1",
+          "label": {
+            "fr": "Combinaison 1",
+            "es": "Combination 1",
+            "en": "Combination 1"
+          }
+        },
+         {
+          "value": "color-scheme-2",
+          "label": {
+            "fr": "Combinaison 2",
+            "es": "Combination 2",
+            "en": "Combination 2"
+          }
+        },
+         {
+          "value": "color-scheme-3",
+          "label": {
+            "fr": "Combinaison 3",
+            "es": "Combination 3",
+            "en": "Combination 3"
+          }
+        },
+        {
+          "value": "color-scheme-inverse",
+          "label": {
+            "fr": "Inversé",
+            "es": "Inverted",
+            "en": "Inverted"
+          }
+        }
+      ]
+    },      
+   
+    {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation des couleurs",
+        "es": "Color customization",
+        "en": "Color customization"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "[Tutoriel vidéo](https://youtu.be/mX5vrnrv4_I)",
+        "es": "[Video tutorial](https://youtu.be/j8md1egrR_4)",
+        "en": "[Video tutorial](https://youtu.be/j8md1egrR_4)"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+      "fr": "Reprend la main sur les paramètres génériques du thème",
+      "es": "Will replace the generic customization from theme settings",
+      "en": "Will replace the generic customization from theme settings"
+      }
+    },
+
+    {
+      "type": "header",
+      "content": {
+          "fr": "Section",
+          "es": "Section",
+          "en": "Section"
+      }
+    },
+
+    {
+      "type": "checkbox",
+      "id": "block_color_enable",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+     
+     {
+       "type":"color",
+       "id":"block_bgcolor",       
+       "label":{
+          "fr":"Fond de la section",
+          "es":"Section background color",
+          "en":"Section background color"
+       },
+       "default":"#ffffff"
+     },
+     {
+       "type":"image_picker",
+       "id":"block_image",       
+       "label":{
+          "fr":"Image de fond (optionnel)",
+          "es":"Background image (optional)",
+          "en":"Background image (optional)"
+       },
+       "info":"1900px Min"
+     },
+     {
+       "type":"checkbox",
+       "id":"section_parallax",      
+       "label":{
+          "fr":"Effet parallax",
+          "es":"Parallax effect",
+          "en":"Parallax effect"
+       },
+       "default":false
+     },
+     {
+       "type":"checkbox",
+       "id":"block_bgcolor_gradient",       
+       "label":{
+          "fr":"Activer la prise en charge du dégradé",
+          "es":"Enable gradient",
+          "en":"Enable gradient"
+       },
+       "default":false
+     },
+	 {
+        "type": "range",
+        "id": "block_bgcolor_gradient_direction",
+        "min": 0,
+        "max": 180,
+        "step": 2,
+        "unit": "deg",
+        "label": {
+          "fr": "Sens du dégradé",
+          "es": "Gradient direction",
+          "en": "Gradient direction"
+        },
+        "default": 90
+     },
+     {
+       "type":"color",
+       "id":"block_bgcolor_gradient_1",       
+       "label":{
+          "fr":"Fond - Couleur 1",
+          "es":"Background - Color 1",
+          "en":"Background - Color 1"
+       },
+       "default":"#F0F0F0"
+     },     
+     {
+       "type":"color",
+       "id":"block_bgcolor_gradient_2",       
+       "label":{
+          "fr":"Fond - Couleur 2",
+          "es":"Background - Color 2",
+          "en":"Background - Color 2"
+       },
+       "default":"#333333"
+     },
+     {
+        "type": "range",
+        "id": "block_bgcolor_gradient_1_percent_2",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "label": {
+          "fr": "Proportion des couleurs",
+          "es": "Color ratio",
+          "en": "Color ratio"
+        },
+        "default": 0
+     },
+     {
+        "type": "range",
+        "id": "block_bgcolor_gradient_1_percent_1",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "label": {
+          "fr": "Début du flou",
+          "es": "Blur beginning",
+          "en": "Blur beginning"
+        },
+        "default": 0
+     },
+     {
+        "type": "range",
+        "id": "block_bgcolor_gradient_2_percent_1",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "label": {
+          "fr": "Fin du flou ",
+          "es": "Blur ending",
+          "en": "Blur ending"
+        },
+        "default": 100
+     },
+     
+     {
+       "type":"color",
+       "id":"section_shadow_color",       
+       "label":{
+          "fr":"Ombre de la section",
+          "es":"Shadow color of the section",
+          "en":"Shadow color of the section"
+       },
+       "default":"#000000"
+     },
+     {
+        "type": "range",
+        "id": "section_shadow_opacity",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "unit": "deg",
+        "label": {
+          "fr": "Degré d'opacité de la section",
+          "es": "Opacity of the section",
+          "en": "Opacity of the section"
+        },
+        "default": 0.2
+     },
+     {
+        "type": "range",
+        "id": "section_shadow_size",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": {
+          "fr": "Taille de l'ombre de la section",
+          "es": "Shadow size",
+          "en": "Shadow size"
+        },
+        "default": 0
+     }, 
+     
+     {
+      "type": "header",
+      "content": {
+          "fr": "Contenu",
+          "es": "Content",
+          "en": "Content"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "colors_product_content",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+     {
+        "type": "color",
+        "id": "faq_panel_color_title",
+        "label": {
+          "fr": "Titre des questions",
+          "es": "Color del título de la pregunta",
+          "en": "Questions title color"
+        },
+        "default": "#333"
+      },
+      {
+        "type": "color",
+        "id": "faq_panel_bg_title",
+        "label": {
+          "fr": "Fond des questions",
+          "es": "Color de fondo de las preguntas",
+          "en": "Questions background color"
+        },
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "faq_panel_color_text",
+        "label": {
+          "fr": "Texte des réponses",
+          "es": "Color del texto de las respuestas",
+          "en": "Answers text color"
+        },
+        "default": "#333"
+      },
+      {
+        "type": "color",
+        "id": "faq_panel_bg_text",
+        "label": {
+          "fr": "Fond des réponses",
+          "es": "Color de fondo de las respuestas",
+          "en": "Answers background color"
+        },
+        "default": "#f9f9f9"
+      },
+      {
+        "type": "color",
+        "id": "faq_panel_color_border",
+        "label": {
+          "fr": "Bordure",
+          "es": "Border",
+          "en": "Border"
+        },
+        "default": "#DEDEDE"
+      },
+     {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation des tailles",
+        "es": "Size customization",
+        "en": "Size customization"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "[Tutoriel vidéo](https://youtu.be/ovHmpm105x8)",
+        "es": "[Video tutorial](https://youtu.be/i4PZ8W99KYA)",
+        "en": "[Video tutorial](https://youtu.be/i4PZ8W99KYA)"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "block_size_enable",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+     {
+      "type": "header",
+      "content": {
+        "fr": "Format Bureau",
+        "es": "Layout (Desktop)",
+        "en": "Layout (Desktop)"
+      }
+    },      
+	  {
+        "type": "range",
+        "id": "block_title_size",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "unit": "px",
+        "label": {
+          "fr": "Taille du titre",
+          "es": "Font size of title",
+          "en": "Font size of title"
+        },
+        "default": 21
+     },
+     {
+        "type": "range",
+        "id": "block_faq_title_size",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "unit": "px",
+        "label": {
+          "fr": "Taille des questions",
+          "es": "Font size of text",
+          "en": "Font size of text"
+        },
+        "default": 21
+     },
+     {
+        "type": "range",
+        "id": "block_faq_text_size",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "unit": "px",
+        "label": {
+          "fr": "Taille des réponses",
+          "es": "Font size of text",
+          "en": "Font size of text"
+        },
+        "default": 16
+     },
+      
+     {
+      "type": "header",
+      "content": {
+        "fr": "Format Mobile",
+        "es": "Layout (Mobile)",
+        "en": "Layout (Mobile)"
+      }
+    },
+     {
+        "type": "range",
+        "id": "block_title_size_sm",
+        "min": 0,
+        "max": 60,
+        "step": 1,
+        "unit": "px",
+        "label": {
+          "fr": "Taille du titre",
+          "es": "Font size of title",
+          "en": "Font size of title"
+        },
+        "default": 21
+     },
+     {
+        "type": "range",
+        "id": "block_faq_title_size_sm",
+        "min": 0,
+        "max": 60,
+        "step": 1,
+        "unit": "px",
+        "label": {
+          "fr": "Taille des questions",
+          "es": "Font size of text",
+          "en": "Font size of text"
+        },
+        "default": 21
+     },
+     {
+        "type": "range",
+        "id": "block_faq_text_size_sm",
+        "min": 0,
+        "max": 60,
+        "step": 1,
+        "unit": "px",
+        "label": {
+          "fr": "Taille des réponses",
+          "es": "Font size of text",
+          "en": "Font size of text"
+        },
+        "default": 16
+     },     
+     {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation de la disposition",
+        "es": "Spacing customization",
+        "en": "Spacing customization"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "[Tutoriel vidéo](https://youtu.be/LLS1yEwaPsw)",
+        "es": "[Video tutorial](https://youtu.be/Lv-3vaK-wNE)",
+        "en": "[Video tutorial](https://youtu.be/Lv-3vaK-wNE)"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": {
+        "fr": "Les espacements sont séparés par des espaces avec 4 valeurs maximales - Haut Droit Bas Gauche - L'unité peut être le rem, px, % - Exemple: 20px 0px 20px 20px - [En savoir plus](https://developer.mozilla.org/fr/docs/Web/CSS/padding) ",
+        "es": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)",
+        "en": "Spacing values are separated by spaces with 4 maximum values - Top Right Bottom Left - Unit can be rem, px, % - Example: 20px 0px 20px 20px - [Read more](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)"
+        }
+    },
+    {
+      "type": "checkbox",
+      "id": "block_spacing_enable",
+      "label": {
+        "fr": "Activer",
+        "es": "Activate",
+        "en": "Activate"
+      },
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "section_max_width",
+      "label": {
+        "fr": "Longueur max (% ou px)",
+        "es": "Max width (% ou px)",
+        "en": "Max width (% or px)"
+      }
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Bureau",
+        "es": "Layout (Desktop)",
+        "en": "Layout (Desktop)"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_padding",
+      "label": {
+        "fr": "Espacements intérieur",
+        "es": "Interior Spacing",
+        "en": "Interior Spacing"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_margin",
+      "label": {
+        "fr": "Espacements extérieur",
+        "es": "Exterior Spacing",
+        "en": "Exterior Spacing"
+      }
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Format Mobile",
+        "es": "Layout (Mobile)",
+        "en": "Layout (Mobile)"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_padding_sm",
+      "label": {
+        "fr": "Espacements intérieur",
+        "es": "Interior Spacing",
+        "en": "Interior Spacing"
+      }
+    },
+    {
+      "type": "text",
+      "id": "block_margin_sm",
+      "label": {
+        "fr": "Espacements extérieur",
+        "es": "Exterior Spacing",
+        "en": "Exterior Spacing"
+      }
+    },
+    {
+      "type": "header",
+      "content": {
+        "fr": "Personnalisation avancée",
+        "es": "Advanced CSS",
+        "en": "Advanced CSS"
+      }
+    },
+    {
+      "type": "text",
+      "id": "class",
+      "label": "CSS Class"
+    },
+    {
+      "type": "text",
+      "id": "id",
+      "label": "CSS Id"
+    }
+  ],
+  "presets": [
+    {
+      "name": {
+        "fr": "FAQs",
+        "es": "PMFs",
+        "en": "FAQs"
+      },      
+      "category": {
+        "fr": "Module",
+        "es": "Módulo",
+        "en": "Module"
+      },
+      "blocks": [
+        {
+          "type": "text"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "text"
+        }
+
+      ]
+    }
+  ]
+}
+{% endschema %}
