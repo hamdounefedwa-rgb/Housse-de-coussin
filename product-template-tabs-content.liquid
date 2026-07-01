@@ -1,0 +1,78 @@
+<div class="tab__content" id="tab-1">
+  <div class="grid-item product-description rte">  
+  {{ product.description }}
+  {% if block.settings.social_sharing_products %}
+  {% render 'social-sharing' %}
+  {% endif %}        
+  {{ block.settings.liquidafterdescription }}            
+  {{ block.settings.textafterdescription }}   
+  </div> 
+  {% if block.settings.form2_active %}
+  <div id="wrapper-form2">
+    <div id="cont-form2">
+      {% render "product-form-secondary", product: product, block_id:block.id %}
+    </div>
+  </div>
+  {% endif %}  
+</div> 
+
+{% if block.settings.titrelivraison != blank %}    
+<div class="tab__content" id="tab-2">
+  <div class="grid-item rte">
+  {% if product.metafields.se_product_z11.identifiant_page_1 != blank %}
+  {% assign page_handle = product.metafields.se_product_z11.identifiant_page_1 %}    
+  {{ pages[page_handle].content }}
+  {% else %}
+  {{ block.settings.textlivraison }}  
+  {% endif %}   
+  </div> 
+</div>   
+{% endif %}
+{% if block.settings.titrewhy != blank %}    
+<div class="tab__content" id="tab-3" class="rte">
+  <div class="grid-item rte">
+    {% if product.metafields.se_product_z11.identifiant_page_2 != blank %}
+    {% assign page_handle = product.metafields.se_product_z11.identifiant_page_2 %}    
+    {{ pages[page_handle].content }}
+    {% else %}
+    {{ block.settings.textwhy }}  
+    {% endif %}      
+  </div>  
+</div>  
+{% endif %}
+
+  {% if block.settings.tab_reviews_enable %}    
+
+  <div class="tab__content" id="tab-4"> 
+    <div class="grid-item rte">
+      {% if product.metafields.se_product_z11.identifiant_page_3 != blank %}
+      {% assign page_handle = product.metafields.se_product_z11.identifiant_page_3 %}    
+      {{ pages[page_handle].content }}
+      {% else %}         
+
+      {{ block.settings.reviews_tabs_app }}
+      <div class="cont-avis cont-avis1">
+        {% if block.settings.reviews_tabs_apps == "loox" %}
+        <div class="loox-rating" data-id="{{ product.id }}" data-rating="{{ product.metafields.loox.avg_rating }}" data-raters="{{ product.metafields.loox.num_reviews }}"></div>
+        {% endif %}
+        {% if block.settings.reviews_tabs_apps == "ryviu" %}
+        <div class="lt-block-reviews"> 
+          <ryviu-widget handle="{{product.handle}}" product_id="{{product.id}}" title_product="{{product.title}}" image_product="{{ product.featured_image.src | img_url: '100x' }}"></ryviu-widget>
+        </div>
+        {% endif %}
+        {% if block.settings.reviews_tabs_apps == "pr" %}
+        <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
+        {% endif %}
+        {% if block.settings.reviews_tabs_apps == "alireviews" %}
+        <div id="shopify-ali-review" product-id="{{ product.id }}"> {{ shop.metafields.review_collector.review_code }}</div>
+        {% endif %}
+        {% if elem.settings.reviews_tabs_apps == "judgeme" %}
+        {% render 'judgeme_widgets', widget_type: 'judgeme_review_widget', concierge_install: false, product: product %}
+        {% endif %}
+        {{ block.settings.reviews_liquid }}
+        {{ block.settings.reviews_lhtml }}
+      </div>
+    </div>  
+  </div>
+  {% endif %} 
+{% endif %}

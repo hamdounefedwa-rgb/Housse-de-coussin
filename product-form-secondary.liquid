@@ -1,0 +1,70 @@
+{% if product.available %}
+
+<div class="form-int form-id-{{ block_id }} {% if block.settings.amount_percent %}amount-percent-{{block.settings.amount_percent}}{% endif %}">
+    
+  {% assign classForm = "addToCartForm addToCartFormId2" %}
+  
+  {% if block.settings.title %}
+  <div class="h2">{{ block.settings.title }}</div>
+  {% endif %}
+  {% form 'product', product, id: "addToCartFormId2", class: classForm %}   
+
+  <select name="id" aria-label="Variant choice" id="productSelect2-{{ block_id }}" class="product-variants product-variants-{{ block_id }}">
+    {% for variant in product.variants %}
+    {% if variant.available %}
+    <option {% if variant.image.src %}data-imgsrc="{{variant.image.src | image_url: width: variant.image.width }}"{% endif %} data-id="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+    {% endif %}
+    {% endfor %}
+  </select>
+
+  <div class="form-infos-1-button{% if block.settings.btn_purchase %} form-infos form-infos-2-buttons {% endif %}"> 
+    <div class="quantity-wrapper">
+      {% render 'custom-selector-qty' %}        
+    </div>
+
+  {% if block.settings.btn_purchase %} <div class="cont-add-btns">{% endif %}
+
+  <div class="{% if block.settings.btn_purchase %}col50{% else %}full-width{% endif %}">  
+  
+  <button type="submit" 
+    {% if method == "cart" %} data-cart-method="cart" {% else %} data-cart-method="mini-cart" {% endif %} 
+    {% if block.settings.direct_purchase %} data-redirect="checkout"{% else %} data-redirect="cart" {% endif %} 
+    name="add" id="addToCartBis" class="addToCart addToCartBis btn btn-atc add-cart-upsell {% if product.available %}{% else %}disabled no-stock{% endif %} {% if block.settings.addtocart_shake %}addtocart-skake{% endif %}">
+    <span class="addToCartText-{{ block_id }}">
+      {{ 'products.product.add_to_cart' | t }}
+    </span>
+  </button>  
+
+  </div>
+
+  {% if block.settings.btn_purchase %}         
+    <div class="col50">  
+      {% if block.settings.addtocart_shake2 %}<div class="cont-shake">{% endif %}
+      {{ form | payment_button }}
+      {% if block.settings.addtocart_shake2 %}</div>{% endif %}
+    </div>
+  {% endif %} 
+
+  {% if block.settings.btn_purchase %} </div>{% endif %}
+
+</div>
+
+  {% endform %}         
+
+  {% if block.settings.image_secure_repeat %}
+  {% render "social-proof" %}  
+  {% endif %} 
+  
+  {% if product.metafields.se_product_z12.contenu_simple_html != blank or product.metafields.se_product_z12.identifiant_page != blank %}
+  <div class="se-meta se-meta-z12">
+    {% if product.metafields.se_product_z12.contenu_simple_html != blank %}  
+    {{ product.metafields.se_product_z12.contenu_simple_html }}   
+    {% endif %} 
+    {% if product.metafields.se_product_z12.identifiant_page != blank %}  
+    {% assign page_handle = product.metafields.se_product_z12.identifiant_page %}    
+    {{ pages[page_handle].content }}
+    {% endif %} 
+  </div>
+  {% endif %}
+</div>
+{% endif %}

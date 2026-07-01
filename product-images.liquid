@@ -1,0 +1,105 @@
+<div id="heroSlider--{{ section.id }}" data-section-slider-id="{{ section.id }}" {{ block.shopify_attributes }} >
+  <div class="text-center cont-photos slider-layout-{{ block.settings.slider_thumbnails_layout }}">   
+    {%- if block.settings.slider_thumbnails_layout == "1" -%}    
+    <div class="slider-container" >
+      {% endif %}
+
+      <div class="slider slider-product {% if block.settings.slider_thumbnails_layout == "1" %} right{% endif %}" data-thumbnails-number="{{ block.settings.slider_thumbnails_number }}" data-thumbnails-layout="{{ block.settings.slider_thumbnails_layout }}"> 
+        
+       {% for media in product.media %}
+        {% case media.media_type %}
+        
+        {% when 'image' %}
+        
+        {% assign image = media %}        
+        {% assign imgSrc = image | img_url: 'master' | split: '?' | first | replace: '/http(s)?:/', '' %}
+        
+       
+        <div class="product-photo-container {% if block.settings.product_image_zoom_enable %} zoom {% endif %} frame" data-media="image" data-media-src="{{ imgSrc }}">   
+                    
+          {% if forloop.index0 == 0 %}
+          <img class="lazyload {% if block.settings.product_image_zoom_enable %} zoom {% endif %} {% if settings.mobile_product_zoom %} zoom-mobile {% endif %}" 
+               id="productPhotoImg" 
+               loading="lazy"
+               width= "{{ image.width }}" height= "{{ image.height }}"
+               src="{{ image | img_url: settings.perf_img_lazy }}"  
+               srcset="{{ image | img_url: '400x' }} 400w, {{ image | img_url: '600x' }} 600w, {{ image | img_url: '900x' }} 900w, {{ image | img_url: '1200x' }} 1200w"
+               alt="{{ image.alt | escape }}" 
+               {% if block.settings.product_image_zoom_enable %} 
+               data-zoom="{{ image | img_url: '1200x1200' }}"                 
+               {% endif %}                 
+               data-image-id="{{ image.id }}"
+                
+               >
+          {% else %}
+          <img class="lazyload {% if block.settings.product_image_zoom_enable %} zoom  {% endif %} {% if settings.mobile_product_zoom %} zoom-mobile {% endif %}" 
+               width= "{{ image.width }}" 
+               height= "{{ image.height }}"
+               loading="lazy"
+               src="{{ image | img_url: settings.perf_img_lazy }}" 
+               srcset="{{ image | img_url: '400x' }} 400w, {{ image | img_url: '600x' }} 600w, {{ image | img_url: '900x' }} 900w, {{ image | img_url: '1200x' }} 1200w"
+               alt="{{ image.alt | escape }}" 
+               {% if block.settings.product_image_zoom_enable %} 
+               data-zoom="{{ image | img_url: '1200x1200' }}" 
+               {% endif %} 
+               data-image-id="{{ image.id }}"
+               >
+          {% endif %}      
+          
+        </div> 
+        {% when 'external_video' %}
+       
+        <div class="product-single__media" data-media="video">
+          {{ media | external_video_tag }}
+        </div>
+        {% when 'video' %}
+        <div class="product-single__video" data-media="video" >
+          {{ media | video_tag: controls: true, image_size: "1024x" }}
+        </div>
+        {% when 'model' %}
+        <div class="product-single__media" style="width:100%;" data-media="model">
+          {{ media | model_viewer_tag : image_size: "1024x" }}
+        </div>
+        {% else %}
+        <div class="product-single__media" data-media="other">
+          {{ media | media_tag }}
+        </div>
+        
+        {% endcase %}
+        {% endfor %}
+      </div>
+     
+      <div class="slider-product-thumbnails  {% if block.settings.slider_thumbnails_layout == '1' %} right{% endif %}">
+       
+        {% for media in product.media %}       
+        
+        {% assign image = media %}
+        
+         <div class="grid-item hack-img">   
+          <img  
+               class="{% if media.media_type == "image" %}media-img {% endif %} sflazy lazyload"
+               loading="lazy"  
+               width= "{{ image.width }}" height= "{{ image.height }}"             
+               src="{{ image.src | img_url: 'compact' }}" 
+               data-src="{{ image.src | img_url: 'compact' }}"
+               srcset="{{ image | img_url: '400x' }} 400w, {{ image | img_url: '600x' }} 600w"
+               alt="{{ image.alt | escape }}">  
+          </div>        
+        {% endfor %}  
+
+      </div>
+
+      {%- if block.settings.slider_thumbnails_layout == "1" -%}    
+    </div>
+    {% endif %}
+  </div>    
+ 
+</div>
+{% if block.settings.product_image_dots == false %}
+{% style %}
+  .slider-product-thumbnails .slick-dots { display:none !important; }
+
+{% endstyle %}
+{% endif %}
+
+

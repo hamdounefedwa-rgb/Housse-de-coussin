@@ -1,0 +1,38 @@
+<div class="cont-slider">
+
+  <div class="{% if section.settings.thumbnails_zoom == true %} collection-zoom {% endif %}{% if section.settings.thumbnails_img_opacity or section.settings.layout == '1' %} opacity-enable{% endif %}">
+    <div id="slider-{{ section.id }}" class="slick-slider product-list-slider" 
+     data-slider='
+     {"nbDesktop": {{ section.settings.grid }}, 
+      "nbMobile": {{ section.settings.grid_sm }},
+      "centerMode":{{ section.settings.grid_slider_products_mobile_center }}}'>
+      {% for product in featured_collection limit: row_limit %}
+      {% unless grid_item_width %}
+      {% assign grid_item_width = 'large--one-fifth medium--one-third small--one-half' %}
+      {% assign current_collection = collections[featured_row] %}  
+      {% endunless %}      
+      {% render 'product-grid-item', 
+        product: product,
+        grid_item_width: grid_item_width, 
+        grid_item_width_sm: grid_item_width_sm,      
+        section: section, 
+        current_collection: current_collection,
+        image_size: image_size,
+        image_size_sm: image_size_sm,
+        image_layout: image_layout
+        forloop: forloop %}
+      {% endfor %}  
+
+    </div>  
+    
+  </div>
+
+  {% if section.settings.collection_show_link %}
+  {% if section.settings.title_link_layout == "1" %}
+  <div class="section-btns">
+    <a class="{{ section.settings.link_layout }} {{ section.settings.btn_scheme }}" href="{{ featured_row.url }}">{{ 'homepage.featured_collection_rows.more_in_collection' | t: collection_title: header_title }}</a>
+  </div>
+  {% endif %}
+  {% endif %}
+
+</div> 

@@ -1,0 +1,39 @@
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false" defer></script>
+<script defer>
+document.addEventListener('DOMContentLoaded', () => {
+  window.cookieconsent.initialise({
+    "palette": {
+      "popup": {
+        "background": "{{ settings.cookies_banner_bgcolor }}",
+        "text": "{{ settings.cookies_banner_color }}"
+      },
+      "button": {
+        "background": "{{ settings.cookies_banner_btnbgcolor }}",
+        "text": "{{ settings.cookies_banner_btncolor }}"
+      }
+    },
+    "type": "opt-in",
+    "content": {
+      "message": "{{ settings.euro_cookies_text }}",
+      "deny": "{{ settings.euro_cookies_btn_decline }}",
+      "allow": "{{ settings.euro_cookies_btn }}",
+      "link": "{{ settings.euro_cookies_more }}",
+      "href": "{{ settings.euro_cookies_link }}"
+    }
+  });
+  const ccBanner = document.querySelector('.cc-banner');
+  ccBanner.parentNode.removeChild(ccBanner); 
+  document.body.appendChild(ccBanner);
+  const ccBottom = document.querySelector('.cc-bottom');  
+  ccBottom.parentNode.removeChild(ccBottom); 
+  document.body.appendChild(ccBottom);
+});
+
+</script>
+<style>
+  .cc-link {
+    color:{{ settings.cookies_banner_linkcolor }} !important;
+  }
+  .cc-revoke { display:none !important; }
+</style>

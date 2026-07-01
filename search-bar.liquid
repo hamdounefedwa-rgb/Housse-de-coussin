@@ -1,0 +1,7 @@
+<form action="/search" method="get" class="search-bar" role="search">
+  <input type="hidden" name="type" value="product{% if settings.search_field_post %},article{% endif %}{% if settings.search_field_page %},page{% endif %}"> 
+  <input type="search" class="search-input" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'layout.search_bar.placeholder' | t }}" aria-label="{{ 'layout.search_bar.placeholder' | t }}">
+  <button type="submit" class="search-bar--submit icon-fallback-text" aria-label="Search">      
+    <i class="fa fa-search" aria-hidden="true"></i>
+  </button>
+</form>

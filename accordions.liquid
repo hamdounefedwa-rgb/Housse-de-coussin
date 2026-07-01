@@ -1,0 +1,98 @@
+<link rel="stylesheet" href="{{ 'component-accordion.css' | asset_url }}" media="all" >
+<div class="accordions block-{{ block.id }} {{ block.settings.class }}" id="{{ block.settings.id }}" {{ block.shopify_attributes }}>
+  <div class="accordion">
+    <details>
+      <summary class="accordion__title">
+          {% if block.settings.icon != blank %}
+              <span class="accordion__icon">{{ block.settings.icon }}</span> 
+          {% endif %}
+          {{ block.settings.title }}
+      
+      </summary>
+      <div class="accordion__content">
+        {{ block.settings.text }}
+        {{ block.settings.html }}
+      </div>
+    </details>
+  </div>
+
+  <div class="accordion">
+    <details>
+      <summary class="accordion__title">
+          {% if block.settings.icon2 != blank %}
+              <span class="accordion__icon">{{ block.settings.icon2 }}</span> 
+          {% endif %}
+          {{ block.settings.title2 }}
+      
+      </summary>
+      <div class="accordion__content">
+        {{ block.settings.text2 }}
+        {{ block.settings.html2 }}
+      </div>
+    </details>
+  </div>
+
+  <div class="accordion">
+    <details>
+      <summary class="accordion__title">
+          {% if block.settings.icon3 != blank %}
+              <span class="accordion__icon">{{ block.settings.icon3 }}</span> 
+          {% endif %}
+          {{ block.settings.title3 }}
+      
+      </summary>
+      <div class="accordion__content">
+        {{ block.settings.text3 }}
+        {{ block.settings.html3 }}
+      </div>
+    </details>
+  </div>
+
+  <div class="accordion">
+    <details>
+      <summary class="accordion__title">
+          {% if block.settings.icon4 != blank %}
+              <span class="accordion__icon">{{ block.settings.icon4 }}</span> 
+          {% endif %}
+          {{ block.settings.title4 }}
+      
+      </summary>
+      <div class="accordion__content">
+        {{ block.settings.text4}}
+        {{ block.settings.html4 }}
+      </div>
+    </details>
+  </div>
+
+  <div class="accordion">
+    <details>
+      <summary class="accordion__title">
+          {% if block.settings.icon5 != blank %}
+              <span class="accordion__icon">{{ block.settings.icon5 }}</span> 
+          {% endif %}
+          {{ block.settings.title5 }}
+      
+      </summary>
+      <div class="accordion__content">
+        {{ block.settings.text5 }}
+        {{ block.settings.html5 }}
+      </div>
+    </details>
+  </div>
+
+  <div class="accordion">
+    <details>
+      <summary class="accordion__title">
+          {% if block.settings.icon6 != blank %}
+              <span class="accordion__icon">{{ block.settings.icon6 }}</span> 
+          {% endif %}
+          {{ block.settings.title6 }}
+      
+      </summary>
+      <div class="accordion__content">
+        {{ block.settings.text6 }}
+        {{ block.settings.html6 }}
+      </div>
+    </details>
+  </div>
+</div>

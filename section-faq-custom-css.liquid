@@ -1,0 +1,46 @@
+<style>
+
+{% if elem.settings.colors_product_content %} 
+
+.section-id-{{ elem.id }} {
+  --colorSectionTitles: {{ elem.settings.block_title_color }};
+  --colorTextBody: {{ elem.settings.block_color }};
+
+  --colorFaqPanelTitle: {{ elem.settings.faq_panel_color_title }};
+  --colorFaqPanelTitleBg: {{ elem.settings.faq_panel_bg_title }};
+  --colorFaqPanelText: {{ elem.settings.faq_panel_color_text }};
+  --colorFaqPanelTextBg: {{ elem.settings.faq_panel_bg_text }};
+  --colorFaqPanelBorder: {{ elem.settings.faq_panel_color_border }};
+}
+
+{% endif %}
+
+{% if elem.settings.block_size_enable %} 
+
+@media screen and (max-width: 749px) {    
+  .section-id-{{ elem.id }} .h1 {
+    font-size: {{ elem.settings.block_title_size_sm }}px;
+  }
+  .section-id-{{ elem.id }} .panel-title {
+    font-size: {{ elem.settings.block_faq_title_size_sm }}px;
+  }  
+  .section-id-{{ elem.id }} .panel-body {
+    font-size: {{ elem.settings.block_faq_text_size_sm }}px;
+  }
+}
+@media screen and (min-width: 750px) {    
+  .section-id-{{ elem.id }} .h1 {
+    font-size: {{ elem.settings.block_title_size }}px;
+  }
+  .section-id-{{ elem.id }} .panel-title {
+    font-size: {{ elem.settings.block_faq_title_size }}px;
+  }  
+  .section-id-{{ elem.id }} .panel-body {
+    font-size: {{ elem.settings.block_faq_text_size }}px;
+  }
+}
+
+{% endif %}
+
+
+</style>

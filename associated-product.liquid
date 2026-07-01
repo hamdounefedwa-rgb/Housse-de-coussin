@@ -1,0 +1,143 @@
+{%- assign product = all_products[article.metafields.se_articles.produit_associe] -%}
+{%- assign associated_product2 = all_products[article.metafields.se_articles.produit_recommande_1] -%}
+{%- assign associated_product3 = all_products[article.metafields.se_articles.produit_recommande_2] -%}
+{%- assign associated_product4 = all_products[article.metafields.se_articles.produit_recommande_3] -%}
+{%- assign associated_product5 = all_products[article.metafields.se_articles.produit_recommande_4] -%}
+
+{% if article.metafields.se_articles.produit_associe %}
+<div class="cont-associated-product">
+  <div class="shop_title shop-look-wrapper">
+    <h2 class="h4 associated-product">{{ 'blogs.article.associated_product_title1' | t }}</h2>
+  </div>
+  <div class="shopthepost-widget"> 
+    <div class="shopthepost-widget-cont shopthepost-widget-cont-full">      
+      
+      <div class="box-item box-item-1">
+        <a style="display:none;" href="{{ product.url }}"></a>
+
+        {% assign featured_image = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
+        <div class="sb-image-no-variant">
+          <img src="{{ featured_image | img_url: '600x' }}" alt="{{ featured_image.alt | escape }}" loading="lazy" width="{{ featured_image.width }}" height="{{ featured_image.height }}" >
+        </div>
+        {% if product.variants.size > 1 %} 
+        {% for image in product.images %}
+        {% for variant in image.variants %}
+        <img data-id="{{ variant.id }}" class="sb-img-hidden" src="{{ image.src | img_url: '220x' }}" alt="{{ product.featured_image.alt }}" loading="lazy" width="{{ image.width }}" height="{{ image.height }}">
+        {% endfor %}
+        {% endfor %}
+        {% endif %}
+      </div>
+      <div class="box-item box-item-2">
+        <div class="inner">
+        <h3><a href="{{ product.url }}" >{{ product.title }}</a></h3>
+        <p>
+          {{ product.description | strip_html | truncatewords: 35 }}          
+        </p>
+		</div>
+      </div>
+      <div class="box-item">
+        {% render "product-form-secondary", product: product, block_id:block.id %}
+        <a href="{{ product.url }}" class="btn btn-secondary" >{{ 'collections.general.link_product' | t }}</a>
+      </div>            
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if article.metafields.se_articles.produit_recommande_1 or article.metafields.se_articles.produit_recommande_2 or article.metafields.se_articles.produit_recommande_3 or article.metafields.se_articles.produit_recommande_4 %}
+<div class="cont-associated-product">
+  <div class="shop_title shop-look-wrapper">
+    <h2 class="h4 associated-product">{{ 'blogs.article.associated_product_title2' | t }}</h2>
+  </div>
+  <div class="shopthepost-widget"> 
+    <div class="shopthepost-widget-cont">
+      
+      {% if article.metafields.se_articles.produit_recommande_1 %}      
+      {% assign image_alt = associated_product2.title | escape %}
+      <a href="{{ associated_product2.url }}" class="shopthepost-item effect-img">
+      {{ associated_product2 | img_url: '600x' | img_tag: image_alt, 'article__image' }}
+      <span class="shopthepost-widget-title">{{ associated_product2.title }}<span>                
+      </a>        
+      {% endif %}
+        
+      {% if article.metafields.se_articles.produit_recommande_2 %}
+      {% assign image_alt = associated_product3.title | escape %}
+      <a href="{{ associated_product3.url }}" class="shopthepost-item effect-img">
+      {{ associated_product3 | img_url: '600x' | img_tag: image_alt, 'article__image' }}
+      <span class="shopthepost-widget-title">{{ associated_product3.title }}<span>                
+      </a>        
+      {% endif %}
+    
+      {% if article.metafields.se_articles.produit_recommande_3 %}
+      {% assign image_alt = associated_product4.title | escape %}
+      <a href="{{ associated_product4.url }}" class="shopthepost-item effect-img">
+      {{ associated_product4 | img_url: '600x' | img_tag: image_alt, 'article__image' }}
+      <span class="shopthepost-widget-title">{{ associated_product4.title }}<span>                
+      </a>        
+      {% endif %}
+        
+      {% if article.metafields.se_articles.produit_recommande_4 %}
+      {% assign image_alt = associated_product5.title | escape %}
+      <a href="{{ associated_product5.url }}" class="shopthepost-item effect-img">
+      {{ associated_product5 | img_url: '600x' | img_tag: image_alt, 'article__image' }}
+      <span class="shopthepost-widget-title">{{ associated_product5.title }}<span>                
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script defer>
+  document.querySelector(".product-variants").addEventListener('change', function(e) {
+    let [option] = e.target.selectedOptions
+    let variantId= option.dataset.id;
+    let variantIdImgObj =  document.querySelector('img[data-id="' + variantId + '"]');
+    let variantIdImg = variantIdImgObj.dataset.id;
+    if (variantId == variantIdImg) {
+      const images = document.querySelectorAll('.box-item-1 img');
+      images.forEach(img => {
+        img.classList.remove('sb-img-show')
+      });
+      document.querySelector('.sb-image-no-variant').style.display = 'none';
+      document.querySelector('.box-item-1 img[data-id="' + variantId + '"]').classList.add('sb-img-show');
+    } 
+  });
+</script>
+      
+{% endif %}
+        
+{% if article.metafields.se_articles.articles_similaires %}   
+<div class="cont-associated-product"> 
+  <div class="shop_title shop-look-wrapper">
+    <h2 class="h4 associated-product">{{ 'blogs.article.related_post_title' | t }}</h2>
+  </div>
+  <div class="shopthepost-widget"> 
+	  <div class="shopthepost-widget-cont">  
+      
+      {% for post in blog.articles %}
+        {% if article.title != post.title %} 
+        {% assign stripTags = article.metafields.se_articles.articles_similaires | strip %}
+        {% assign tags = stripTags | split: "," %}
+
+        {% for tag in tags %}
+          {% assign newtag = tag | strip %}
+          {% if post.metafields.se_articles.articles_similaires contains newtag %} 
+            <a href="{{ post.url }}" class="shopthepost-item blog-cont-img effect-img">
+            {{ post.image | img_url: '600x' | img_tag: image_alt, 'article__image' }}
+            <span class="shopthepost-widget-title">{{ post.title }}<span>                
+            </a>        
+          {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+        
+
+       
+
+       

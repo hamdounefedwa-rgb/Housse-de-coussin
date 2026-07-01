@@ -1,0 +1,187 @@
+{% unless grid_item_width %}
+ {% assign grid_item_width = 'small--one-half one-quarter' %}
+{% endunless %}
+
+{% unless current_collection %}
+  {% assign current_collection = collection %}
+{% endunless %}
+
+{% assign on_sale = false %}
+{% if product.compare_at_price > product.price %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if product.available %}
+  {% assign sold_out = false %}
+{% endif %}
+
+{% assign image_size_x = image_size | append: "x" %}
+
+<div class="wow slideInUp {% unless section.settings.grid_slider %}grid-item {{ grid_item_width }} {% endunless %}{% if sold_out %} sold-out{% endif %}{% if on_sale %} on-sale{% endif %} " {% if section.settings.grid_sm == "1" %}  style="width:100%;" {% endif %} data-wow-duration="{{ settings.wow_effects_duration }}s" 
+     data-wow-delay="0.{{ forloop.index }}s">
+
+  <div data-link="{% if settings.seo_collection_product_url %}{{ product.url }}{% else %}{{ product.url | within: current_collection }}{% endif %}" class="product-grid-item simulate-link">
+    <div class="product-grid-image">
+      <div class="product-grid-image--centered featured-box--image">
+        {% if sold_out %}
+          <div class="badge badge--sold-out"><span class="badge-label">{{ 'products.product.sold_out' | t }}</span></div>
+        {% endif %}    
+        {% if section.settings.product_show_badge %}
+        <div class="badge-promo position-{{ section.settings.product_position_badge }} ">{{ "collections.general.product_sold" | t }}</div>
+        {% endif %}   
+         {% if on_sale %}
+        {% if section.settings.product_show_saved_amount2 %}
+        <div class="badge-sale sale-tag {% unless section.settings.show_compare_at_price %} medium--right{% endunless %}{% if section.settings.product_reviews_enable %} has-reviews{% endif %}">
+          {% assign compare_price = product.compare_at_price %}
+          {% assign product_price = product.price %}
+          {% render 'price-sale', product_price: product_price, compare_price: compare_price %}
+        </div> 
+        {% endif %}
+        {% endif %}     
+         
+        
+        <img              
+            src="{{ product.featured_image.src | img_url: settings.perf_img_lazy }}"
+            srcset="{{ product.featured_image | img_url: image_size_x }} {{image_size}}w"
+            sizes="100vw"
+            width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}"
+            loading="lazy"
+            alt="{{ product.featured_image.alt }}" />
+          <noscript>
+            <img src="{{ product.featured_image.src | img_url: '600x' }}" alt="{{ product.featured_image.alt }}" loading="lazy" width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}">
+          </noscript>
+
+
+
+  
+        {% if section.settings.thumbnails_imgbis %}
+        <div class="reveal">  
+          
+          {% if image_layout == "0" %}
+          <div>        
+          {% else %}
+          <div class="media" style="padding-bottom: {{ 1 | divided_by: image_layout | times: 100 }}%;">
+          {% endif %}
+          <img 
+            srcset="{%- if product.featured_image.width >= 160 -%}{{ product.featured_image | image_url: width: 160 }} 160w,{%- endif -%}
+            {%- if product.featured_image.width >= 210 -%}{{ product.featured_image | image_url: width: 210 }} 210w,{%- endif -%}
+            {%- if product.featured_image.width >= 280 -%}{{ product.featured_image | image_url: width: 280 }} 280w,{%- endif -%}
+            {%- if product.featured_image.width >= 360 -%}{{ product.featured_image | image_url: width: 360 }} 360w,{%- endif -%}
+            {%- if product.featured_image.width >= 480 -%}{{ product.featured_image | image_url: width: 480 }} 480w,{%- endif -%}
+            {%- if product.featured_image.width >= 750 -%}{{ product.featured_image | image_url: width: 750 }} 750w,{%- endif -%}"
+            src="{{ product.featured_image.src | img_url: settings.perf_img_lazy }}"             
+            loading="lazy"                 
+            width= "{{ product.featured_image.src.width }}"
+            height= "{{ product.featured_image.src.height }}"
+            alt="{{ product.featured_image.alt }}"  
+            sizes="(min-width: 960px) {{ image_size }}px, 40vw"         
+            style="border-radius:{{ section.settings.img_border_radius_v2 }};"
+            />               
+          
+          {% if product.images.size > 1 %}
+          <div class="hidden">            
+            <img    
+              srcset="{%- if product.images[1].src.width >= 160 -%}{{ product.images[1].src | image_url: width: 160 }} 160w,{%- endif -%}
+              {%- if product.images[1].src.width >= 210 -%}{{ product.images[1].src | image_url: width: 210 }} 210w,{%- endif -%}
+              {%- if product.images[1].src.width >= 280 -%}{{ product.images[1].src | image_url: width: 280 }} 280w,{%- endif -%}
+              {%- if product.images[1].src.width >= 360 -%}{{ product.images[1].src | image_url: width: 360 }} 360w,{%- endif -%}
+              {%- if product.images[1].src.width >= 480 -%}{{ product.images[1].src | image_url: width: 480 }} 480w,{%- endif -%}
+              {%- if product.images[1].src.width >= 750 -%}{{ product.images[1].src | image_url: width: 750 }} 750w,{%- endif -%}"
+              src="{{ product.images[1].src.src | img_url: settings.perf_img_lazy }}"             
+              loading="lazy"     
+              width= "{{ product.images[1].src.width }}"
+              height= "{{ product.images[1].src.height }}"
+              alt="{{ product.images[1].alt }}" 
+              sizes="(min-width: 960px) {{ image_size }}px, 40vw"
+              style="border-radius:{{ section.settings.img_border_radius_v2 }};"
+              />
+          </div>  
+          
+          {% endif %}
+        </div>
+        </div>
+        {% else %}
+        {% if image_layout == "0" %}
+        <div>        
+        {% else %}
+        <div class="media" style="padding-bottom: {{ 1 | divided_by: image_layout | times: 100 }}%;">
+        {% endif %}
+      
+        <img   
+          srcset="{%- if product.featured_image.width >= 160 -%}{{ product.featured_image | image_url: width: 160 }} 160w,{%- endif -%}
+          {%- if product.featured_image.width >= 210 -%}{{ product.featured_image | image_url: width: 210 }} 210w,{%- endif -%}
+          {%- if product.featured_image.width >= 280 -%}{{ product.featured_image | image_url: width: 280 }} 280w,{%- endif -%}
+          {%- if product.featured_image.width >= 360 -%}{{ product.featured_image | image_url: width: 360 }} 360w,{%- endif -%}
+          {%- if product.featured_image.width >= 480 -%}{{ product.featured_image | image_url: width: 480 }} 480w,{%- endif -%}
+          {%- if product.featured_image.width >= 750 -%}{{ product.featured_image | image_url: width: 750 }} 750w,{%- endif -%}"
+          src="{{ product.featured_image.src | img_url: settings.perf_img_lazy }}"
+          loading="lazy"            
+          width= "{{ product.featured_image.src.width }}"
+          height= "{{ product.featured_image.src.height }}"
+          alt="{{ product.featured_image.alt }}"
+          sizes="(min-width: 960px) {{ image_size }}px, 40vw"
+          style="border-radius:{{ section.settings.img_border_radius_v2 }};"
+          />
+        </div>
+        {% endif %}
+        {% if section.settings.thumbnails_img_link %}
+        {% else %}
+        </a>
+        {% endif %}
+
+        </div>
+      
+      
+    </div>
+	<div class="product-caption product-grid-content  {% if section.settings.product_caption == '2' %} product-caption-2  {% endif %} ">
+    <div class="grid-crop-title h3"><a class="title-truncate" href="{% if settings.seo_collection_product_url %}{{ product.url }}{% else %}{{ product.url | within: current_collection }}{% endif %}">{{ product.title }}</a></div>
+     
+     {% render 'app-reviews-stars' product: product, elem: section %}
+    
+     <div class="product-item--price">   
+
+          <span class="medium--left">
+            {% if section.settings.price_text == true %}
+            {% if product.price_varies and product.price_min > 0 %}<span class="price-from"> {{ "collections.general.price_from" | t }} </span>{% endif %}
+            {% endif %}
+            {% if on_sale %}
+              <span class="visually-hidden">{{ "products.general.sale_price" | t }}</span>
+            {% else %}
+            <span class="visually-hidden">{{ "products.general.regular_price" | t }}</span>
+            {% endif %}
+            {% render 'price', price: product.price %}
+            {% if on_sale %}
+            {% if section.settings.product_show_compare_at_price2 %}
+            <small>
+              <s>
+                <span class="visually-hidden">{{ "products.general.regular_price" | t }}</span>
+                {% render 'price', price: product.compare_at_price %}
+              </s>
+            </small>
+            {% endif %}  
+            {% endif %}
+          </span>          
+
+          {% if on_sale %}
+          {% if section.settings.product_show_saved_amount2 %}
+
+          <span style="display:none;" class="sale-tag {% unless section.settings.show_compare_at_price %} medium--right{% endunless %}{% if section.settings.product_reviews_enable %} has-reviews{% endif %}">
+            {% assign compare_price = product.compare_at_price %}
+            {% assign product_price = product.price %}
+            {% render 'price-sale', product: product, compare_price: compare_price, product_price: product_price %}
+
+          </span> 
+          
+          {% render 'product-unit-price', variant: product.selected_or_first_available_variant %}
+        
+          {% endif %}
+          {% endif %}
+          
+      	</div>
+    </div>
+
+  </div>   
+
+  {% render 'product-grid-form', product: product %} 
+</div>

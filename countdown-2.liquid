@@ -1,0 +1,321 @@
+
+<div class="text-center">
+ 
+  {% if sold_out %}
+  {% else %}
+  <div id="gdcdtimer" class="{% if block.settings.product_cdtimer_theme == "0" %} gdcdtimer-1 {% endif %}{% if block.settings.product_cdtimer_theme == "1" %} gdcdtimer-2 {% endif %}{% if block.settings.product_cdtimer_theme == "2" %} gdcdtimer-3 {% endif %}{% if block.settings.product_cdtimer_theme == "3" %} gdcdtimer-4 {% endif %} cdtimer-permanent-{{ block.settings.product_cdtimer }} cdtimer-progress-{{ block.settings.product_cdtimer_progress }}  cdtimer-cr-{{ block.settings.product_cdtimer_cr }}"><br />
+
+    <script type="text/javascript" defer>     
+      
+      jQuery(function(){         
+        
+        var instantTime = Date.now() / 1000;
+        var cookieEndDate = jQuery.cookie('endDate');
+        
+        countDown = function(){
+          var currentDate = Math.round(new Date() / 1000);
+
+          var clock = jQuery('.clock').FlipClock({
+            countdown: true,
+            clockFace: 'DailyCounter',
+            callbacks: {
+              init: function() {
+                //store end date If it's not yet in cookies
+                var cdtimerDay = jQuery('#showcdtimer').data('jours') * 86400 * 1000;
+                var cdtimerHour = jQuery('#showcdtimer').data('heures') * 3600 * 1000;
+                var cdtimerMinutes = jQuery('#showcdtimer').data('minutes') * 60 * 1000;
+                if (jQuery('#showcdtimer').length > 0) {
+                  var fcmins = cdtimerMinutes;
+                  var fchours = cdtimerHour;
+                  var fcdays = cdtimerDay;
+
+                } 
+                else {
+                  var fcdays = {{ block.settings.product_cdtimer_timeday }} * 86400 * 1000;
+                  var fchours = {{ block.settings.product_cdtimer_timehour }} * 3600 * 1000;
+                  var fcmins = {{ block.settings.product_cdtimer_timemn }} * 60 * 1000;
+                }                       
+
+                var totalMins = fcdays + fchours + fcmins;              
+
+                if(!jQuery.cookie('endDate')){
+                  // end date = current date + 1 minutes
+                  var endDate = Date.now() + totalMins; 
+
+                  // store end date in cookies
+                  jQuery.cookie('endDate', Math.round(endDate / 1000)); 
+                }
+              },
+              interval: function () {
+                var currentDate = Math.round(new Date() / 1000);
+                var time = clock.getTime().time;
+              },
+              stop: function() {
+                //jQuery('.message').html('The clock has stopped!');
+                 jQuery('.progress-bar-texte').hide();
+                jQuery('.flip-clock-wrapper').hide();
+              },
+            }
+          });
+
+          // counter will be in first 1 min if the user refresh the page the counter will be the difference between current and end Date, so like this counter can continue the countdown normally in case of refresh.
+          var counter = jQuery.cookie('endDate')-currentDate;
+
+          clock.setTime(counter);
+          clock.setCountdown(true);
+
+          clockFace: 'DailyCounter'
+          
+          clock.start();        
+        
+        }
+        
+        //reset button
+        jQuery('#cookie-reset').click(function(){
+          jQuery.removeCookie('endDate'); //removing end date from cookies
+          countDown(); //launch countdown function
+          location.reload();
+        });
+        
+        if(cookieEndDate < instantTime) {
+          jQuery.removeCookie('endDate'); //removing end date from cookies
+          countDown(); //launch countdown function
+          jQuery('.flip-clock-wrapper').show();
+        }
+
+        //Lanching countDown function on ready
+        
+        countDown();
+           
+        jQuery('.flip-clock-wrapper .seconds .flip-clock-label').text('{{ block.settings.product_cdtimer_seconds }}');
+        jQuery('.flip-clock-wrapper .minutes .flip-clock-label').text('{{ block.settings.product_cdtimer_minutes }}');
+        jQuery('.flip-clock-wrapper .hours .flip-clock-label').text('{{ block.settings.product_cdtimer_hours }}');
+        jQuery('.flip-clock-wrapper .days .flip-clock-label').text('{{ block.settings.product_cdtimer_days }}');
+         
+        if(cookieEndDate < instantTime) {         
+          jQuery('.flip-clock-wrapper').hide();
+          jQuery('.progress-bar-texte').hide();
+        }
+        if(cookieEndDate > instantTime) {         
+          jQuery('.flip-clock-wrapper').show();
+          jQuery('.progress-bar-texte').show();
+        }
+      }); 
+      
+      function randomIntFromInterval(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+      
+      {% if block.settings.product_cdtimer_number1 == "" or block.settings.product_cdtimer_number1 == " " %}  
+      {% assign min_items_left = "10" %}
+      {% else %}
+      {% assign min_items_left = block.settings.product_cdtimer_number1 %}
+      {% endif %}
+      {% if block.settings.product_cdtimer_number2 == "" or block.settings.product_cdtimer_number2 == " " %}  
+      {% assign max_items_left = "20" %}
+      {% else %}
+      {% assign max_items_left = block.settings.product_cdtimer_number2 %}
+      {% endif %}  
+      
+      // Settings are here
+      var total_items = 50;
+      var d = new Date();
+      var min_items_left = {{ min_items_left }};
+      var max_items_left = {{ max_items_left }};     
+      var remaining_items = randomIntFromInterval(min_items_left, max_items_left);
+      var min_of_remaining_items = 2;
+      var decrease_after = 0.27;
+      var decrease_after_first_item = 0.23;
+      (function(jQuery) {
+        jQuery.fn.progressbar = function() {
+          
+          var a = "<p>{{ block.settings.product_cdtimer_text1 }} <span class='count'>" + remaining_items + "</span> {{ block.settings.product_cdtimer_text2 }}</p>" + "<div class='progressbar'><div style='width:100%'></div></div>";
+          this.addClass('items-count');
+          this.html(a + this.html());
+          updateMeter(this);
+          var b = this;
+          
+          
+          setTimeout(function() {
+                                    
+            if (remaining_items == '2' ) {
+            
+            }
+            else {
+              remaining_items--; 
+              jQuery('.count').css('background-color', '#CE0201');
+              jQuery('.count').css('color', '#fff');
+              setTimeout(function() {
+                jQuery('.count').css('background-color', '#fff');
+                jQuery('.count').css('color', '#CE0201')
+              }, 1000 * 60 * 0.03);
+              b.find(".count").text(remaining_items);
+              updateMeter(b)
+            }
+        
+            if (remaining_items < min_of_remaining_items) {
+              
+            }           
+            
+          }, 1000 * 60 * decrease_after_first_item);
+          setInterval(function() {
+            if (remaining_items == '2' ) {
+
+            }
+            else {
+              remaining_items--; 
+              jQuery('.count').css('background-color', '#CE0201');
+              jQuery('.count').css('color', '#fff');
+              setTimeout(function() {
+                jQuery('.count').css('background-color', '#fff');
+                jQuery('.count').css('color', '#CE0201')
+              }, 1000 * 60 * 0.03);
+              b.find(".count").text(remaining_items);
+
+              updateMeter(b);
+            }
+            
+            if (remaining_items < min_of_remaining_items) {
+             
+            }
+            
+           
+          }, 1000 * 60 * decrease_after)
+        };
+
+        function updateMeter(a) {
+          var b = 100 * remaining_items / total_items;
+          if (remaining_items < 10) {
+            a.find('.progressbar div:first').addClass('less-than-ten')
+          }
+          a.find('.progressbar').addClass('active progress-striped');
+          setTimeout(function() {
+            myanimate(a.find('.progressbar div:first'), b);
+            a.find('.progressbar').removeClass('active progress-striped')
+          }, 1000)
+        }
+      }(jQuery));
+
+      function myanimate(a, b) {
+        var c = 0;
+        var d = parseInt(a.closest('.progressbar').css('width'));
+        var e = Math.floor(100 * parseInt(a.css('width')) / d);
+        if (e > b) {
+          c = e
+        }
+
+        function frame() {
+          if (e > b) {
+            c--
+          } else {
+            c++
+          }
+          a.css('width', c + '%');
+          if (c == b || c <= 0 || c >= 100) clearInterval(f)
+            }
+        var f = setInterval(frame, 40)
+        }
+      jQuery.noConflict()(function(jQuery) {
+        jQuery(document).ready(function() {
+         
+          jQuery("#progress_bar").progressbar();
+          var tag = "ctdn-12-12".match(/\d+/g);
+          var hour = 14;
+          var theDaysBox = jQuery("#numdays2");
+          var theHoursBox = jQuery("#numhours2");
+          var theMinsBox = jQuery("#nummins2");
+          var theSecsBox = jQuery("#numsecs2");
+          var d = new Date();
+          var n = d.getDay();
+          var date = 1;
+          var gg = 0;
+          var hh = 0;
+          var ii = 0;
+          var nsec = 27;
+          var cdtimerDay = jQuery('#showcdtimer').data('jours');
+          var cdtimerHour = jQuery('#showcdtimer').data('heures');
+          var cdtimerMinutes = jQuery('#showcdtimer').data('minutes');
+          if (cdtimerHour != undefined || cdtimerMinutes != undefined || cdtimerDay != undefined) {
+            var nmin = cdtimerMinutes;
+            var nhrs = cdtimerHour;
+            var ndat = cdtimerDay;
+            
+          } 
+          else {
+            var nmin = {{ block.settings.product_cdtimer_timemn }};
+            var nhrs = {{ block.settings.product_cdtimer_timehour }};
+            var ndat = {{ block.settings.product_cdtimer_timeday }};
+          } 
+          
+          function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+          }          
+        
+          theSecsBox.html(nsec);          
+          theMinsBox.html(nmin);          
+          theHoursBox.html(nhrs);          
+          theDaysBox.html(ndat);          
+          
+          var refreshId = setInterval(function() {
+            var e = theSecsBox.text();
+            var a = theMinsBox.text();
+            var c = theHoursBox.text();
+            var b = theDaysBox.text();
+            if (e == 0 && a == 0 && c == 0 && b == 0) {} else {
+              if (e == 0 && a == 0 && c == 0) {
+                theDaysBox.html(0);
+                theHoursBox.html("0");
+                theMinsBox.html("00");
+                theSecsBox.html("59")
+              } else {
+                if (e == 0 && a == 0) {
+                  theHoursBox.html(c - 1);
+                  theMinsBox.html("59");
+                  theSecsBox.html("59")
+                } else {
+                  if (e == 0) {
+                    theMinsBox.html(a - 1);
+                    theSecsBox.html("59")
+                  } else {
+                    theSecsBox.html(e - 1)
+                  }
+                }
+              }
+            }          
+          }, 1000);          
+        });
+      });
+    </script>
+    {% if block.settings.product_cd_stock_type == "0" %}
+    
+    {% assign product_qty = 0 %}
+    {% for variant in product.variants %}
+    {% if variant.inventory_quantity > 0 %}
+    {% assign product_qty = product_qty | plus: variant.inventory_quantity %}
+    {% endif %}
+    {% endfor %}
+    {% if product_qty > 0 %}
+    <div class="items-count">
+      <p>{{ block.settings.product_cdtimer_text1 }} <span class="count">{{ product_qty }}</span> {{ block.settings.product_cdtimer_text2 }}
+      </p>
+    </div>
+    {% endif %}
+    
+    {% else %}
+    <div class="items-count" id="progress_bar"></div>
+    
+    {% endif %} 
+    <div class="clock"></div>
+    <div class="message"></div>
+    {% if block.settings.product_cdtimer_cookie == true %}
+      {% if request.design_mode %}
+        <button id='cookie-reset'>Delete your cookie - only shopify admin</button>
+      {% endif %} 
+    {% endif %} 
+    <p class="progress-bar-texte">{{ block.settings.product_cdtimer_text3 }}</p></div>
+  {% endif %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" integrity="sha512-3j3VU6WC5rPQB4Ld1jnLV7Kd5xr+cq9avvhwqzbH/taCRNURoeEpoPBK9pDyeukwSxwRPJ8fDgvYXd6SkaZ2TA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.7/flipclock.min.js" defer></script>

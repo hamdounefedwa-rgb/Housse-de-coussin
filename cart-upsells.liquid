@@ -1,0 +1,43 @@
+{% assign isProduct = false %}
+{% for item in cart.items %}
+  {% if item.product_id == upsell.id %}
+     <!-- <center>Produit est présent dans le panier</center>--> 
+     {% assign isProduct = true %}
+  {% endif %} 
+{% endfor %}
+
+<div class="product__upsell" {% if isProduct %} style="display:none" {% endif %}>
+  <div class="product__upsell-item product__upsell-item1">
+    <a style="display:none;" href="{{ upsell.url }}"></a>
+
+    {% assign featured_image = upsell.selected_or_first_available_variant.featured_image | default: upsell.featured_image %}
+    <div class="product__upsell-img">
+      <img data-imgsrc="{{featured_image.src | image_url: width: '280x' }}" src="{{ featured_image | img_url: '280x' }}" alt="{{ featured_image.alt | escape }}" loading="lazy" width="{{ featured_image.width | img_url: '280x' }}" height="{{ featured_image.height | img_url: '280x'  }}" >
+    </div>
+  
+  </div>
+
+  <div class="product__upsell-item">
+    <a href="{{ upsell.url }}" >{{ upsell.title }}</a>          
+  </div>
+
+  <div class="product__upsell-item product__upsell__form">
+    {% form 'product', upsell, id: "addToCartFormId2", class: "addToCartForm addToCartFormId2" %}       
+    <select name="id" id="productSelect-{{ upsell.id }}" class="product-variants product-variants-{{ upsell.id }}">
+      {% for variant in upsell.variants %}
+      {% if variant.available %}
+      <option data-imgsrc="{{variant.image.src | image_url: width: '280x' }}"{% if variant == upsell.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">
+        {{ variant.title }} - {{ variant.price | money }}
+      </option>    
+      {% endif %}
+      {% endfor %}
+    </select>      
+    <div style="display:none;">  
+      <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
+    </div>
+    <button type="submit" name="add" id="addToCartBis" class="addToCart btn btn-atc add-cart-upsell">
+      <span id="addToCartText-{{ section.id }}">Ajouter au panier</span>
+    </button>
+    {% endform %}         
+  </div>
+</div>

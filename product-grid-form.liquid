@@ -1,0 +1,62 @@
+{% if section.settings.btn_choice == "2" %}
+{% assign variant = product.selected_or_first_available_variant %}
+{% if product.variants.size > 1 %}
+  <!-- Modal form -->
+  <div class="grid-product-form"> 
+    <div class="cont-atc show-modal-form">
+      <button class="btn {{ section.settings.btn_scheme }} form-grid-btn">
+        {% if product.available %}{{ 'products.product.add_to_cart' | t }}{% else %}{{ 'products.product.sold_out' | t }}{% endif %}
+      </button>
+    </div>
+    <div class="modal-form" {% if product.variants.size > 1 and variant.available %}style="display:none;"{% endif %}>
+    <div class="modal-form--close">&times;</div>
+      {% form 'product', product, class: "form-grid addToCartForm" %}    
+      <select name="id" id="productSelect-{{ product.id }}" class="product-variants product-variants-{{ product.id }}" {% unless product.variants.size > 1 and variant.available %}style="display:none;"{% endunless %}>
+        {% for variant in product.variants %}
+        {% if variant.available %}
+        <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+        {% else %}
+        <option disabled="disabled">
+          {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+        </option>
+        {% endif %}
+        {% endfor %}
+      </select>
+      <button type="submit" name="add" {% if settings.ajax_cart_method == "page" %} data-cart-method="cart" {% else %} data-cart-method="mini-cart" {% endif %} {% if product.available %} {% else %}disabled{% endif %} class="form-grid-btn addToCart btn-atc {% if product.available %}{% else %}disabled no-stock{% endif %} btn {{ section.settings.btn_scheme }} add-cart-upsell {% if section.settings.addtocart_shake %}addtocart-skake{% endif %}">
+        <span id="addToCartText-{{ section.id }}">
+          {% if product.available %}{{ 'products.product.add_to_cart' | t }}{% else %}{{ 'products.product.sold_out' | t }}{% endif %}
+        </span>
+      </button> 
+      {% endform %} 
+    </div>
+  </div>
+  {% else %}             
+  <!-- Only BTN no variants -->
+  {% form 'product', product, class: "form-grid addToCartForm" %}    
+      <select name="id" style="display:none" id="productSelect-{{ product.id }}" class="product-variants product-variants-{{ product.id }}" {% unless product.variants.size > 1 and variant.available %}style="display:none;"{% endunless %}>
+        {% for variant in product.variants %}
+        {% if variant.available %}
+        <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+        {% else %}
+        <option disabled="disabled">
+          {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+        </option>
+        {% endif %}
+        {% endfor %}
+      </select>
+      <button type="submit" name="add" {% if settings.ajax_cart_method == "page" %} data-cart-method="cart" {% else %} data-cart-method="mini-cart" {% endif %} {% if product.available %} {% else %}disabled{% endif %} class="form-grid-btn addToCart btn-atc {% if product.available %}{% else %}disabled no-stock{% endif %} btn {{ section.settings.btn_scheme }} add-cart-upsell {% if section.settings.addtocart_shake %}addtocart-skake{% endif %}">
+        <span id="addToCartText-{{ section.id }}">
+          {% if product.available %}{{ 'products.product.add_to_cart' | t }}{% else %}{{ 'products.product.sold_out' | t }}{% endif %}
+        </span>
+      </button> 
+      {% endform %} 
+  {% endif %}
+{% endif %}
+
+{% if section.settings.btn_choice == "1" %} 
+<div class="cont-atc-2">
+  <a href="{% if settings.seo_collection_product_url %}{{ product.url }}{% else %}{{ product.url | within: current_collection }}{% endif %}" class="btn {{ section.settings.btn_scheme }}" >
+    {{ 'collections.general.link_product' | t }}
+  </a>
+</div>
+{% endif %}  

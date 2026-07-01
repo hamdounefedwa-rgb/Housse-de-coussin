@@ -1,0 +1,44 @@
+<div class="flash-infos" style="opacity: 0;" data-auto-play-speed="{{ autoPlaySpeed }}"> 
+  {{ html }}  
+</div>
+
+<style>
+  .flash-infos {
+    padding:2px 10px;
+    display:flex;
+    width:100%;
+    max-width:100%;
+    align-items:center;
+    
+  }
+   .flash-info > div  {
+     padding:0;
+     display:flex !important;
+     align-items:center;
+     justify-content:center;
+     gap:7px;
+   }
+   .flash-info svg {
+     fill:var(--topheaderTextColor);
+     width:auto;
+   } 
+   .flash-info.truck svg  {
+     height:24px;
+   }
+   .flash-info-pulse {
+     animation: flash-pulse 2s infinite;
+   }
+   @keyframes flash-pulse {
+     0% {
+       opacity:0;
+     }
+     
+     50% {
+       opacity:1;
+     }
+
+     100% {
+       opacity:1;
+     }
+   }
+ </style>

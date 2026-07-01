@@ -1,0 +1,5 @@
+{% assign splitArticleUrl = article.url | replace: '/', ' ' %}
+{% assign newArraySlug = splitArticleUrl | split: ' ' %}
+{% assign featured_blog = blogs[newArraySlug[1]] %}
+
+<div class="blog__category">{{ featured_blog.title }}</div>

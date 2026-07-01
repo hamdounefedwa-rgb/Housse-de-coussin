@@ -1,0 +1,3 @@
+{% assign formatted_price = price | money %}
+<span aria-hidden="true" class="product-item--sale-price">{{ formatted_price }}</span>
+<span class="visually-hidden product-item--sale-price">{{ price | money }}</span>

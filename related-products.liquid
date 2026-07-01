@@ -1,0 +1,39 @@
+{% assign number_of_products = 15 %}
+{% assign number_of_products_to_fetch = number_of_products | plus: 1 %}
+
+{% if collection == null or collection.handle == 'frontpage' or collection.handle == 'all' %}
+  {% assign found_a_collection = false %}
+  {% for c in product.collections %}
+    {% if found_a_collection == false and c.handle != 'frontpage' and c.handle != 'all' and c.all_products_count > 1 %}
+      {% assign found_a_collection = true %}
+      {% assign collection = c %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{% if collection and collection.products_count > 1 %}
+ 
+  <div class="h1 {% if section.settings.title_center %} text-center{% endif %}">{{ 'products.general.related_products' | t }}</div>
+  <div class="grid-uniform  {% if collection.products_count > 5 %} slider-items{% endif %}"
+  data-slider-nb-desktop="5" data-slider-nb-mobile="2">
+    {% assign current_product = product %}
+    {% assign current_product_found = false %}
+     {% liquid
+          if section.settings.not_showing_sold_out_products
+            assign featured_collection = collection.products | where: 'available' 
+          else 
+            assign featured_collection = collection.products
+          endif
+        %}
+    {% for product in featured_collection limit: number_of_products_to_fetch %}
+      {% if product.handle == current_product.handle %}
+        {% assign current_product_found = true %}
+      {% else %}
+        {% unless current_product_found == false and forloop.last %}
+          {% render 'related-product-grid-item', product: product, section:section, image_size: image_size %}
+        {% endunless %}
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
+
+

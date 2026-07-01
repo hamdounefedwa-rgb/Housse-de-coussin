@@ -1,0 +1,93 @@
+<style>
+  #cookies-banner {
+    display:none;
+    gap:1rem;
+    justify-content: center;
+    flex-wrap:wrap;
+    align-items: center;
+    padding: 1em;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    background: {{ settings.cookies_banner_bgcolor }};
+    color: {{ settings.cookies_banner_color }};
+    box-shadow:0 0 5px rgba(0,0,0,0.15);
+  }
+  #cookies-banner > .btn {
+    background: {{ settings.cookies_banner_btnbgcolor }};
+    color: {{ settings.cookies_banner_btncolor }};
+  }
+  #cookies-banner > .btn--reset {
+    color : {{ settings.cookies_banner_btnbgcolor }};
+    background: {{ settings.cookies_banner_btncolor }};
+  }
+  @media screen and (max-width: 749px) {  
+    #cookies-banner span {
+      font-size:12px;
+      overflow:auto;
+      display:block;
+      max-height:120px;
+      line-height:1;
+    }
+    #cookies-banner .btn {
+      font-size:14px;
+    }
+  }
+</style>
+
+
+<div id="cookies-banner">
+  <span>{{ settings.euro_cookies_text }}</span>
+  <button class="btn btn--reset btn--small" onclick="handleDecline()">{{ settings.euro_cookies_btn_decline }}</button>
+  <button class="btn btn--small" onclick="handleAccept()">{{ settings.euro_cookies_btn }}</button>
+</div>
+
+<script>
+  function getBannerEl() {
+    return document.getElementById('cookies-banner');
+  }
+
+  function hideBanner(res) {
+    getBannerEl().style.display = 'none';
+  }
+
+  function showBanner() {
+   getBannerEl().style.display = 'flex';
+  }
+
+  function handleAccept(e) {
+    window.Shopify.customerPrivacy.setTrackingConsent(true, hideBanner);
+
+    document.addEventListener('trackingConsentAccepted',function() {
+      console.log('trackingConsentAccepted event fired');
+    });
+  }
+
+  function handleDecline() {
+    window.Shopify.customerPrivacy.setTrackingConsent(false,hideBanner);
+  }
+
+  function initCookieBanner() {
+    const userCanBeTracked = window.Shopify.customerPrivacy.userCanBeTracked();
+    const userTrackingConsent = window.Shopify.customerPrivacy.getTrackingConsent();
+
+    if(!userCanBeTracked && userTrackingConsent === 'no_interaction') {
+      showBanner();
+    }
+  }
+
+  window.Shopify.loadFeatures([
+    {
+      name: 'consent-tracking-api',
+      version: '0.1',
+    }
+  ],
+  function(error) {
+    if (error) {
+      throw error;
+    }
+
+    initCookieBanner();
+  });
+
+</script>

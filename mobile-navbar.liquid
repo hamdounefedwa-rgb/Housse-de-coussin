@@ -1,0 +1,38 @@
+<div id="mobileNavBar">
+  <div class="header-grid header-grid__nav">
+    <button class="menu-toggle mobileNavBar-link">
+      <span class="icon icon-hamburger"></span>
+      {% if settings.mobile_burger_text %}<span class="menu-toggle-text">{{ 'layout.navigation.mobile_menu' | t }}</span>{% endif %}
+      </button>    
+  </div>
+  <div class="header-grid header-grid__logo">
+  
+    {% if section.settings.logo %}
+    {% capture image_size %}x80{% endcapture %}
+    <a  href="/" class="mobile-link-logo">      
+      <img src="{{ section.settings.logo | img_url: image_size }}"
+           loading="lazy"   
+           width="{{ section.settings.logo.width }}"
+           height="{{ section.settings.logo.height }}"       
+           alt="{{ section.settings.logo.alt | default: shop.name }}"> 
+    </a>
+    {% else %}
+    <a class="logo-link" href="/">{{ shop.name }}</a>
+    
+  
+  {% endif %}
+  </div>
+  <div class="header-grid header-grid__links">    
+    {% unless section.settings.search_actived %}        
+    <a href="#" onclick="openSearch()" aria-label="Search" class="header-cart-btn header-action-search mobileNavBar-link openBtn">
+      <i class="fa fa-search" aria-hidden="true"></i>
+    </a>
+    {% endunless %} 
+    
+    <a href="/cart" aria-label="cart" class="header-cart-btn header-action-cart cart-toggle mobileNavBar-link">
+      {{ section.settings.header_icon_cart }}
+       <span class="cart-count {% if cart.item_count == 0 %}hidden-count{% endif %}">{{ cart.item_count }}</span>
+    </a> 
+    
+  </div>
+</div>

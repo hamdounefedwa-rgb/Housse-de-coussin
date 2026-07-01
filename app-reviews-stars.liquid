@@ -1,0 +1,19 @@
+{% if elem.settings.reviews_tabs_apps != "none" %}
+  <div class="cont-badges-star">
+    {% if elem.settings.reviews_tabs_apps == "loox" %}
+    <div class="loox-rating" data-id="{{ product.id }}" data-rating="{{ product.metafields.loox.avg_rating }}" data-raters="{{ product.metafields.loox.num_reviews }}"></div>
+    {% endif %}
+    {% if elem.settings.reviews_tabs_apps == "ryviu" %}
+    <div class="ryviu-collection-widget" data="collection_product_reviews" product-handle="{{ product.handle }}"></div>
+    {% endif %}
+    {% if elem.settings.reviews_tabs_apps == "pr" %}
+    <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+    {% endif %}
+    {% if elem.settings.reviews_tabs_apps == "alireviews" %}
+    <div product-id="{{ product.id }}" class="arv-collection arv-collection--{{ product.id }}"></div>
+    {% endif %}
+    {% if elem.settings.reviews_tabs_apps == "judgeme" %}
+    {% render 'judgeme_widgets', widget_type: 'judgeme_review_widget', concierge_install: false, product: product %}
+    {% endif %}
+  </div>
+{% endif %}

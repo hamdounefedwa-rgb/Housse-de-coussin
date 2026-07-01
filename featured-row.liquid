@@ -1,0 +1,46 @@
+{% unless row_limit %}
+  {% capture row_limit %}{{ row_limit_setting | times: 5 }}{% endcapture %}
+{% endunless %}
+
+{% assign header_title = collections[featured_row].title %}
+{% assign more_link = collections[featured_row].url %}
+
+{% render 'featured-row-header', section: section, featured_row: featured_row, header_title: header_title, more_link: more_link %}
+
+<div class="grid-uniform {% if section.settings.grid_scroll %} scroll-x {% endif %}{% if section.settings.thumbnails_zoom == true %} collection-zoom {% endif %} {% if section.settings.thumbnails_img_opacity  or section.settings.layout == '1' %} opacity-enable{% endif %} " style="align-items: {{ section.settings.d_flex_align_items }}">
+  {% liquid
+    if not_showing_sold_out_products
+      assign custom_collection_products = collections[featured_row].products | where: 'available' 
+    else 
+      assign custom_collection_products = collections[featured_row].products
+    endif
+  %}
+  {% for product in custom_collection_products limit: row_limit  %}
+    {% unless grid_item_width %}
+    {% assign grid_item_width = 'large--one-fifth medium--one-third small--one-half' %}
+    {% endunless %}
+    {% assign current_collection = collections[featured_row] %}    
+    {% render 'product-grid-item', 
+      product: product,
+      grid_item_width: grid_item_width, 
+      grid_item_width_sm: grid_item_width_sm, 
+      row_limit: row_limit,
+      section: section, current_collection: current_collection,
+      image_size: image_size,
+      image_size_sm: image_size_sm,
+      image_layout: image_layout,
+      forloop: forloop,
+      show_colors: show_colors
+    %}
+  {% endfor %}
+</div>
+
+
+{% if section.settings.title_link_layout == '1' and section.settings.collection_show_link %}
+<div class="section-btns wow fadeIn"
+     data-wow-duration="{{ settings.wow_effects_duration }}s"
+     data-wow-delay="{{ settings.wow_effects_delay }}s">
+  <a class="{% if section.settings.link_layout == '1' %} btn {{ section.settings.btn_collection_scheme }} {% else %} {{ section.settings.link_layout }}{% endif %}" href="{{ featured_row.url }}">{{ 'homepage.featured_collection_rows.more_in_collection' | t: collection_title: header_title }}</a>
+</div>
+
+{% endif %}

@@ -1,0 +1,72 @@
+{% if collection.metafields.custom.menu %}
+
+<div class="collection-nav">
+
+  <ul class="custom-scroll-x">
+    {% if linklists[collection.metafields.custom.menu].links != blank %}
+      {% for link in linklists[collection.metafields.custom.menu].links %}
+        <li><a href="{{ link.url }}">{{ link.title }}</a></li> 
+      {% endfor %}
+    {% endif %}
+  </ul>
+
+  <style>
+    .collection-nav {
+      width:100%;
+      padding:0 var(--gutter-half);
+    }
+    .collection-nav > ul {
+      display: flex;
+      gap:1rem;
+      width:100%;
+      flex-wrap: wrap;
+      overflow: auto;
+    }
+
+    .collection-nav > ul::-webkit-scrollbar {
+      height: 5px;
+      width: 15px;
+    }
+
+    .collection-nav > ul::-webkit-scrollbar-track {
+      background: var(--color-text-body-opacity1);
+    }
+
+    .collection-nav > ul::-webkit-scrollbar-thumb, .collection-nav > ul::-webkit-scrollbar-thumb:hover {
+      background: var(--colorBorder);
+    }
+
+    .collection-nav > ul > li {
+      flex:0 0 auto;
+      
+    }
+    .collection-nav > ul > li > a {
+      display: block;
+      padding:7px 11px;
+      color:var(--colorTextBody);
+      transition: all .2s;
+      border:1px solid var(--colorBorder);
+    }
+    .collection-nav > ul > li > a:hover {
+      background:var(--color-text-body-opacity1);
+      border-color:var(--color-text-body-opacity3);
+    }
+
+    @media screen and (max-width: 749px) {
+      .collection-nav > .custom-scroll-x {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 1.5rem;      
+        margin-bottom: 1rem; 
+      }
+      .collection-nav > ul > li > a {
+        padding:4px 7px;
+        font-size: 13px;
+      }
+    }
+  </style>      
+
+</div>
+{% endif %}

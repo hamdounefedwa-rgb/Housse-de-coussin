@@ -1,0 +1,188 @@
+
+<style>
+
+  {% if elem.settings.full_page %}
+    .no-template-index {
+      padding-left:0;
+      padding-right:0;
+    }
+    
+  {% endif %}
+  
+
+  {% if elem.settings.colors_product_content %}
+  .section-id-{{ elem.id }} h1 { 
+    color: {{ elem.settings.color_titles }};
+  }
+  {% endif %} 
+
+  .section-id-{{ elem.id }} {
+
+    /* Section colors */
+    {% if elem.settings.colors_product_content %}
+    --colorTextTitle: {{ elem.settings.color_titles }}; 
+    --colorTextBody: {{ elem.settings.color_body_text }};
+    --color-text-body-opacity1: {{ elem.settings.color_body_text | color_modify: 'alpha', 0.05 }};
+    {% endif %} 
+
+    {% if elem.settings.block_color_enable %} 
+    
+    --colorBody: {{ elem.settings.block_bgcolor }}; 
+    color:var(--colorTextBody);
+    background: {{ elem.settings.block_bgcolor }};
+
+    {% if elem.settings.block_image %}  
+      background-image:url({{ elem.settings.block_image | img_url: "1900x" }}); 
+      background-repeat: no-repeat !important; 
+      background-size:cover;
+      background-position:center;    
+      {% if elem.settings.section_parallax == true %}   
+      background-attachment: fixed;       
+      {% endif %}  
+    {% endif %} 
+    
+    {% if elem.settings.block_bgcolor_gradient %}   
+      
+      background: linear-gradient({{ elem.settings.block_bgcolor_gradient_direction }}deg, 
+      {{ elem.settings.block_bgcolor_gradient_1 }} {{ elem.settings.block_bgcolor_gradient_1_percent_1 }}% {{ elem.settings.block_bgcolor_gradient_1_percent_2 }}%, 
+      {{ elem.settings.block_bgcolor_gradient_2 }} {{ elem.settings.block_bgcolor_gradient_2_percent_1 }}% 100%);
+    {% else %} 
+      background-color:{{ elem.settings.block_bgcolor }};
+    {% endif %}        
+    box-shadow:0 0 {{ elem.settings.section_shadow_size }}px {{ elem.settings.section_shadow_color | color_modify: 'alpha', elem.settings.section_shadow_opacity }};
+
+    {% endif %}
+    
+    /* Form colors */ 
+    {% if elem.settings.colors_product_form %}
+    
+    --colorPrice: {{ elem.settings.color_price }};
+    --colorPrice2: {{ elem.settings.color_price2 }};  
+    --colorPriceBg: {{ elem.settings.color_price_bg }};
+    --colorPriceText: {{ elem.settings.color_price_text }}; 
+    {% endif %}
+    
+    /* Variants colors */ 
+    {% if elem.settings.colors_product_variants %}
+    --variantLabel: {{ elem.settings.swatch_color_label }};
+    --swatchBtnColor: {{ elem.settings.swatch_color_btn_text }};
+    --swatchBtnBgColor: {{ elem.settings.swatch_color_btn_bg }};
+    --swatchBtnBorderColor: {{ elem.settings.swatch_color_btn_border }};
+    --swatchBtnColorHover: {{ elem.settings.swatch_color_btn_text2 }};
+    --swatchBtnBgColorHover: {{ elem.settings.swatch_color_btn_bg2 }};
+    --swatchBtnBorderColorHover: {{ elem.settings.swatch_color_btn_border2 }};
+    --swatchBtnBorderWidth: {{ elem.settings.swatch_color_design }};  
+    --variant-box-shadow: 0 0 {{ elem.settings.variants_shadow_size }}px {{ elem.settings.variants_shadow_color | color_modify: 'alpha', elem.settings.variants_shadow_opacity }};
+    --colorBorder: var(--swatchBtnBorderColor);
+    {% endif %}
+    
+    /* Qty colors */ 
+    {% if elem.settings.colors_product_qty %}
+    --productQtyColor: {{ elem.settings.color_product_qty1 }};
+    --productQtyBgColor: {{ elem.settings.color_product_qty2 }};
+    --productQtyBorderColor: {{ settings.color_product_qty_border }};  
+    {% endif %} 
+    
+    /* Button colors */  
+    {% if elem.settings.colors_product_btns %}
+    --colorBtnPrimaryBg: {{ elem.settings.color_btn_primary_bg }};
+    --colorBtnPrimaryText: {{ elem.settings.color_btn_primary_text }};
+    --sizeBtnPrimaryBorder: {{ elem.settings.size_btn_primary_border }}px; 
+    --colorBtnPrimaryBorder: {{ elem.settings.color_btn_primary_border }};
+    --colorBtnSecondaryBg: {{ elem.settings.color_btn_secondary_bg }};
+    --colorBtnSecondaryText: {{ elem.settings.color_btn_secondary_text }};  
+    --colorBtnAtcText: {{ elem.settings.color_btn_atc_text }};
+    --colorBtnAtcBg: {{ elem.settings.color_btn_atc_bg }};
+    --colorBtnAtcTextHover: {{ elem.settings.color_btn_atc_text }};
+    --colorBtnAtcBgHover: {{ elem.settings.color_btn_atc_bg }};
+    --sizeBtnAtcBorder: {{ elem.settings.size_btn_atc_border }}px; 
+    --colorBtnAtcBorder: {{ elem.settings.color_btn_atc_border }};
+    --colorBtnBuyNowText: {{ elem.settings.color_btn_buynow_text }};
+    --colorBtnBuyNowBg: {{ elem.settings.color_btn_buynow_bg }};
+    {% endif %}
+    
+    /* Components colors  */
+    {% if elem.settings.colors_product_components %}
+    --navProductsText: {{ elem.settings.color_nav_products }};
+    --tabColor: {{ elem.settings.tab_color }};
+    --tabBgColor: {{ elem.settings.tab_bgcolor }};
+    --tabBorderColor: {{ elem.settings.tab_bordercolor }};
+    
+    {% endif %}
+
+    /* FONT SIZES */
+
+    {% if elem.settings.block_size_enable %}    
+
+    --h1FontSize: {{ elem.settings.h1_size | default: settings.h1_size }};
+    --h2FontSize: {{ elem.settings.h2_size | default: settings.h2_size }};
+    --h3FontSize: {{ elem.settings.h3_size | default: settings.h3_size }};
+    --h4FontSize: {{ elem.settings.h4_size | default: settings.h4_size }};
+    --h5FontSize: {{ elem.settings.h5_size | default: settings.h5_size }};
+
+    --h1FontSizeSm: {{ elem.settings.h1_size_sm | default: settings.h1_size_sm }};
+    --h2FontSizeSm: {{ elem.settings.h2_size_sm | default: settings.h2_size_sm }};
+    --h3FontSizeSm: {{ elem.settings.h3_size_sm | default: settings.h3_size_sm }};
+    --h4FontSizeSm: {{ elem.settings.h4_size_sm | default: settings.h4_size_sm }};
+    --h5FontSizeSm: {{ elem.settings.h5_size_sm | default: settings.h5_size_sm }};
+
+    {% endif %}
+
+  } 
+  {% if elem.settings.block_color_enable %} 
+  {% if elem.settings.block_bgcolor_gradient %}         
+   
+  
+  @media screen and (max-width: 749px) { 
+    .section-id-{{ elem.id }} {
+       background: linear-gradient({{ elem.settings.block_bgcolor_gradient_direction }}deg, 
+    {{ elem.settings.block_bgcolor_gradient_1 }} {{ elem.settings.block_bgcolor_gradient_1_percent_1 | divided_by: 2 }}% {{ elem.settings.block_bgcolor_gradient_1_percent_2 | divided_by: 2 }}%, 
+    {{ elem.settings.block_bgcolor_gradient_2 }} {{ elem.settings.block_bgcolor_gradient_2_percent_1 | divided_by: 2 }}% 100%);
+    }
+  }
+  {% endif %} 
+  {% endif %} 
+
+  .section-id-{{ elem.id }} .cont-related .slick-track { 
+    display:flex;
+    justify-content:{{ elem.settings.section_flex_align_items }};
+    align-items:{{ elem.settings.section_flex_align_items }}; 
+  }  
+
+  {% if elem.settings.block_spacing_enable %}
+
+  
+  @media screen and (max-width: 749px) {  
+    .section-id-{{ elem.id }} {
+      {% if elem.settings.block_padding_sm != blank %} padding:{{ elem.settings.block_padding_sm }}; {% else %} padding:0; {% endif %}
+      {% if elem.settings.block_margin_sm != blank %} margin:{{ elem.settings.block_margin_sm }}; {% else %} margin:0; {% endif %}          
+    }
+  }
+  @media screen and (min-width: 750px) {
+    .section-id-{{ elem.id }} {
+      {% if elem.settings.block_padding != blank %} padding:{{ elem.settings.block_padding }}; {% else %} padding:0; {% endif %}
+      {% if elem.settings.block_margin != blank %} margin:{{ elem.settings.block_margin }}; {% else %} margin:0; {% endif %}        
+    }   
+    .section-id-{{ elem.id }} > div {
+      max-width:{{ elem.settings.section_max_width }};
+      margin:0 auto;
+    }
+  }
+
+  /*.section-id-{{ elem.id }} > div {
+    margin: 0 auto;
+  } 
+
+  .section-id-{{ elem.id }} {
+    padding:calc(var(--gutter) /2);
+  }*
+
+  @media screen and (min-width: 750px) {
+    .section-id-{{ elem.id }} {
+      padding:var(--gutter);
+    }
+  }*/
+  
+  {% endif %}
+ 
+</style>

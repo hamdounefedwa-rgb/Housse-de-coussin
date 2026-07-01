@@ -1,0 +1,220 @@
+
+<div class="text-center">
+ 
+  {% if sold_out %}
+  {% else %}
+  <div id="gdcdtimer" class="{% if block.settings.product_cdtimer_theme == "0" %} gdcdtimer-1 {% endif %}{% if block.settings.product_cdtimer_theme == "1" %} gdcdtimer-2 {% endif %}{% if block.settings.product_cdtimer_theme == "2" %} gdcdtimer-3 {% endif %}{% if block.settings.product_cdtimer_theme == "3" %} gdcdtimer-4 {% endif %} cdtimer-permanent-{{ block.settings.product_cdtimer }} cdtimer-progress-{{ block.settings.product_cdtimer_progress }}  cdtimer-cr-{{ block.settings.product_cdtimer_cr }}">
+
+    <script type="text/javascript" defer>
+
+      $(document).ready(function() {        
+        
+        
+        if ($('#showcdtimer').length > 0) {
+              
+          var date1 = new Date(+$('#showcdtimer').data('annees')+'/'+$('#showcdtimer').data('mois')+'/'+$('#showcdtimer').data('jours')+' 23:59:59'); 
+          var date2 = new Date(date1).getTime();
+
+        } 
+        else {
+          var fcday = parseInt({{ block.settings.product_cdtimer_timeday }});
+          var fcmonth = parseInt({{ block.settings.product_cdtimer2_timemonth }});
+          var fcyear = parseInt({{ block.settings.product_cdtimer2_timeyear }});
+          var date1 = new Date(+fcyear+'/'+fcmonth+'/'+fcday+' 23:59:59'); 
+          var date2 = new Date(date1).getTime();
+        }  
+       
+
+        var clock;
+
+        // Grab the current date
+        var currentDate = new Date();
+
+        // Calculate the difference in seconds between the future and current date
+        var diff = date1.getTime() / 1000 - currentDate.getTime() / 1000;
+
+        clock = $('.clock').FlipClock(diff, {
+          clockFace: 'DailyCounter',
+          countdown: true,
+          callbacks: {
+            stop: function() {
+              /*$('.message').html('The clock has stopped!')*/
+            }
+          }
+        });
+
+        if(date2 < currentDate) {         
+          $('.flip-clock-wrapper').css('display','none');
+          $('.progress-bar-texte').css('display','none');
+
+        }
+        if(date2 > currentDate) {         
+          $('.flip-clock-wrapper').css('display','flex');
+          $('.progress-bar-texte').css('display','block');
+        }        
+        
+        $('.flip-clock-wrapper .seconds .flip-clock-label').text('{{ block.settings.product_cdtimer_seconds }}');
+        $('.flip-clock-wrapper .minutes .flip-clock-label').text('{{ block.settings.product_cdtimer_minutes }}');
+        $('.flip-clock-wrapper .hours .flip-clock-label').text('{{ block.settings.product_cdtimer_hours }}');
+        $('.flip-clock-wrapper .days .flip-clock-label').text('{{ block.settings.product_cdtimer_days }}');
+
+      });		
+      
+      function randomIntFromInterval(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+        
+      {% if block.settings.product_cdtimer_number1 == "" or block.settings.product_cdtimer_number1 == " " %}  
+      {% assign min_items_left = "10" %}
+      {% else %}
+      {% assign min_items_left = block.settings.product_cdtimer_number1 %}
+      {% endif %}
+      {% if block.settings.product_cdtimer_number2 == "" or block.settings.product_cdtimer_number2 == " " %}  
+      {% assign max_items_left = "20" %}
+      {% else %}
+      {% assign max_items_left = block.settings.product_cdtimer_number2 %}
+      {% endif %}  
+      
+      // Settings are here
+      var total_items = 50;
+      var d = new Date();
+      var min_items_left = {{ min_items_left }};
+      var max_items_left = {{ max_items_left }};    
+      var remaining_items = randomIntFromInterval(min_items_left, max_items_left);
+      var min_of_remaining_items = 2;
+      var decrease_after = 0.27;
+      var decrease_after_first_item = 0.23;
+      (function($) {
+        $.fn.progressbar = function() {
+          
+          var a = "<p>{{ block.settings.product_cdtimer_text1 }} <span class='count'>" + remaining_items + "</span> {{ block.settings.product_cdtimer_text2 }}</p>" + "<div class='progressbar'><div style='width:100%'></div></div>";
+          this.addClass('items-count');
+          this.html(a + this.html());
+          updateMeter(this);
+          var b = this;          
+          
+          setTimeout(function() {
+                                    
+            if (remaining_items == '2' ) {
+            
+            }
+            else {
+              remaining_items--; 
+              $('.count').css('background-color', '#CE0201');
+              $('.count').css('color', '#fff');
+              setTimeout(function() {
+                $('.count').css('background-color', '#fff');
+                $('.count').css('color', '#CE0201')
+              }, 1000 * 60 * 0.03);
+              b.find(".count").text(remaining_items);
+              updateMeter(b)
+            }
+        
+            if (remaining_items < min_of_remaining_items) {
+              
+            }           
+            
+          }, 1000 * 60 * decrease_after_first_item);
+          setInterval(function() {
+            if (remaining_items == '2' ) {
+
+            }
+            else {
+              remaining_items--; 
+              $('.count').css('background-color', '#CE0201');
+              $('.count').css('color', '#fff');
+              setTimeout(function() {
+                $('.count').css('background-color', '#fff');
+                $('.count').css('color', '#CE0201')
+              }, 1000 * 60 * 0.03);
+              b.find(".count").text(remaining_items);
+
+              updateMeter(b);
+            }
+            
+            if (remaining_items < min_of_remaining_items) {
+             
+            }
+            
+           
+          }, 1000 * 60 * decrease_after)
+        };
+
+        function updateMeter(a) {
+          var b = 100 * remaining_items / total_items;
+          if (remaining_items < 10) {
+            a.find('.progressbar div:first').addClass('less-than-ten')
+          }
+          a.find('.progressbar').addClass('active progress-striped');
+          setTimeout(function() {
+            myanimate(a.find('.progressbar div:first'), b);
+            a.find('.progressbar').removeClass('active progress-striped')
+          }, 1000)
+        }
+      }(jQuery));
+
+      function myanimate(a, b) {
+        var c = 0;
+        var d = parseInt(a.closest('.progressbar').css('width'));
+        var e = Math.floor(100 * parseInt(a.css('width')) / d);
+        if (e > b) {
+          c = e
+        }
+
+        function frame() {
+          if (e > b) {
+            c--
+          } else {
+            c++
+          }
+          a.css('width', c + '%');
+          if (c == b || c <= 0 || c >= 100) clearInterval(f)
+            }
+        var f = setInterval(frame, 40)
+        }
+      jQuery.noConflict()(function($) {
+        $(document).ready(function() {
+          /*eraseCookie(nmin);*/
+          $("#progress_bar").progressbar();
+          var tag = "ctdn-12-12".match(/\d+/g);          
+          var d = new Date();
+          var n = d.getDay();
+          var date = 1;
+          var gg = 0;
+          var hh = 0;
+          var ii = 0;
+          function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+          }       
+        });
+      });
+    </script>
+    
+    {% if block.settings.product_cd_stock_type == "0" %}
+    
+    {% assign product_qty = 0 %}
+    {% for variant in product.variants %}
+    {% if variant.inventory_quantity > 0 %}
+    {% assign product_qty = product_qty | plus: variant.inventory_quantity %}
+    {% endif %}
+    {% endfor %}
+    {% if product_qty > 0 %}
+    <div class="items-count">
+      <p>{{ block.settings.product_cdtimer_text1 }} <span class="count">{{ product_qty }}</span> {{ block.settings.product_cdtimer_text2 }}
+      </p>
+    </div>
+    {% endif %}
+    
+    {% else %}
+    <div class="items-count" id="progress_bar"></div>
+    
+    {% endif %} 
+   
+    <div class="clock"></div>
+    <div class="message"></div>   
+    <p class="progress-bar-texte">{{ block.settings.product_cdtimer_text3 }}</p></div>
+
+{% endif %}
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.7/flipclock.min.js" defer></script>

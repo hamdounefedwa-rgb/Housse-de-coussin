@@ -1,0 +1,29 @@
+{% if settings.size_chart or product.metafields.se_product_z16.contenu_simple_html != blank or product.metafields.se_product_z16.identifiant_page != blank %}
+<link rel="stylesheet" href="{{ 'app-size-chart.css' | asset_url }}" media="all" >
+<div class="dg-size-chart">
+  <div id="scModal" class="sc-modal">    
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="sc-close">×</span>
+        <span>{{ 'general.size_chart.title' | t }}</span>
+      </div>
+      <div class="modal-body">
+        <div style="width:100%; margin:15px 5px !important;">
+          {% if product.metafields.se_product_z16.contenu_simple_html != blank or product.metafields.se_product_z16.identifiant_page != blank %}
+          {% if product.metafields.se_product_z16.contenu_simple_html != blank %}  
+          {{ product.metafields.se_product_z16.contenu_simple_html }}   
+          {% endif %} 
+          {% if product.metafields.se_product_z16.identifiant_page != blank %}  
+          {% assign page_handle = product.metafields.se_product_z16.identifiant_page %}    
+          {{ pages[page_handle].content }}          
+          {% endif %}           
+          {% else %}
+          {% assign size_chart = settings.size_chart_page %}          
+          {{ pages[size_chart].content }}   
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

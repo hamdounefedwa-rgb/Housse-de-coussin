@@ -1,0 +1,139 @@
+
+
+<ul class="site-nav nav-position-{{ section.settings.type_nav_position2 }}" id="accessibleNav">
+  {% for link in linklists[section.settings.menu].links %}
+   
+  {% if forloop.index == 1 %}
+  {% assign icon = section.settings.navbar_icon_1 %}
+  {% elsif forloop.index == 2 %}
+  {% assign icon = section.settings.navbar_icon_2 %}
+  {% elsif forloop.index == 3 %}
+  {% assign icon = section.settings.navbar_icon_3 %}
+  {% elsif forloop.index == 4 %}
+  {% assign icon = section.settings.navbar_icon_4 %}
+  {% elsif forloop.index == 5 %}
+  {% assign icon = section.settings.navbar_icon_5 %}
+  {% elsif forloop.index == 6 %}
+  {% assign icon = section.settings.navbar_icon_6 %}
+  {% endif %} 
+    
+  {% if linklists[link.handle] == empty %}
+  <li data-dropdown-rel="{{ link.handle }}"  class="site-nav-first-level{% if link.active %} site-nav--active {% endif %} site-nav-{{ link.handle }} site-nav-icon-{{ icon }}">
+    <a href="{{ link.url }}">{{ link.title }}</a>
+  </li>
+  {% else %}
+  <li data-dropdown-rel="{{ link.handle }}" class="site-nav-first-level site-nav--has-dropdown{% if link.active %} site-nav--active{% endif %}  site-nav-{{ link.handle }} site-nav-icon-{{ icon }}" aria-haspopup="true">
+    {% if link.url == 'http://' or link.url == '' or link.url == '/' or link.url == 'https://' %}
+    <a  href="{{ link.url }}">{{ link.title }}</a>
+    <span class="collapsible level1">
+      <i class="fa fa-angle-down" aria-hidden="true"></i>
+    </span>
+    {% elsif link.url == '#' %}
+    <a href="{{ link.url }}" class="level1-title">{{ link.title }}</a>
+    <span data-title="dropdown" class="collapsible level1">
+      <i class="fa fa-angle-down" aria-hidden="true"></i>
+    </span>
+    {% else %}
+    <a href="{{ link.url }}">{{ link.title }}</a>
+    <span class="collapsible level1">
+     <i class="fa fa-angle-down" aria-hidden="true"></i>
+    </span>
+    {% endif %}
+
+	<ul class="site-nav--dropdown {% if settings.mega_menu_1 or settings.mega_menu_2 or settings.mega_menu_3 or settings.mega_menu_4 or settings.mega_menu_5 %} mega-menu-on{% endif %}">
+      {% for link in linklists[link.handle].links %}
+      {% if linklists[link.handle] == empty %}
+      <li {% if link.active %}class="Selected"{% endif %}>
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      </li>
+      {% else %}
+     <li data-dropdown-rel="{{ link.handle }}" class="site-nav--has-dropdown{% if link.active %} site-nav--active{% endif %} " aria-haspopup="true">
+    {% if link.url == 'http://' or link.url == '' or link.url == '/' or link.url == 'https://' %}
+       <a  href="{{ link.url }}">{{ link.title }}</a>
+       <span class="collapsible level2"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+       {% elsif link.url == '#' %}
+       <a href="{{ link.url }}" class="{{ link.handle }} level2-title">{{ link.title }}</a>
+       <span data-title="dropdown" class="collapsible level2"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+       {% else %}
+       <a  href="{{ link.url }}">{{ link.title }}</a>
+       <span class="collapsible level2"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+       {% endif %}
+    
+	<ul class="site-nav--dropdown {% if settings.mega_menu_1 or settings.mega_menu_2 or settings.mega_menu_3 or settings.mega_menu_5 or settings.mega_menu_5 %} mega-menu-on{% endif %}">
+      {% for link in linklists[link.handle].links %}
+      {% if linklists[link.handle] == empty %}
+      <li {% if link.active %}class="Selected"{% endif %}>
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      </li>
+      {% else %}
+      <li {% if link.active %}class="Selected"{% endif %}>
+        {% if link.url == 'http://' or link.url == '' or link.url == '/' or link.url == 'https://' or link.url == '#' %}
+        <span>{{ link.title }}</span>
+        {% else %}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+        {% endif %}
+        <ul class="site-nav--dropdown site-nav--submenu">
+          {% for link in linklists[link.handle].links %}
+          <li {% if link.active %}class="Selected"{% endif %}><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </li>
+      {% endif %}
+      {% endfor %}
+    </ul>
+      </li>
+      {% endif %}
+      {% endfor %}
+    </ul>
+   
+    
+  </li>
+  {% endif %}
+  {% endfor %}  
+  {% if shop.customer_accounts_enabled %}
+  {% if customer %}
+  <li class="customer-navlink large--hide"><a href="/account">{{ 'layout.customer.view_account' | t }}</a></li>
+  <li class="customer-navlink large--hide">{{ 'layout.customer.log_out' | t | customer_logout_link }}</li>
+  {% else %}
+  <li class="customer-navlink large--hide">{{ 'layout.customer.sign_in' | t | customer_login_link }}</li>
+  <li class="customer-navlink large--hide">{{ 'layout.customer.create_account' | t | customer_register_link }}</li>
+  {% endif %}
+  {% endif %}
+
+  {% if linklists[section.settings.quick_access].links != blank %}
+
+  {% for link in linklists[section.settings.quick_access].links %}
+  <li class="large--hide"><a href="{{ link.url }}">{{ link.title }}</a></li>
+  {% endfor %}
+  {% endif %}
+
+  {% if section.settings.top_header_socials %}
+  <li class="large--hide">
+    <ul class="icon-links">
+      {% render 'social-icons' %}
+    </ul> 
+  </li>
+  {% endif %}
+</ul>
+
+
+<script defer>  
+  (function() {
+    if (window.matchMedia("(min-width: 1024px)").matches) {  
+      const collapsibles = document.querySelectorAll(".collapsible");
+      for (let i = 0; i < collapsibles.length; i++) {  
+        let href = collapsibles[i].previousElementSibling;
+        // Detach
+        let elem = collapsibles[i]; 
+        elem.classList.add('in');
+        let ref = elem.parentNode.removeChild(elem);
+        // Attach         
+        href.append(ref);           
+      }
+    }  
+  })();
+ 
+</script>
+
+
+

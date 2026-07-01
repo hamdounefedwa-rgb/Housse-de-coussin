@@ -1,0 +1,245 @@
+{% unless grid_item_width %}
+  {% assign grid_item_width = 'small--one-half one-quarter' %}
+{% endunless %}
+
+{% unless current_collection %}
+  {% assign current_collection = collection %}
+{% endunless %}
+
+{% assign on_sale = false %}
+{% if product.compare_at_price > product.price %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if product.available %}
+  {% assign sold_out = false %}
+{% endif %}
+
+{% if section.settings.block_title_hn %}
+{% assign title_hn = section.settings.block_title_hn %}
+{% else %}
+{% assign title_hn = "h3" %}
+{% endif %}
+
+{% comment %} 
+  assign image_size_x = image_size | append: "x"
+  assign image_size_retina = image_size | times: 2 
+  assign image_size_retina_x = image_size_retina | append: "x" 
+  {% unless sold_out %} {% endunless %}
+{% endcomment %}
+
+
+<div id="product-id-{{ product.id }}" {% if section.settings.d_flex_align_items == "stretch" %} style="display:flex; flex-direction:column; align-items: stretch;"{% endif %}
+     class="wow slideInUp {% unless section.settings.grid_slider %}grid-item {{ grid_item_width_sm }} {{ grid_item_width }} {% endunless %}
+     {% if sold_out %} sold-out{% endif %}{% if on_sale %} on-sale{% endif %}"
+     data-wow-duration="{{ settings.wow_effects_duration }}s"
+     data-wow-delay="{% if forloop.index >= 10 %}{{ forloop.index | divided_by: 10 }}.{{ forloop.index | minus: 10 | times: 1 }}{% else %}0.{{ forloop.index }}{% endif %}s">
+
+  <div class="product-grid-item {% if section.settings.thumbnails_center %}text-center{% endif %}"  >
+    <div class="product-grid-image simulate-link"  data-link="{% if settings.seo_collection_product_url %}{{ product.url }}{% else %}{{ product.url | within: current_collection }}{% endif %}">
+   
+        {% if sold_out %}
+        <div class="badge badge--sold-out"><span class="badge-label">{{ 'products.product.sold_out' | t }}</span></div>
+        {% endif %}        
+        {% if on_sale %}
+        {% if section.settings.product_show_badge %}
+        <div class="badge-promo position-{{ section.settings.product_position_badge }} ">{{ "collections.general.product_sold" | t }}</div>
+        {% endif %}
+        {% endif %}
+        {% if section.settings.product_new_show %}
+        {% assign days = section.settings.product_new_time %}
+        {% assign period_time = days | times: 24 | times: 60 | times: 60 %}
+        {% assign date_now = 'now' | date: '%s' %}
+        {% assign date_finished = product.published_at | date: '%s' | plus: period_time | date: '%s' %}
+        {% if date_finished > date_now %}
+        <div class="badge-new position-{{ section.settings.product_position_new }}">{{ "collections.general.product_new" | t }}</div>
+        {% endif %}
+        {% endif %}          
+        
+        {% if settings.seo_collection_product_url %}
+		    <a href="{{ product.url }}">
+        {% else %}
+        <a href="{{ product.url | within: current_collection }}">
+        {% endif %}
+       
+        {% if section.settings.thumbnails_imgbis %}
+        <div class="reveal">  
+          
+          {% if image_layout == "0" %}
+          <div>        
+          {% else %}
+          <div class="media" style="padding-bottom: {{ 1 | divided_by: image_layout | times: 100 }}%;">
+          {% endif %}
+          <img 
+            srcset="{%- if product.featured_image.width >= 160 -%}{{ product.featured_image | image_url: width: 160 }} 160w,{%- endif -%}
+            {%- if product.featured_image.width >= 210 -%}{{ product.featured_image | image_url: width: 210 }} 210w,{%- endif -%}
+            {%- if product.featured_image.width >= 280 -%}{{ product.featured_image | image_url: width: 280 }} 280w,{%- endif -%}
+            {%- if product.featured_image.width >= 360 -%}{{ product.featured_image | image_url: width: 360 }} 360w,{%- endif -%}
+            {%- if product.featured_image.width >= 480 -%}{{ product.featured_image | image_url: width: 480 }} 480w,{%- endif -%}
+            {%- if product.featured_image.width >= 750 -%}{{ product.featured_image | image_url: width: 750 }} 750w,{%- endif -%}"
+            src="{{ product.featured_image.src | img_url: settings.perf_img_lazy }}"             
+            loading="lazy"                 
+            width= "{{ product.featured_image.src.width }}"
+            height= "{{ product.featured_image.src.height }}"
+            alt="{{ product.featured_image.alt }}"  
+            sizes="(min-width: 960px) {{ image_size }}px, 40vw"         
+            style="border-radius:{{ section.settings.img_border_radius_v2 }};"
+            />               
+          
+          {% if product.images.size > 1 %}
+          <div class="hidden">            
+            <img    
+              srcset="{%- if product.images[1].src.width >= 160 -%}{{ product.images[1].src | image_url: width: 160 }} 160w,{%- endif -%}
+              {%- if product.images[1].src.width >= 210 -%}{{ product.images[1].src | image_url: width: 210 }} 210w,{%- endif -%}
+              {%- if product.images[1].src.width >= 280 -%}{{ product.images[1].src | image_url: width: 280 }} 280w,{%- endif -%}
+              {%- if product.images[1].src.width >= 360 -%}{{ product.images[1].src | image_url: width: 360 }} 360w,{%- endif -%}
+              {%- if product.images[1].src.width >= 480 -%}{{ product.images[1].src | image_url: width: 480 }} 480w,{%- endif -%}
+              {%- if product.images[1].src.width >= 750 -%}{{ product.images[1].src | image_url: width: 750 }} 750w,{%- endif -%}"
+              src="{{ product.images[1].src.src | img_url: settings.perf_img_lazy }}"             
+              loading="lazy"     
+              width= "{{ product.images[1].src.width }}"
+              height= "{{ product.images[1].src.height }}"
+              alt="{{ product.images[1].alt }}" 
+              sizes="(min-width: 960px) {{ image_size }}px, 40vw"
+              style="border-radius:{{ section.settings.img_border_radius_v2 }};"
+              />
+          </div>  
+          
+          {% endif %}
+        </div>
+        </div>
+        {% else %}
+        {% if image_layout == "0" %}
+        <div>        
+        {% else %}
+        <div class="media" style="padding-bottom: {{ 1 | divided_by: image_layout | times: 100 }}%;">
+        {% endif %}
+      
+        <img   
+          srcset="{%- if product.featured_image.width >= 160 -%}{{ product.featured_image | image_url: width: 160 }} 160w,{%- endif -%}
+          {%- if product.featured_image.width >= 210 -%}{{ product.featured_image | image_url: width: 210 }} 210w,{%- endif -%}
+          {%- if product.featured_image.width >= 280 -%}{{ product.featured_image | image_url: width: 280 }} 280w,{%- endif -%}
+          {%- if product.featured_image.width >= 360 -%}{{ product.featured_image | image_url: width: 360 }} 360w,{%- endif -%}
+          {%- if product.featured_image.width >= 480 -%}{{ product.featured_image | image_url: width: 480 }} 480w,{%- endif -%}
+          {%- if product.featured_image.width >= 750 -%}{{ product.featured_image | image_url: width: 750 }} 750w,{%- endif -%}"
+          src="{{ product.featured_image.src | img_url: settings.perf_img_lazy }}"
+          loading="lazy"            
+          width= "{{ product.featured_image.src.width }}"
+          height= "{{ product.featured_image.src.height }}"
+          alt="{{ product.featured_image.alt }}"
+          sizes="(min-width: 960px) {{ image_size }}px, 40vw"
+          style="border-radius:{{ section.settings.img_border_radius_v2 }};"
+          />
+        </div>
+        {% endif %}
+        {% if section.settings.thumbnails_img_link %}
+        {% else %}
+        </a>
+        {% endif %}
+          
+        {% if on_sale %}
+        {% if section.settings.product_show_saved_amount2 %}
+        <div class="badge-sale sale-tag {% unless section.settings.show_compare_at_price %} medium--right{% endunless %}{% if section.settings.product_reviews_enable %} has-reviews{% endif %}">
+          {% assign compare_price = product.compare_at_price %}
+          {% assign product_price = product.price %}
+          {% render 'price-sale', product_price: product_price, compare_price: compare_price %}
+        </div> 
+        {% endif %}
+        {% endif %}
+        
+        </div>
+
+  
+    
+	    
+      <div class="product-grid-content {% if section.settings.btn_choice != '0' %}grid-cont-content {% endif %} {% if section.settings.layout == "1" %}product-caption{% endif %} {% if section.settings.product_caption == "2" %} product-caption-2 {% endif %}">  
+      
+        <div class="grid-crop-title">
+          <{{ title_hn }} class="h3"><a class="title-truncate" href="{% if settings.seo_collection_product_url %}{{ product.url }}{% else %}{{ product.url | within: current_collection }}{% endif %}">{{ product.title }}</a></{{ title_hn }}>
+        </div>
+
+        {% render 'app-reviews-stars' product: product, elem: section %}
+
+        <div class="product-item--price">   
+
+          <span class="medium--left">
+            {% if section.settings.price_text == true %}
+            {% if product.price_varies and product.price_min > 0 %}<span class="price-from"> {{ "collections.general.price_from" | t }} </span>{% endif %}
+            {% endif %}
+            {% if on_sale %}
+              <span class="visually-hidden">{{ "products.general.sale_price" | t }}</span>
+            {% else %}
+            <span class="visually-hidden">{{ "products.general.regular_price" | t }}</span>
+            {% endif %}
+            {% render 'price', price: product.price %}
+            {% if on_sale %}
+            {% if section.settings.product_show_compare_at_price2 %}
+            <small>
+              <s>
+                <span class="visually-hidden">{{ "products.general.regular_price" | t }}</span>
+                {% render 'price', price: product.compare_at_price %}
+              </s>
+            </small>
+            {% endif %}  
+            {% endif %}
+          </span>          
+
+          {% if on_sale %}
+          {% if section.settings.product_show_saved_amount2 %}
+
+          <span style="display:none;" class="sale-tag {% unless section.settings.show_compare_at_price %} medium--right{% endunless %}{% if section.settings.product_reviews_enable %} has-reviews{% endif %}">
+            {% assign compare_price = product.compare_at_price %}
+            {% assign product_price = product.price %}
+            {% render 'price-sale', product: product, compare_price: compare_price, product_price: product_price %}
+
+          </span> 
+          
+          {% render 'product-unit-price', variant: product.selected_or_first_available_variant %}
+        
+          {% endif %}
+          {% endif %}
+          
+      	</div>
+    
+        {% if settings.swatch_color and show_colors %}
+        {% if product.available and product.variants.size > 0 %}
+        {% if settings.product_selector_type == "0" %}
+      
+        {% render 'swatch-variant-colors', product: product %}        
+    
+        {% endif %}
+        {% endif %}
+        {% endif %}
+        
+    
+      </div>
+
+      {% if section.settings.product_reviews_enable %}
+        <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+      {% endif %}   
+         
+   
+    
+    {% if template.name == "index" and settings.seo_collection_pa_excerpt == false %}
+    {% if settings.seo_collection_excerpt %}    
+    <p class="product-excerpt">{{ product.description | strip_html | truncatewords: settings.seo_collection_excerpt_max }}</p>
+    {% endif %}
+    {% endif %}
+    {% if template.name != "index" %}
+    {% if settings.seo_collection_excerpt %}    
+    <p class="product-excerpt">{{ product.description | strip_html | truncatewords: settings.seo_collection_excerpt_max }}</p>
+    {% endif %}
+    {% endif %} 
+
+     </div>   
+      
+    {% if section.settings.layout != "2" %}
+      
+      {% render 'product-grid-form', product: product %}
+  
+    {% endif %}
+
+   
+
+</div>

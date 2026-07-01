@@ -1,0 +1,23 @@
+<div class="content wrapper">
+
+  {%- for block in section.blocks -%}
+
+    {%- case block.type -%} 
+
+    {%- when 'title' -%}        
+    <div class="section-header">
+    <h1 class="block-{{ block.id }} {{ block.settings.class }}">{{ page.title }}</h1>
+    </div>
+    {%- when 'description' -%}  
+
+    <div class="rte block-{{ block.id }} {{ block.settings.class }}">
+      {{ page.content }}
+    </div> 
+
+    {%- endcase -%}  
+
+    {% render 'product-block-custom-css', elem: block %}
+
+  {%- endfor -%}      
+
+</div>

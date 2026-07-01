@@ -1,0 +1,72 @@
+<style>
+  .section-id-{{ elem.id }} {
+    color: var(--colorFooterText);
+  }
+  
+  {% if elem.settings.colors_product_content %} 
+  .section-id-{{ elem.id }}, .section-id-{{ elem.id }} a {
+    --colorFooterText: {{ elem.settings.block_color }};
+    --colorTextBody: {{ elem.settings.block_color }};
+    --colorFooterSocialLinks: {{ elem.settings.block_icons_color }};
+  }
+  .section-id-{{ elem.id }} .block-title {
+    --colorFooterTitle: {{ elem.settings.block_title_color }};   
+  }
+  .section-id-{{ elem.id }} input[type=email] {
+    --colorFooterBgInputText: {{ elem.settings.block_form_field_color }};  
+    --colorFooterBgInput: {{ elem.settings.block_form_field_bg_color }}; 
+  }
+ 
+  .section-id-{{ elem.id }} .btn {
+    --colorFooterBgBtnText: {{ elem.settings.block_form_input_color }}; 
+    --colorFooterBgBtn: {{ elem.settings.block_form_input_bg_color }};     
+  } 
+  .section-id-{{ elem.id }} li .icon {
+    --colorFooterSocialLinks: {{ elem.settings.block_icons_color }};     
+  } 
+
+  
+  {% endif %}
+  
+  {% if elem.settings.block_size_enable %} 
+  
+  @media screen and (max-width: 749px) {  
+    
+    .section-id-{{ elem.id }} .grid-item  {
+      font-size: {{ elem.settings.block_text_size_sm }}px;
+    }
+    .section-id-{{ elem.id }} .block-title {
+      font-size: {{ elem.settings.block_title_size_sm }}px;
+    }
+    .section-id-{{ elem.id }} input[type=email] {
+      font-size: {{ elem.settings.block_form_field_size_sm }}px;
+    }   
+    .section-id-{{ elem.id }} .btn {
+      font-size: {{ elem.settings.block_form_btn_size_sm }}px;
+    }   
+    .section-id-{{ elem.id }} li .icon {
+      font-size: {{ elem.settings.block_icons_size_sm }}px;   
+    }    
+  }
+  @media screen and (min-width: 750px) {    
+    .section-id-{{ elem.id }}  {
+      font-size: {{ elem.settings.block_text_size }}px;
+    }
+    .section-id-{{ elem.id }} .block-title {
+      font-size: {{ elem.settings.block_title_size }}px;
+    }
+    .section-id-{{ elem.id }} input[type=email] {
+      font-size: {{ elem.settings.block_form_field_size }}px;
+    }   
+    .section-id-{{ elem.id }} .btn {
+      font-size: {{ elem.settings.block_form_btn_size }}px;
+    }   
+    .section-id-{{ elem.id }} li .icon {
+      font-size: {{ elem.settings.block_icons_size }}px;   
+    }   
+  }
+  
+  {% endif %}
+  
+  
+  </style>

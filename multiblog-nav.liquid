@@ -1,0 +1,41 @@
+<div class="wrapper wrapper--full ">
+  <div class="blog-nav">
+    {% for link in linklists.blogs.links %}
+    {% assign blog = link.object %}
+    <a href="{{ blog.url }}" class="blog-nav-item">{{ blog.title }}</a> 
+    {% endfor %} 
+  </div>
+</div>
+<style>
+  .blog-nav {
+    display: flex;
+    justify-content: center;
+    gap:1px;
+    margin-top:var(--gutter);
+    background: #F0F0F0;
+    margin-bottom:-8px;
+
+  }
+  .blog-nav-item {
+    transform: skew(-7deg);
+    text-align: center;
+    color: #FFFF;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding:1rem;
+    background-color: #333;
+    
+  }
+  .blog-nav-item:hover {
+    color: #FFF;
+    opacity: 0.9;
+  }
+  @media screen and (max-width: 749px){
+    .blog-nav-item {
+      padding:.6rem;
+      font-size:13px;
+    }
+  }
+</style>

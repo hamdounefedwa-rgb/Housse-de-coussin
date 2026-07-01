@@ -1,0 +1,123 @@
+<style>
+
+  {% if elem.settings.layout_2_border_enable %}
+    .section-id-{{ elem.id }} .product-grid-item {
+     border: 1px solid var(--color-text-body-opacity1);
+   }
+  {% endif %}
+
+
+  {% if elem.settings.block_color_enable %} 
+    .section-id-{{ elem.id }} .product-grid-item {   
+      box-shadow:0 0 {{ elem.settings.block_shadow_size }}px {{ elem.settings.block_shadow_color | color_modify: 'alpha', elem.settings.block_shadow_opacity }};
+    }
+
+    .section-id-{{ elem.id }} .opacity-enable .product-grid-item:hover::after {
+      background: rgba(0, 0, 0, {{ elem.settings.thumbnails_img_opacity_deg }});
+      width: 100%;
+      content: "";
+      display: block;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      z-index: 100;
+      -webkit-transition: all 1s ease;
+      -moz-transition: all 1s ease;
+      -o-transition: all 1s ease;
+      transition: all 1s ease;
+    }
+  {% endif %}
+
+  {% if elem.settings.colors_product_content %} 
+  .section-id-{{ elem.id }} .section-header a {
+    --colorLink:  {{ elem.settings.block_title_color }};
+    color: var(--colorLink);
+  }
+   
+  .section-id-{{ elem.id }} {
+    --colorSectionTitles: {{ elem.settings.block_title_color }};  
+   
+  }
+
+  .section-id-{{ elem.id }} .product-item--price {
+    color: {{ elem.settings.block_card_price_color }};
+    --colorPrice2: {{ elem.settings.block_card_price2_color }};
+  }
+
+  .section-id-{{ elem.id }} .h1 {
+    color: {{ elem.settings.block_title_color }};
+  }
+
+  .section-id-{{ elem.id }} .product-grid-item {
+    --colorSectionTitles: {{ elem.settings.block_card_title_color }};  
+    background: {{ elem.settings.block_card_bg_color }}; 
+    {% if elem.settings.block_card_border_color != blank %}
+    border:1px solid {{ elem.settings.block_card_border_color }}; 
+    {% endif %}  
+  }
+
+  .section-id-{{ elem.id }} .price-from {
+    color: {{ elem.settings.block_card_text_color }};
+  }
+  .section-id-{{ elem.id }} .btn {
+    border:none;
+    color: {{ elem.settings.block_card_btn_color }};
+    background: {{ elem.settings.block_card_btn_bg_color }};
+  }
+
+  .section-id-{{ elem.id }} {
+    --colorPriceBg: {{ elem.settings.color_price_bg }};
+    --colorPriceText: {{ elem.settings.color_price_text }};     
+  }
+
+  
+  {% endif %}
+  
+  {% if elem.settings.block_size_enable %} 
+  
+  @media screen and (max-width: 749px) {  
+    .section-id-{{ elem.id }} .h1 {
+      font-size: {{ elem.settings.block_title_size_sm }}px;
+    }  
+    .section-id-{{ elem.id }} .product-grid-item .h3 {
+      font-size: {{ elem.settings.block_card_title_size_sm }}px;
+    }
+    .section-id-{{ elem.id }} .product-grid-item, .section-id-{{ elem.id }} .price-from, .section-id-{{ elem.id }} .product-grid-image * {
+      font-size: {{ elem.settings.block_card_text_size_sm }}px;
+    }
+    .section-id-{{ elem.id }} .product-item--price span:not(.price-from) {
+      font-size: {{ elem.settings.block_card_price_size_sm }}px;
+    }
+    .section-id-{{ elem.id }} .product-item--price span:not(.price-from) small span {
+      font-size: {{ elem.settings.block_card_price2_size_sm }}px;
+    }
+    .section-id-{{ elem.id }} .btn {
+      font-size: {{ elem.settings.block_btn_size_sm }}px;
+    }
+    
+  }
+  @media screen and (min-width: 750px) {    
+    .section-id-{{ elem.id }} .h1 {
+      font-size: {{ elem.settings.block_title_size }}px;
+    }  
+    .section-id-{{ elem.id }} .product-grid-item .h3 {
+      font-size: {{ elem.settings.block_card_title_size }}px;
+    }
+    .section-id-{{ elem.id }} .product-grid-item, .section-id-{{ elem.id }} .price-from, .section-id-{{ elem.id }} .product-grid-image * {
+      font-size: {{ elem.settings.block_card_text_size }}px;
+    }
+    .section-id-{{ elem.id }} .product-item--price span:not(.price-from) {
+      font-size: {{ elem.settings.block_card_price_size }}px;
+    }
+    .section-id-{{ elem.id }} .product-item--price span:not(.price-from) small span {
+      font-size: {{ elem.settings.block_card_price2_size }}px;
+    }
+    .section-id-{{ elem.id }} .btn {
+      font-size: {{ elem.settings.block_btn_size }}px;
+    }
+  }
+  
+  {% endif %}
+  
+  
+  </style>

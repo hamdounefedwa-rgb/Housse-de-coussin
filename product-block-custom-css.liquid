@@ -1,0 +1,442 @@
+
+<style> 
+  
+  /* BLOCKS */
+
+  {% if elem.type %}
+
+  /* GENERIC */
+
+  .block-{{ elem.id }} .article__content {
+    text-align:{{ elem.settings.alignment_text_sm }};
+  }
+  @media screen and (min-width: 1024px) {
+    .block-{{ elem.id }} .article__content {
+      text-align:{{ elem.settings.alignment_text }};
+    }
+  }
+  .shopify-app-block {
+    width:100%;
+  }
+  .block-{{ elem.id }} { flex:1 0 100%; }
+
+  {% if elem.settings.block_color_enable %}
+  .block-{{ elem.id }} {
+    color: {{ elem.settings.block_text_color }};
+  }
+  {% endif %}
+
+  {% if elem.settings.block_size_enable %}
+
+  {% if elem.type == "infos" %}.product-meta { display:inline-flex; }{% endif %}
+  @media screen and (max-width: 749px) {
+    .block-{{ elem.id }}{% if elem.type == "title" %}, .block-{{ elem.id }} h1, .block-{{ elem.id }} .h1 {% endif %}{% if elem.type == "infos" %}, .block-{{ elem.id }} a {% endif %}  {
+      font-size:{{ elem.settings.block_text_size_sm }}px;        
+    }
+  }
+  @media screen and (min-width: 750px) {
+    .block-{{ elem.id }}{% if elem.type == "title" %}, .block-{{ elem.id }} h1, .block-{{ elem.id }} .h1 {% endif %}{% if elem.type == "infos" %}, .block-{{ elem.id }} a {% endif %} {
+      font-size:{{ elem.settings.block_text_size }}px;
+    }
+  }
+  {% endif %} 
+
+  {% if elem.settings.block_spacing_enable %}
+  .block-id-{{ elem.id }} {
+    margin: 0 auto;
+  }
+
+  
+  @media screen and (max-width: 749px) {  
+  .block-{{ elem.id }} {
+      {% if elem.settings.block_center_sm %} flex:1; text-align:center; justify-content: center; width:100%; {% endif %}
+      {% if elem.settings.block_padding_sm %} padding:{{ elem.settings.block_padding_sm }}; {% else %} 0 {% endif %}
+      {% if elem.settings.block_margin_sm %} margin:{{ elem.settings.block_margin_sm }}; {% else %} 0 {% endif %}   
+    }    
+  }
+  @media screen and (min-width: 750px) {
+    .block-{{ elem.id }} {
+      {% if elem.settings.block_center %} flex:1;  text-align:center; justify-content: center; width:100%; {% endif %}
+      {% if elem.settings.block_padding %} padding:{{ elem.settings.block_padding }}; {% else %} 0 {% endif %}
+      {% if elem.settings.block_margin %} margin:{{ elem.settings.block_margin }}; {% else %} 0 {% endif %}   
+    }   
+  }
+  {% endif %}
+
+  /* GRID */
+  
+  {% if elem.type == "grid_open" %}
+    .grid-content .grid-item.grid-id-{{ elem.id }} {
+      {% if elem.settings.block_center_sm %} text-align:center; justify-content: center; {% endif %}
+      padding:{{ elem.settings.block_padding_sm }};
+      margin:{{ elem.settings.block_margin_sm }};
+
+      {% if elem.settings.block_color_enable %}
+
+      {% if elem.settings.block_image %}
+    
+        background-image:url({{ elem.settings.block_image | img_url: "1900x" }}); 
+        background-repeat: no-repeat !important; 
+        background-size:cover;
+        background-position:center;
+        
+        {% if elem.settings.section_parallax == true %}   
+        background-attachment: fixed;       
+        {% endif %}
+      
+      {% endif %}
+      
+      {% if elem.settings.block_bgcolor_gradient %}
+      background: linear-gradient({{ elem.settings.block_bgcolor_gradient_direction }}deg, 
+        {{ elem.settings.block_bgcolor_gradient_1 }} {{ elem.settings.block_bgcolor_gradient_1_percent_1 }}% {{ elem.settings.block_bgcolor_gradient_1_percent_2 }}%, 
+        {{ elem.settings.block_bgcolor_gradient_2 }} {{ elem.settings.block_bgcolor_gradient_2_percent_1 }}% 100%);
+      {% else %} 
+      background-color:{{ elem.settings.block_bgcolor }};
+      {% endif %}        
+      box-shadow:0 0 {{ elem.settings.section_shadow_size }}px {{ elem.settings.section_shadow_color | color_modify: 'alpha', elem.settings.section_shadow_opacity }};
+      
+    {% endif %}  
+
+    }
+    @media screen and (min-width: 750px) {
+      .grid-content .grid-item.grid-id-{{ elem.id }} {
+        {% if elem.settings.block_center %} text-align:center; justify-content: center; {% endif %}
+        padding:{{ elem.settings.block_padding }};
+        margin:{{ elem.settings.block_margin }};
+      }
+    }
+
+  {% endif %}  
+
+  /* TITLE */
+
+  {% if elem.type == "title" %}
+  
+    {% if elem.settings.block_spacing_enable %}
+    @media screen and (max-width: 749px) {  
+      h1.block-{{ elem.id }}, .block-{{ elem.id }} .h1, .block-{{ elem.id }} .h3, .block-{{ elem.id }} h1 {
+        {% if elem.settings.block_center_sm %} text-align:center; justify-content: center; {% endif %}
+      }
+    }
+    @media screen and (min-width: 750px) {  
+      h1.block-{{ elem.id }}, .block-{{ elem.id }} .h1, .block-{{ elem.id }} .h3, .block-{{ elem.id }} h1 {
+        {% if elem.settings.block_center %} text-align:center; justify-content: center; {% endif %}
+      }
+    }
+   
+    {% endif %}
+
+    {% if elem.settings.block_color_enable %}
+    h1.block-{{ elem.id }}, .block-{{ elem.id }} .h1, .block-{{ elem.id }} h1 {
+      color: {{ elem.settings.block_title_color }};
+    }
+    {% endif %}
+    
+  {% endif %}  
+
+  /* SOCIAL PROOF */
+
+  {% if elem.type == "social_proof" %}
+    .block-{{ elem.id }} .img1 {
+      max-width:{{ elem.settings.image_secure_max_width }};
+    }
+    .block-{{ elem.id }} .img2 {
+      max-width:{{ elem.settings.image_secure2_max_width }};
+    }
+    
+    {% if elem.settings.block_spacing_enable %}
+    @media screen and (max-width: 749px) {  
+    .block-{{ elem.id }} {
+        {% if elem.settings.block_center_sm %} 
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        align-items: center;  
+        {% endif %}
+        padding:{{ elem.settings.block_padding_sm }};
+        margin:{{ elem.settings.block_margin_sm }};
+      }    
+    }
+    @media screen and (min-width: 750px) {
+      .block-{{ elem.id }} {
+        {% if elem.settings.block_center %} 
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        align-items: center; 
+        {% endif %}
+        padding:{{ elem.settings.block_padding }};
+        margin:{{ elem.settings.block_margin }};
+      }   
+    }
+    {% endif %}
+  {% endif %}
+
+  /* GENERIC */
+
+  {% if elem.settings.block_spacing_enable %}
+    @media screen and (max-width: 749px) {  
+    .block-{{ elem.id }} {
+        {% if elem.settings.block_center_sm %} 
+        text-align:center;
+        justify-content: center;
+        {% endif %}
+        
+      }  
+      .block-{{ elem.id }} ul {
+        {% if elem.settings.block_center_sm %} 
+          display:inline-block;
+        {% endif %}
+      }  
+      .block-{{ elem.id }} ul.tabs {
+        {% if elem.settings.block_center_sm %} 
+          display:inline-flex;
+        {% endif %}
+      } 
+    }
+    @media screen and (min-width: 750px) {
+      .block-{{ elem.id }} {
+        {% if elem.settings.block_center %} 
+          text-align:center;
+          justify-content: center;
+        {% endif %}       
+      }  
+      
+      .block-{{ elem.id }} ul {
+        {% if elem.settings.block_center %} 
+          display:inline-block;
+        {% endif %}
+      }
+      .block-{{ elem.id }} ul.tabs {
+        {% if elem.settings.block_center %} 
+          display:inline-flex;
+        {% endif %}
+      }
+    }
+  {% endif %}
+
+  {% if elem.type == "content" or elem.type == "vendor" or elem.type == "custom_meta" or elem.type == "description" %}
+    {% if elem.settings.block_color_enable %}
+    .block-{{ elem.id }} {
+      color: {{ elem.settings.block_text_color }};
+    }
+    {% endif %} 
+    
+  {% endif %} 
+  
+  /* NAVIGATION PRODUITS */
+
+  {% if elem.type == "nav_products" %}
+    {% if elem.settings.block_color_enable %}
+    .block-{{ elem.id }}, .block-{{ elem.id }} a {
+      color: {{ elem.settings.block_text_color }};
+    }
+    {% endif %} 
+    
+  {% endif %} 
+
+  /* DESCRIPTION */  
+  {% if elem.type == "description" %}
+    {% if elem.settings.block_color_enable %}
+    .block-{{ elem.id }} {
+        --colorTextTitle: {{ elem.settings.block_title_color }};
+    }
+    {% endif %}
+  {% endif %}
+
+  /* FORMS */
+  
+  {% if elem.type == "form" %}
+    {% if elem.settings.block_spacing_enable %}
+
+    {% if elem.settings.block_center_sm %} 
+    @media screen and (max-width: 749px) {
+
+      .block-{{ elem.id }} * {
+        text-align: center;
+        justify-content: center;
+      }
+      .block-{{ elem.id }} .cont-form {
+        margin-left:auto;
+        margin-right:auto;
+      }
+      .block-{{ elem.id }} .product-meta, .block-{{ elem.id }} .swatch .swatch-inner {
+        justify-content: center;
+      }
+    }
+    {% endif %}
+    {% if elem.settings.block_center %}    
+    @media screen and (min-width: 750px) {
+      .block-{{ elem.id }} * {
+        text-align: center;
+        justify-content: center;
+        margin:0 auto !important;
+        
+      }
+      .block-{{ elem.id }} .cont-form {
+        margin-left:auto;
+        margin-right:auto;
+      }
+      .block-{{ elem.id }} .product-meta, .block-{{ elem.id }} .swatch .swatch-inner {
+        justify-content: center;
+      }
+    }   
+    {% endif %}
+    {% endif %}
+
+    {% if elem.settings.block_size_enable %}
+    @media screen and (max-width: 749px) {
+      
+      .block-{{ elem.id }} .so-price {    
+        font-size:{{ elem.settings.block_price1_size_sm }}px;   
+      }
+      .block-{{ elem.id }} .product-meta .sale-tag {    
+        font-size:{{ elem.settings.block_saving_price_size_sm }}px;   
+      }  
+      .block-{{ elem.id }} .product-meta s {
+        font-size:{{ elem.settings.block_price2_size_sm }}px;  
+      }
+      .block-{{ elem.id }} .swatch .header, .block-{{ elem.id }} .product-form label {
+        font-size:{{ elem.settings.block_variant_title_size_sm }}px;
+        --baseFontSize: {{ elem.settings.block_variant_title_size_sm }}px;   
+      }
+      .block-{{ elem.id }} .swatch-element label, .block-{{ elem.id }} .product-form select {
+        line-height:initial;
+        font-size:{{ elem.settings.block_variant_text_size_sm }}px;  
+        height:auto;
+       
+      }
+     
+      .block-{{ elem.id }} form .btn,
+      .block-{{ elem.id }} form button {
+        font-size:{{ elem.settings.block_variant_btn_size_sm }}px !important;  
+      }
+      
+    }
+    
+    @media screen and (min-width: 750px) {
+      .block-{{ elem.id }} .so-price {    
+        font-size:{{ elem.settings.block_price1_size }}px;   
+      }
+      .block-{{ elem.id }} .product-meta .sale-tag {    
+        font-size:{{ elem.settings.block_saving_price_size }}px;   
+      }  
+      .block-{{ elem.id }} .product-meta s {
+        font-size:{{ elem.settings.block_price2_size }}px;  
+      }
+      .block-{{ elem.id }} .swatch .header, .block-{{ elem.id }} .product-form label {
+        --baseFontSize: {{ elem.settings.block_variant_title_size }}px;
+        font-size:{{ elem.settings.block_variant_title_size }}px;  
+      }
+      .block-{{ elem.id }} .swatch-element label, .block-{{ elem.id }} .product-form select {
+        font-size:{{ elem.settings.block_variant_text_size }}px;  
+        line-height:initial;
+      }
+      .block-{{ elem.id }} form .btn,
+      .block-{{ elem.id }} form button {
+        font-size:{{ elem.settings.block_variant_btn_size }}px !important;  
+      }
+      .block-{{ elem.id }} .js-qty {
+        margin-left:0;     
+      }
+    }
+    {% endif %} 
+  {% endif %}   
+
+  {% if elem.type == "form_secondary" %} 
+
+    {% if elem.settings.block_color_enable %}
+      .block-{{ elem.id }} {
+        color: {{ elem.settings.block_text_color }};
+       
+        {% if elem.settings.form_bgcolor != "" %}
+        margin:10px 0;
+        padding:20px 20px 5px;
+        {% endif %}    
+        background:{{ elem.settings.form_bgcolor }};
+        border-color:{{ elem.settings.form_bgcolor }};      
+      }
+      .block-{{ elem.id }} select {
+        color: {{ elem.settings.variants_color }};
+        background-color: {{ elem.settings.variants_bg_color }};
+        border-color:{{ elem.settings.variants_border_color }};
+        box-shadow:0 0 {{ elem.settings.variants_shadow_size }}px {{ elem.settings.variants_shadow_color | color_modify: 'alpha', elem.settings.variants_shadow_opacity }};
+      }  
+    {% endif %} 
+
+    {% if elem.settings.block_spacing_enable %}
+
+    {% if elem.settings.block_center_sm %} 
+    @media screen and (max-width: 749px) {
+      .block-{{ elem.id }} {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        align-items: center; 
+      }
+      .block-{{ elem.id }} label {
+        display: none;
+      }
+      .block-{{ elem.id }} * {
+        margin-left:auto;
+        margin-right:auto;
+      }
+    }
+    {% endif %}
+    {% if elem.settings.block_center %}    
+    @media screen and (min-width: 750px) {
+      .block-{{ elem.id }} {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        align-items: center; 
+      }
+      .block-{{ elem.id }} label {
+        display: none;
+      }
+      .block-{{ elem.id }} * {
+        margin-left:auto;
+        margin-right:auto;
+      }
+    }   
+    {% endif %}
+  {% endif %}
+
+  {% if elem.settings.block_size_enable %}
+    @media screen and (max-width: 749px) {
+      
+      .block-{{ elem.id }} .h2 {
+        font-size:{{ elem.settings.block_title_size_sm }}px;        
+      }
+      .block-{{ elem.id }} select {
+        font-size:{{ elem.settings.block_variant_size_sm }}px;        
+      }
+      .block-{{ elem.id }} form .btn,
+      .block-{{ elem.id }} form button {
+        font-size:{{ elem.settings.block_variant_btn_size_sm }}px !important;  
+      }
+    }
+    @media screen and (min-width: 750px) {
+     
+      .block-{{ elem.id }} .h2 {
+        font-size:{{ elem.settings.block_title_size }}px;
+      }
+      .block-{{ elem.id }} select {
+        font-size:{{ elem.settings.block_variant_size }}px;
+      }
+      .block-{{ elem.id }} form .btn,
+      .block-{{ elem.id }} form button {
+        font-size:{{ elem.settings.block_variant_btn_size }}px !important;  
+      }
+    }
+  {% endif %} 
+
+  {% endif %} 
+
+{% endif %} 
+
+</style>

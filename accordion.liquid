@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="{{ 'component-accordion.css' | asset_url }}" media="all" >
+
+
+<div class="accordion block-{{ block.id }} {{ block.settings.class }}" id="{{ block.settings.id }}" {{ block.shopify_attributes }}>
+  <details>
+    <summary class="accordion__title">
+        {% if block.settings.icon != blank %}
+            <span class="accordion__icon">{{ block.settings.icon }}</span> 
+        {% endif %}
+        {{ block.settings.title }}
+     
+    </summary>
+    <div class="accordion__content">
+      {{ block.settings.text }}
+      {{ block.settings.html }}
+    </div>
+  </details>
+</div>

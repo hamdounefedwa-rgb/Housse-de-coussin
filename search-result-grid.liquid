@@ -1,0 +1,107 @@
+{% unless grid_item_width %}
+  {% assign grid_item_width = 'large--one-third medium--one-half' %}
+{% endunless %}
+
+{% unless current_collection %}
+  {% assign current_collection = collection %}
+{% endunless %}
+
+{% assign on_sale = false %}
+{% if item.compare_at_price > item.price %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if item.available %}
+  {% assign sold_out = false %}
+{% endif %}
+
+{% assign image_size = '600x600' %}
+
+<div class="grid-item search-result {{ grid_item_width }}{% if sold_out %} sold-out{% endif %}{% if on_sale %} on-sale{% endif %}" style="text-align:center;">
+
+  <div data-link="{{ item.url }}" class="product-grid-item simulate-link">
+
+    {% if item.object_type == 'product' %}
+      {% if item.featured_image %}
+      <div class="product-grid-image">
+        <div class="product-grid-image--centered">
+          {% if sold_out %}
+            <div class="badge badge--sold-out"><span class="badge-label">{{ 'products.product.sold_out' | t }}</span></div>
+          {% endif %}
+          <img src="{{ item.featured_image.src | img_url: image_size }}" alt="{{ item.featured_image.alt | escape }}" loading="lazy" width="{{ item.featured_image.width }}" height="{{ item.featured_image.height }}">
+        </div>
+      </div>
+      {% endif %}
+
+      <p><a style="color:inherit" href="{{ item.url }}">{{ item.title }}</a></p>
+
+      <div class="product-item--price">
+        <span class="medium--left">
+        
+          {% if item.price_varies and item.price_min > 0 %}<span class="price-from"> {{ "collections.general.price_from" | t }} </span>{% endif %}
+
+          {% if on_sale %}
+            <span class="visually-hidden">{{ "products.general.sale_price" | t }}</span>
+          {% else %}
+          <span class="visually-hidden">{{ "products.general.regular_price" | t }}</span>
+          {% endif %}
+          {% render 'price', price: item.price %}
+          {% if on_sale %}
+         
+          <small>
+            <s>
+              <span class="visually-hidden">{{ "products.general.regular_price" | t }}</span>
+              {% render 'price', price: item.compare_at_price %}
+            </s>
+          </small>
+       
+          {% endif %}
+        </span>      
+
+      </div>
+    {% else %}
+
+      {% if item.object_type == 'article' %}  
+
+        <div class="product-grid-image">
+          <div class="product-grid-image--centered">         
+            <img src="{{ item.image.src | img_url: image_size }}" alt="{{ item.image.alt | escape }}" loading="lazy" width="{{ item.image.width }}" height="{{ item.image.height }}">
+          </div>
+        </div>
+
+      {% else %}
+
+        {% assign img_tag = '<' | append: 'img' %}
+        {% if item.content contains img_tag %}
+          {% assign src = item.content | split: 'src="' %}
+          {% assign src = src[1] | split: '"' | first %}
+          {% if src %}
+            {% assign image_src = src | replace: '_small.', '.' | replace: '_compact.', '.' | replace: '_medium.', '.' | replace: '_large.', '.' | replace: '_grande.', '.' %}
+          {% endif %}
+          
+        {% endif %}
+
+        {% unless image_src == blank %}
+        <div class="product-grid-image">
+          <div class="product-grid-image--centered">
+            {{ image_src | asset_url | img_tag }}
+          </div>
+        </div>
+        {% endunless %}
+      {% endif %}
+
+      <p class="h6"><a style="color:inherit" href="{{ item.url }}">{{ item.title }}</a></p>
+
+      <div class="rte">
+        {% if item.excerpt.size > 0 %}
+          <p>{{ item.excerpt | strip_html | truncatewords: 30 }}</p>
+        {% else %}
+          <p>{{ item.content | strip_html | truncatewords: 30 }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    </div>
+
+</div>

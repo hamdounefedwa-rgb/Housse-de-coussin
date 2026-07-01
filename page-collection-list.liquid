@@ -1,0 +1,45 @@
+<div class="rte">
+  {{ page.content }}
+</div>
+
+<div class="grid-uniform subcat text-center collection-position-title-{{ section.settings.collections_list_placement_title }}">
+
+  {% assign index = 0 %}
+  {% assign index = section.blocks.size %}  
+
+  {% if section.settings.collections_list_grid_number == "2" %}  
+  {% assign featured_collection_width = 'one-half' %}
+  {% assign featured_collection_size = '600x' %}
+  {% endif %}
+
+  {% if section.settings.collections_list_grid_number == "3" %}  
+  {% assign featured_collection_width = 'small--one-half one-third' %}
+  {% assign featured_collection_size = '360x' %}
+  {% endif %}
+
+  {% if section.settings.collections_list_grid_number == "4" %}  
+  {% assign featured_collection_width = 'small--one-half one-quarter' %}
+  {% assign featured_collection_size = '260x' %}
+  {% endif %}    
+
+  {% if index > 0 %}
+    {% for block in section.blocks %}
+      {% assign featured = block.settings.collection %}
+      {% render 'featured-collection', featured: featured, block: block, featured_collection_width: featured_collection_width, featured_collection_size: featured_collection_size %}
+  
+    {% endfor %}
+  {% comment %}
+  {% else %}
+    {% assign index = 0 %}
+    {% for collection in collections limit:4 %}
+      {% unless index >= 4 %}
+        {% unless collection.handle == 'frontpage' %}
+          {% assign featured = collection.handle %}
+          {% include 'featured-collection' %}
+          {% assign index = index | plus: 1 %}
+        {% endunless %}
+      {% endunless %}
+    {% endfor %}
+    {% endcomment %}
+  {% endif %}  
+</div>

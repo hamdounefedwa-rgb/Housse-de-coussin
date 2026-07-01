@@ -1,0 +1,278 @@
+{% if settings.cart_package %}  
+    
+  {% assign sbCurrencySymbol = "€" %}    
+  {% if shop.currency == "EUR" %}{% assign sbCurrencySymbol = "€" %}{% endif %}   
+  {% if shop.currency == "USD" %}{% assign sbCurrencySymbol = "$" %}{% endif %}    
+  {% if shop.currency == "CAD" %}{% assign sbCurrencySymbol = "$" %}{% endif %}     
+    
+    {%- assign productBundle = all_products[settings.cart_package_product] -%}  
+    
+    {% if settings.cart_package_discount_code1 == "10" %}   
+    {%- assign package1Percent = "1.1113" -%}    
+    {% endif %}
+    {% if settings.cart_package_discount_code1 == "15" %}   
+    {%- assign package1Percent = "1.1765" -%}    
+    {% endif %}
+    {% if settings.cart_package_discount_code1 == "20" %}   
+    {%- assign package1Percent = "1.25" -%}    
+    {% endif %}
+    {% if settings.cart_package_discount_code1 == "25" %}   
+    {%- assign package1Percent = "1.333" -%}    
+    {% endif %}
+    {% if settings.cart_package_discount_code1 == "30" %}   
+    {%- assign package1Percent = "1.4285" -%}    
+    {% endif %}
+    {% if settings.cart_package_discount_code1 == "35" %}   
+    {%- assign package1Percent = "1.5385" -%}    
+    {% endif %}
+    {% if settings.cart_package_discount_code1 == "40" %}   
+    {%- assign package1Percent = "1.6672" -%}    
+    {% endif %}       
+    {% if settings.cart_package_discount_code1 == "45" %}   
+    {%- assign package1Percent = "1.8187" -%}    
+    {% endif %} 
+    {% if settings.cart_package_discount_code1 == "50" %}   
+    {%- assign package1Percent = "2" -%}    
+    {% endif %} 
+    
+    {% if settings.cart_package_discount_code2 == "10" %}   
+    {%- assign package2Percent = "1.1113" -%}    
+    {% endif %}
+    {% if settings.cart_package_discount_code2 == "15" %}   
+    {%- assign package2Percent = "1.1765" -%}    
+    {% endif %}
+    {% if settings.cart_package_discount_code2 == "20" %}   
+    {%- assign package2Percent = "1.25" -%}    
+    {% endif %}
+    {% if settings.cart_package_discount_code2 == "25" %}   
+    {%- assign package2Percent = "1.333" -%}    
+    {% endif %}
+    {% if settings.cart_package_discount_code2 == "30" %}   
+    {%- assign package2Percent = "1.4285" -%}    
+    {% endif %}
+    {% if settings.cart_package_discount_code2 == "35" %}   
+    {%- assign package2Percent = "1.5385" -%}    
+    {% endif %}
+    {% if settings.cart_package_discount_code2 == "40" %}   
+    {%- assign package2Percent = "1.6672" -%}    
+    {% endif %}  
+    {% if settings.cart_package_discount_code2 == "45" %}   
+    {%- assign package2Percent = "1.8187" -%}    
+    {% endif %} 
+    {% if settings.cart_package_discount_code2 == "50" %}   
+    {%- assign package2Percent = "2" -%}    
+    {% endif %}     
+    
+    {% if item.product.id == productBundle.id %}
+    
+	<div class="cart-packs" data-key="{{ item.key }}">
+    <br>
+      <h2>{{ 'cart.general.packs_title' | t }}</h2>	  
+      <div class="grid-uniform">
+        <div class="grid-item small--one-half medium--one-third large--one-third on-sale">
+          <div class="cart-packs-box cart-packs-box-1" >
+            <div class="cont-star"><i class="fa fa-star"></i></div>
+            <label for="box-price-1">
+            <p><strong>{{ 'cart.general.bundle_of' | t }} <span>1</span> {{ item.title }}</strong></p>            
+            <div class="d-flex">
+              <input type="radio" id="box-price-1" name="box-price" value="1" checked>            
+              <span class="box-price-span">{{ item.original_price | money }} <span class="box-price-qty">(X1)</span></span>
+            </div>
+            </label>
+          </div>
+        </div>
+        <div class="grid-item small--one-half medium--one-third large--one-third on-sale">
+          <div class="cart-packs-box cart-packs-box-2">
+            <div class="cont-star"><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
+            <label for="box-price-2">
+            <p><strong>{{ 'cart.general.bundle_of' | t }} <span>2</span> {{ item.title }}</strong></p>             
+            <div class="d-flex">
+              <input type="radio" id="box-price-2" name="box-price" value="2">            
+              <span class="box-price-span" data-price="{{ item.original_price | divided_by : package1Percent | money_without_currency | replace: "," , "." }}">{{ item.original_price | divided_by : package1Percent | money }} <span class="box-price-qty">(X2)</span></span>
+            </div>
+            </label>
+          </div>
+        </div>
+        <div class="grid-item small--one-half medium--one-third large--one-third on-sale">
+          <div class="cart-packs-box cart-packs-box-3">
+            <div class="cont-star"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
+            <label for="box-price-3">
+            <p><strong>{{ 'cart.general.bundle_of' | t }} <span>3</span> {{ item.title }}</strong></p>             
+            <div class="d-flex">
+              <input type="radio" id="box-price-3" name="box-price" value="3">            
+              <span class="box-price-span" data-price="{{ item.original_price | divided_by : package2Percent | money_without_currency | replace: ", ", "." }}">{{ item.original_price | divided_by : package2Percent | money }} <span class="box-price-qty">(X3)</span></span>
+            </div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      $(function () {
+
+        function $_GET(param) {
+          var vars = {};
+          window.location.href.replace( location.hash, '' ).replace( 
+            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
+            function( m, key, value ) { // callback
+              vars[key] = value !== undefined ? value : '';
+            }
+          );
+
+          if ( param ) {
+            return vars[param] ? vars[param] : null;	
+          }
+          return vars;
+        }
+        
+        var sfPackNb = $_GET('pack');
+        var sfPackNbSelected = sfPackNb - 1;
+        if (sfPackNbSelected < 0) { var sfPackNbSelected = 0; }
+        var cartPacksProductKey = jQuery(".cart-packs").data('key');      
+        var cartPacksProductKeyArray = cartPacksProductKey.split(":"); 
+        var cartPacksProductVariant = cartPacksProductKeyArray[0];
+        
+        var itemsNumbers = jQuery(".cart-row-item").length;
+        var otherProduct2Value2 = parseFloat('0');
+        if (itemsNumbers == 2) {         
+          var otherProduct2 = jQuery(".cart-row-2 .h2"); 
+          var otherProduct2Value= jQuery(otherProduct2).attr('data-price');
+          var otherProduct2Qty= jQuery(otherProduct2).attr('data-qty');
+          var otherProduct2Value2 = parseFloat(otherProduct2Value) * otherProduct2Qty;
+        }
+        if (itemsNumbers == 3) {
+          var otherProduct2 = jQuery(".cart-row-2 .h2"); 
+          var otherProduct3 = jQuery(".cart-row-3 .h2"); 
+          var otherProduct2Value= jQuery(otherProduct2).attr('data-price');
+          var otherProduct2Qty= jQuery(otherProduct2).attr('data-qty');
+          var otherProduct3Value= jQuery(otherProduct3).attr('data-price');
+          var otherProduct2Value1 = parseFloat(otherProduct2Value);
+          var otherProduct3Qty= jQuery(otherProduct3).attr('data-qty') * otherProduct2Qty;
+          var otherProduct3Value1 = parseFloat(otherProduct3Value) * otherProduct3Qty;
+          var otherProduct2Value2 = (otherProduct2Value1 + otherProduct3Value1);
+        }        
+         
+        jQuery('.cart-packs input[type=radio]').eq(sfPackNbSelected).prop("checked", true);
+        
+        if (sfPackNb == 1) {
+          jQuery('.go-checkout').attr('value','/checkout');
+          var sbDiscountCode = "empty";          
+        }
+        else if (sfPackNb == 2) {                   
+          var itemPrice = jQuery('.cart-packs-box-2 .box-price-span').html(); 
+          var itemDataPrice = jQuery('.cart-packs-box-2 .box-price-span').attr('data-price');
+          var itemDataPrice2 = parseFloat(itemDataPrice);
+          jQuery('.packs-product-first .h2').html('{% if item.variant.compare_at_price > item.price %}<s>{{ item.variant.compare_at_price | money }}</s>{% endif %} ' + itemPrice);       
+          var itemDataPriceDouble = (itemDataPrice2 * 2 + otherProduct2Value2);        
+          jQuery('.wh-original-cart-total').html('<small><span class="amout">'+itemDataPriceDouble.toFixed(2)+'{{ sbCurrencySymbol }}</span></small>');
+          var sbDiscountCode = "{{ settings.cart_package_discount_title1 }}";
+        }
+        else if (sfPackNb == 3) {          
+          var itemPrice = jQuery('.cart-packs-box-3 .box-price-span').html();         
+          var itemDataPrice = jQuery('.cart-packs-box-3 .box-price-span').attr('data-price');
+          var itemDataPrice2 = parseFloat(itemDataPrice);          
+          jQuery('.packs-product-first .h2').html('{% if item.variant.compare_at_price > item.price %}<s>{{ item.variant.compare_at_price | money }}</s>{% endif %} ' + itemPrice);
+          var itemDataPriceTriple = itemDataPrice2 * 3 + otherProduct2Value2;          
+          jQuery('.wh-original-cart-total').html('<small><span class="amout">'+itemDataPriceTriple.toFixed(2)+'{{ sbCurrencySymbol }}</span></small>');
+          var sbDiscountCode = "{{ settings.cart_package_discount_title2 }}";
+        }
+        else {
+          jQuery('.go-checkout').attr('value','/checkout');
+          var sbDiscountCode = "empty";
+        }
+        
+        jQuery( ".go-checkout" ).click(function(e) {
+          e.preventDefault();
+          if (sbDiscountCode != "empty") {
+          	setTimeout(function(){ window.location.href = '/checkout?discount=' + sbDiscountCode + ''; }, 300);
+          }
+          else {            
+            setTimeout(function(){ window.location.href = '/checkout' }, 300);
+          }
+        }); 
+          
+        jQuery('.cart-packs').eq(1).hide();
+    
+        jQuery('.cart-packs input[type=radio]').change(function(){
+          var nbPacks = $(this).val();        
+          if (nbPacks == 1) {            
+            jQuery.post('/cart/update.js', "updates["+cartPacksProductVariant+"]=1");
+          }
+          if (nbPacks == 2) {
+            jQuery.post('/cart/update.js', "updates["+cartPacksProductVariant+"]=2");          
+          }
+          else if (nbPacks == 3) {
+            jQuery.post('/cart/update.js', "updates["+cartPacksProductVariant+"]=3");
+           
+          }
+          else {
+            
+          }
+          setTimeout(function(){ 
+            window.location.href = "/cart?pack="+nbPacks;
+          }, 300);	 
+        })
+      })
+    </script>
+    
+  {% endif %}
+
+  <style>
+    /* cart */
+    .cart-packs {
+      text-align:center;  
+    }
+    .header-cart .cart-packs { display:none; }  
+    .cart-packs p { margin-bottom:0; }
+    .cart-packs h2 { margin-bottom:35px; }
+    .cart-packs-box {
+      background:var(--bundleBgColor);
+        color:var(--bundleColor);
+          position:relative;
+          border-bottom:3px solid var(--bundleStarColor);
+            margin-bottom:25px;
+    }
+    .cart-packs-box label {
+      padding:25px 15px 15px 15px;
+    
+    }
+    .cart-packs-box .box-price-span {
+      display:inline;
+      font-size:28px;
+      padding-left:5px;
+    }
+    
+    .cont-star {
+      position:absolute;
+      right:-15px;
+      top:-17px;
+    }
+    .cont-star i {
+      margin-left:2px;
+      color:var(--bundleStarColor);
+        font-size:34px;
+    }
+    .cart-packs-box .d-flex {
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+    .cart-packs-box .box-price-span .box-price-qty {
+      font-size: 13px;
+      position: relative;
+      top: -0.35rem;
+      display: inline-block;
+      height: 1.3rem;
+    }
+    .cart-packs-box input[type='radio'] {
+      position: relative;
+      display: inline-block; 
+    }
+    .cks-box label  {
+      display:inline;
+    }
+    </style>
+    
+
+{% endif %}
+

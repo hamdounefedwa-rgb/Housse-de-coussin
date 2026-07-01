@@ -1,0 +1,441 @@
+<link rel="stylesheet" href="{{ 'component-accordion.css' | asset_url }}" media="all" >
+
+<form class="filter-form accordions">
+
+{% render 'collection-sorting' block: block %}
+
+{% if block.settings.sidebar_filter_collection %}
+<div class="widget filter-group">
+  <select class="coll-picker"> 
+    <option value="all">{{ block.settings.sidebar_filter_collection_title }}</option>
+    {% for c in collections %}
+    {% unless c.handle == 'all' %}
+    {% if collection.handle == c.handle %}
+    <option value="{{ c.handle }}" selected>{{ c.title }}</option>
+    {% else %}
+    <option value="{{ c.handle }}">{{ c.title }}</option>
+    {% endif %}
+    {% endunless %}
+    {% endfor %}
+  </select>
+</div>  
+{%- endif -%}
+
+<a href="{{ collection.url }}?sort_by={{ collection.sort_by }}" class="active-filters__clear">&times; {{ 'collections.sidebar.clear_all' | t }}</a>
+
+{%- for filter in collection.filters -%}
+
+<div class="accordion {% if filter.values.size < 2 %} hidden {% endif %}">
+
+  <details class="filter-group" {%- if filter.active_values.size > 0 or filter.type == "price_range" -%}open{%- endif -%}>
+    
+    <summary class="filter-group-summary accordion__title">
+      <span class="title">{{ filter.label }}</span>
+      {%- if filter.active_values.size > 0 -%}
+        <span>({{ filter.active_values.size }})</span>
+      {%- endif -%}
+    </summary>
+   
+    <div class="filter-group-display">
+    {%- if filter.active_values.size > 1 -%}
+      <div class="filter-group-display__header">
+        <span class="filter-group-display__header-selected">{{ filter.active_values.size }} {{ 'collections.sidebar.selected' | t }}</span>
+        <a href="{{ filter.url_to_remove }}" class="filter-group-display__header-reset">&times;</a>
+      </div>
+      {%- endif -%}
+  
+      {%- case filter.type -%}
+        {%- when 'boolean' or 'list' -%}
+       
+        <ul class="filter-group-display__list">
+          {%- for filter_value in filter.values -%}
+            
+           
+              <li class="filter-group-display__list-item {% if filter.label contains 'Couleur' or  filter.label contains 'couleur' or
+                filter.label contains 'Couleurs' or  filter.label contains 'couleurs' or
+                filter.label contains 'Color' or  filter.label contains 'color'  or
+                filter.label contains 'Colors' or  filter.label contains 'colors'
+              %}
+              filter-group-display__list-item--inline
+              {% endif %}
+              ">
+              
+              <label for="Filter-{{ filter.param_name }}-{{ forloop.index }}" class="variant-color--{{ filter_value.value | handle }} {% if filter_value.active -%}is-checked{%- endif %}">
+                <input type="checkbox"
+                  name="{{ filter_value.param_name }}"
+                  value="{{ filter_value.value }}"
+                  id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                  {% if filter_value.active -%}checked{%- endif %}
+                  {% if filter_value.count == 0 and filter_value.active == false -%}disabled{%- endif %}
+                >{{ filter_value.label }} ({{ filter_value.count }})</label>
+              </li>
+            
+    
+            
+          {%- endfor -%}
+        </ul>
+    
+        {%- when 'price_range' -%}
+        {%  assign range_max = filter.range_max | money_without_currency | ceil | plus: 1 %}
+        {%  assign max_value = filter.max_value.value | money_without_currency | ceil | plus: 1 %}
+        {%  assign min_value = filter.min_value.value | money_without_currency | ceil %}
+
+        <div class="range-slider" data-range-min="" data-range-max="{{ range_max }}">
+          <div class="values">
+            <span id="range1">0</span>{{ cart.currency.symbol }}
+            <span> -</span>
+       
+            <span id="range2">{{ range_max }}</span>{{ cart.currency.symbol }}
+          </div>
+          <div class="range-slider__container">
+            <div class="slider-track"></div>
+            <input type="range"  
+              name="{{ filter.min_value.param_name }}" 
+               min="0"
+               max="{{ range_max }}"
+              {% if filter.min_value.value -%}
+                value="{{ min_value }}"
+              {%- else %} 
+                value="0"
+              {%- endif %} 
+              id="range-slider-1" oninput="rangeSlider.slideOne()">
+            <input type="range" 
+              name="{{ filter.max_value.param_name }}"
+              min="0"
+              max="{{ range_max }}"
+             {% if filter.max_value.value -%}
+                value="{{ max_value }}"
+             {%- else %} 
+                value="{{ range_max }}"
+              {%- endif %} 
+              id="range-slider-2" 
+              oninput="rangeSlider.slideTwo()">
+            </div>
+          </div>
+        
+        <!--
+        <label for="Filter-{{ filter.min_value.param_name }}">From</label>
+        <div class="filter-group-display__price-range-from">
+          <input name="{{ filter.min_value.param_name }}"
+            id="Filter-{{ filter.min_value.param_name }}"
+            {% if filter.min_value.value -%}
+              value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+            {%- endif %}
+            type="number"
+            placeholder="0"
+            min="0"
+            max="{{ filter.range_max | money_without_currency | replace: ',', '' | plus: 1 }}"
+          >
+        </div>
+        <label for="Filter-{{ filter.max_value.param_name }}">To</label>
+        <div class="filter-group-display__price-range-to">
+
+          <input name="{{ filter.max_value.param_name }}"
+            id="Filter-{{ filter.max_value.param_name }}"
+            {% if filter.max_value.value -%}
+              value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+            {%- endif %}
+            type="number"
+            placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+            min="0"
+            max="{{ filter.range_max | money_without_currency | replace: ',', '' | plus: 1 }}"
+              >
+          </div>
+          <div>{{ cart.currency.symbol }}</div>
+        
+          -->
+
+      {%- endcase -%}
+    </div>
+  </details>
+</div>
+
+{%- endfor -%}
+
+<div class="active-filters" style="display:none;">
+  
+  {%- for filter in collection.filters -%}
+    {%- if filter.type == "price_range" -%}
+      {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+        <span class="active-filters__remove-filter" href="{{ filter.url_to_remove }}">
+          {%- assign min_value = filter.min_value.value | default: 0 -%}
+          {%- assign max_value = filter.max_value.value | default: filter.range_max -%}
+          {{ min_value | money }} - {{ max_value | money }}
+          <a href="{{ filter.url_to_remove }}" class="filter-group-display__header-reset">&times;</a>
+        </span>
+      {%- endif -%}
+    {%- else -%}
+      {%- for filter_value in filter.active_values -%}
+        <span class="active-filters__remove-filter">
+          {{ filter.label }}: {{ filter_value.label }} <a href="{{ filter_value.url_to_remove }}" class="filter-group-display__header-reset">&times;</a>
+        </span>
+      {%- endfor -%}
+    {%- endif- %}
+  
+  {%- endfor -%}
+</div>
+<div class="filter-group-display__submit">
+  <input type="submit" value="Apply" id="apply">
+</div>
+</form>
+
+<script defer>
+/* Collection */
+
+class RangeSlider {
+  constructor(color1, color2) {
+    this.sliderOne = document.getElementById("range-slider-1");
+    this.sliderTwo = document.getElementById("range-slider-2");
+    this.displayValOne = document.getElementById("range1");
+    this.displayValTwo = document.getElementById("range2");
+    this.minGap = 0;
+    this.sliderTrack = document.querySelector(".slider-track");
+    this.sliderMaxValue = parseInt(this.sliderTwo.max);
+    this.color1 = color1;
+    this.color2 = color2;  
+  } 
+
+  fillColor() {
+    this.percent1 = (this.sliderOne.value / this.sliderMaxValue) * 100;
+    this.percent2 = (this.sliderTwo.value / this.sliderMaxValue) * 100;
+    this.sliderTrack.style.background = `linear-gradient(to right, ${this.color1} ${this.percent1}% , ${this.color2} ${this.percent1}% , ${this.color2} ${this.percent2}%, ${this.color1} ${this.percent2}%)`;    
+  }
+  
+  slideOne() {
+    console.log(this.sliderMaxValue);
+    if (parseInt(this.sliderTwo.value) - parseInt(this.sliderOne.value) <= 0) {
+      this.sliderOne.value = parseInt(this.sliderTwo.value) - 0;
+    }
+    this.displayValOne.textContent = this.sliderOne.value;  
+    return this.fillColor(); 
+  }
+  
+  slideTwo() {
+    if (parseInt(this.sliderTwo.value) - parseInt(this.sliderOne.value) <= 0) {
+      this.sliderTwo.value = parseInt(this.sliderOne.value) + 0;
+    }
+    this.displayValTwo.textContent = this.sliderTwo.value; 
+    return this.fillColor();
+  }
+}
+
+const rangeSlider = new RangeSlider("#999","#333");
+rangeSlider.slideOne();
+rangeSlider.slideTwo();
+
+document.addEventListener("DOMContentLoaded", () => {
+  const allcheckbox = document.querySelectorAll('.filter-group input');
+  const submitBtn = document.getElementById('apply');
+  const loader = document.getElementById('loader-wrapper');
+
+  allcheckbox.forEach(item => {
+    item.addEventListener('change', () => {
+      loader.classList.add('active');
+      submitBtn.click();
+    })
+  });
+  let urlParamFilter = (new URL(document.location));
+  if(urlParamFilter.search.includes("?") &&  !urlParamFilter.search.includes("?sort_by")) {
+    document.querySelector('.active-filters__clear').style.display = "block";
+  }
+
+});
+
+  
+</script>
+
+{% assign swatch_color_colors2 = settings.swatch_color_colors | split: ';' %}
+
+<style>
+  {% for text_row in swatch_color_colors2 %}
+  {%-liquid
+     assign text_row_array = text_row | split: '|'
+     assign color_name = text_row_array[0] | lstrip | handleize
+     assign color_hex = text_row_array[1] | lstrip
+     assign color_hex2 = text_row_array[2] | lstrip 
+  -%}
+	
+	.variant-color--{{ color_name }} { background:{{ color_hex }}; box-shadow:0 0 2px #999; width:35px; min-width:35px !important; height:35px !important; border-radius:{{ settings.swatch_color_design }}px; font-size:0; text-indent:-9999px; }
+  
+  .variant-color--{{ color_name }}.is-checked::after {  
+    background:#666;    
+  }
+  .variant-color--{{ color_name }} label, .variant-color--{{ color_name }} input {
+    display:none;
+  }
+  
+  {% endfor %}
+</style>
+
+<style>
+
+.filter-group-summary {
+  padding:var(--gutter-half) 0;
+  font-size:110%;
+  font-weight:bold;
+  display: flex;
+  align-items: center;
+  column-gap:7px;
+}
+.filter-group-display__header {
+  margin-bottom:7px;
+}
+
+.filter-group-display { 
+  padding:var(--gutter-quarter) 0 var(--gutter-half) 0;
+}
+.filter-form label {
+  margin:0;
+  position:relative;
+}
+.filter-form label::after {
+  content: "";
+  display:block;
+  width:10px;
+  height:2px;
+  background:none;
+  position:absolute;
+  bottom:-5px;
+  left:12px;
+}
+
+.filter-form label, .filter-group-display__header, .filter-group-display__price-range, .active-filters__remove-filter {
+  display: flex;
+  align-items: center;
+  column-gap:7px;
+}
+
+.filter-form input {
+  min-height:initial;
+}
+.filter-group-display__list {
+  margin:0;
+}
+.filter-group-display__list-item--inline {
+  display:inline-flex;
+  margin-bottom:8px;
+  padding-right: 5px;
+}
+.filter-group-display__header-reset {
+  font-size:12px;
+  width:12px;
+  height:12px;
+  padding:7px;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  border: 1px solid var(--colorTextBody);
+}
+.active-filters {
+  display:flex;
+  flex-direction:column;
+  padding-bottom:var(--gutter);
+  padding:var(--gutter-half);
+  border: 1px solid var(--colorTextBody);
+  margin:var(--gutter-half) 0;
+}
+
+.active-filters__clear {
+  text-align:center;
+  display:none;
+  font-weight:bold;
+  color:var(--colorTextBody);
+  border:1px solid var(--colorTextBody);
+  padding:var(--gutter-quarter);
+  margin:0 0 var(--gutter) 0;
+  text-transform:uppercase;
+}
+.filter-group-display__submit {
+  display:none;
+}
+.filter-group>summary {
+  border-top:none;
+}
+.filter-group>summary:before, .filter-group>summary:after {
+  right:0;
+}
+
+/* range */
+.range-slider__container {
+  position:relative;
+  margin-bottom:2.5rem;
+}
+.range-slider input[type="range"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100%;
+  outline: none;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  background-color: transparent;
+  pointer-events: none;
+  padding:0;
+}
+.range-slider .slider-track {
+  width: 100%;
+  height: 5px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 5px;
+}
+.range-slider input[type="range"]::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  height: 5px;
+}
+.range-slider input[type="range"]::-moz-range-track {
+  -moz-appearance: none;
+  height: 5px;
+}
+.range-slider input[type="range"]::-ms-track {
+  appearance: none;
+  height: 5px;
+}
+.range-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 1.4em;
+  width: 1.4em;
+  background-color: var(--colorTextBody);
+  cursor: pointer;
+  margin-top: -5px;
+  pointer-events: auto;
+  border-radius: 50%;
+}
+.range-slider input[type="range"]::-moz-range-thumb {
+  -webkit-appearance: none;
+  height: 1.4em;
+  width: 1.4em;
+  margin-top: -5px;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: #333;
+  pointer-events: auto;
+  border: none;
+}
+.range-slider input[type="range"]::-ms-thumb {
+  appearance: none;
+  height: 1.4em;
+  width: 1.4em;
+  margin-top: -5px;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: var(--colorTextBody);
+  pointer-events: auto;
+}
+.range-slider input[type="range"]:active::-webkit-slider-thumb {
+  background-color: #ffffff;
+  border: 1px solid var(--colorTextBody);
+}
+.range-slider .values {
+  position: relative;
+  margin: 0 auto 1rem auto;
+  padding: 0 0 10px 0;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 17px;
+}
+
+</style>

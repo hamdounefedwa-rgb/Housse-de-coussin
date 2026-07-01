@@ -1,0 +1,117 @@
+{% if settings.newsletter_popup_enabled %}
+
+<link rel="stylesheet" href="{{ 'app-newsletter-popup.css' | asset_url }}" media="all" >
+<noscript>{{ 'app-newsletter-popup.css' | asset_url | stylesheet_tag }}</noscript>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" integrity="sha512-3j3VU6WC5rPQB4Ld1jnLV7Kd5xr+cq9avvhwqzbH/taCRNURoeEpoPBK9pDyeukwSxwRPJ8fDgvYXd6SkaZ2TA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function() {   
+    var $modalParent        = jQuery('div.newsletterwrapper'),
+        modalWindow         = jQuery('#newsletter-modal'),
+        newsletterModal          = jQuery('#newsletter-modal'),
+        modalPageURL        = window.location.pathname; 
+          
+    modalWindow = modalWindow.html();
+    modalWindow = '<div id="newsletter-modal">' + modalWindow + '</div>';
+    $modalParent.css({'position':'relative'});
+    jQuery('.wrapper #newsletter-modal').remove();
+    $modalParent.append(modalWindow);
+
+  if (jQuery.cookie('newsletterSubcribeModal') != 'closed') {
+    opennewsletterModalWindow();
+  };
+
+  jQuery('#newsletter-modal .btn.close').click(function(e) {
+    e.preventDefault();
+    closenewsletterModalWindow();
+  });
+  jQuery('body').keydown(function(e) {
+    if( e.which == 27) {
+      closenewsletterModalWindow();
+      jQuery('body').unbind('keydown');
+    }
+  });
+  jQuery('#mc_embed_signup form').submit(function() {
+    if (jQuery('#mc_embed_signup .newsletter').val() != '') {
+      closenewsletterModalWindow();
+    }
+  });
+
+  function closenewsletterModalWindow () {
+    jQuery('#newsletter-modal .modal-window').fadeOut(600, function() {
+      jQuery('#newsletter-modal .modal-overlay').fadeOut(600, function() {
+        jQuery('#newsletter-modal').hide();
+        jQuery.cookie('newsletterSubcribeModal', 'closed', {expires:{{ settings.popup_newsletter_cookies_expire }}, path:'/'});
+      });
+    })
+  }
+  {% if settings.popup_newsletter_cookies_expire == "0" %}
+    $.removeCookie('newsletterSubcribeModal', { path: '/' });
+  {% endif %}
+
+  function showNewsletterModal() {
+    jQuery('#newsletter-modal').fadeIn(300, function() {
+      jQuery('#newsletter-modal .modal-window').fadeIn(300);
+    });
+  }
+  function opennewsletterModalWindow () {
+
+    if(window.matchMedia("(min-width: 1024px)")) {
+      if (jQuery.cookie('newsletterSubcribeModal') != 'closed') {
+        $(document).mouseleave(function () {
+          console.log('toto')
+          showNewsletterModal();
+        });
+      }             
+    }  
+  
+    if(window.matchMedia("(min-width: 1024px)")) {
+      setTimeout(function(){       
+        showNewsletterModal();
+      }, {{ settings.popup_newsletter_daly }});
+    }
+  }
+});
+</script>
+
+<div class="newsletter-wrapper">
+  <div id="newsletter-modal" class="newsletter-modal" style="display: none;">
+    <div class="modal-overlay"></div>
+    <div class="modal-window" style="display: none; {% unless settings.popup_newsletter_img %} max-width:600px;{% endunless %} ">
+      <div class="window-window">
+        <div class="window-content">
+          <a class="btn close" title="Close" data-translate="close">×</a>
+
+          <div class="grid-uniform">
+          <div class="left grid-item {% if settings.popup_newsletter_img %} large--one-half {% endif %} "{% unless settings.popup_newsletter_img %} style="width:100%;"{% endunless %}>           
+            
+            <strong class="title">{{ settings.popup_newsletter_title }}</strong>        
+            
+            <p class="sub-title">{{ settings.popup_newsletter_sub_title }}</p>      
+            
+            <div id="mailchimp-newsletter-subscibe">
+              <div id="mc_embed_signup">{% render 'newsletter-form' %}</div>
+            </div>           
+            
+            <p class="message">{{ settings.popup_newsletter_message }}</p>
+         
+          </div>
+            {% if settings.popup_newsletter_img %}                       
+          <div class="right grid-item large--one-half">
+             
+           
+            <div class="newsletter-wrapper-img1" style="background-image:url('{{ settings.popup_newsletter_img | img_url: '450x' }}'); background-repeat:no-repeat; background-position:center center; background-size:cover">
+              
+            </div>
+            
+            
+          </div>
+          {% endif %}
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+

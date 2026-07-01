@@ -1,0 +1,514 @@
+<div class="multiblog">
+  {% assign show_blog_category = true %}
+{% render 'multiblog-nav' %}
+
+{%- for block in section.blocks -%}
+
+{%- case block.type -%} 
+
+{%- when 'title' -%}  
+<section>
+<div class="wrapper"> 
+<div class="section-header">
+  <h1 class="block-{{ block.id }} {{ block.settings.class }}">{{ page.title }}</h1>
+</div>
+</div>  
+</section>   
+{%- when 'description' -%}  
+<div class="wrapper"> 
+<div class="rte block-{{ block.id }} {{ block.settings.class }}">
+  {{ page.content }}
+</div> 
+<br />
+</div> 
+
+{%- when 'hero' -%} 
+<section class="blog__hero wrapper wrapper--full wrapper--full-width-padding">
+  <h2 class="h2" style="display: none;">Articles du moment</h2>
+  <div class="hero__wrapper">
+    <div class="hero__grid">
+    {% assign article = articles[block.settings.featured_article1] %}
+    {% render 'multiblog-hero-item' article: article, blog: blog, btn_scheme: block.settings.btn_scheme %}  
+  </div>
+  <div class="hero__grid">
+    <div class="hero__wrapper--first-item">
+    {% assign article = articles[block.settings.featured_article2] %}
+    {% render 'multiblog-hero-item' article: article, btn_scheme: block.settings.btn_scheme %}  
+    </div>
+    <div class="hero__wrapper--last-items">
+    {% assign article = articles[block.settings.featured_article3] %}
+    {% render 'multiblog-hero-item' article: article, btn_scheme: block.settings.btn_scheme %}   
+    {% assign article = articles[block.settings.featured_article4] %}
+    {% render 'multiblog-hero-item' article: article, btn_scheme: block.settings.btn_scheme %}   
+    </div>       
+  </div>
+</div>
+</section>
+
+{%- when 'conseil' -%} 
+<section class="blog__tips blog__tips-1">
+  <div class="wrapper">
+
+  
+  {%- assign featured_blog = blogs[block.settings.featured_blog] -%}
+  <h2 class="h2">{{ block.settings.block_title }}</h2>
+  <div class="blog__grid">
+
+    <div class="blog__grid__item grid__left large--one-third">
+      <div class="grid-uniform row-negative-bottom blog-grid">
+        {% for article in featured_blog.articles limit:1 %}
+        {% render 'blog-item', article: article, elem: block, btn_scheme: block.settings.btn_scheme %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="blog__grid blog__grid__item grid__right large--two-thirds small--one-whole">      
+    
+
+      <div class="grid-uniform row-negative-bottom blog-grid">
+        {% for article in featured_blog.articles offset: 1 limit: block.settings.post_limit %}        
+        {% render 'blog-item', article: article, elem: block, btn_scheme: block.settings.btn_scheme %}
+        {% endfor %}
+      </div>
+      
+    </div>
+  </div>
+</div>
+</section>
+
+{%- when 'popular' -%} 
+<section class="blog__popular ">
+
+  <div class="wrapper">
+
+  <h2 class="h2">{{ block.settings.block_title }}</h2>
+  
+  {%- assign featured_blog = blogs[block.settings.featured_blog] -%}
+
+  <div class="grid-uniform row-negative-bottom blog-grid">
+    {% for link in linklists.blogs.links %}
+    {% assign blog = link.object %}
+    {% for article in blog.articles %}
+
+    {% if article.tags contains "popular" %}
+
+    {% render 'blog-item', article: article, elem: block, btn_scheme: block.settings.btn_scheme, show_blog_category: true %}
+    
+    {% endif %}
+    {% endfor %} 
+  {% endfor %}
+  </div>
+</div>
+
+</section>
+
+{%- when 'actu' -%}
+<section class="blog__actu ">
+
+  <div class="wrapper">
+
+  
+  <h2 class="h2">{{ block.settings.block_title }}</h2>
+  {%- assign featured_blog = blogs[block.settings.featured_blog] -%}
+
+  <div class="grid-uniform row-negative-bottom blog-grid">
+    {% for article in featured_blog.articles limit: block.settings.post_limit %}
+    
+    {% render 'blog-item', article: article, elem: block, btn_scheme: block.settings.btn_scheme %}
+    {% endfor %}
+  </div>
+</div>
+</section>
+
+{%- when 'comparisons' -%} 
+<section class="blog__tips ">
+  <div class="wrapper">
+
+  {%- assign featured_blog = blogs[block.settings.featured_blog] -%}
+  <h2 class="h2">{{ block.settings.block_title }}</h2>
+  <div class="blog__grid">
+
+    <div class="blog__grid__item grid__left large--one-third">
+      <div class="grid-uniform row-negative-bottom blog-grid">
+        {% for article in featured_blog.articles limit:1 %}
+        {% render 'blog-item', article: article, elem: block %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="blog__grid blog__grid__item grid__right large--two-thirds">      
+    
+
+      <div class="grid-uniform row-negative-bottom blog-grid">
+        {% for article in featured_blog.articles offset: 1 limit: block.settings.post_limit %}        
+        {% render 'blog-item', article: article, elem: block, btn_scheme: block.settings.btn_scheme %}
+        {% endfor %}
+      </div>
+      
+    </div> 
+  </div>
+</div>
+</section>
+
+{%- when 'favorites' -%} 
+<section class="blog__favorites">
+  <div class="wrapper">
+    <h2 class="h2">{{ block.settings.block_title }}</h2>
+    <div class="grid-uniform row-negative-bottom blog-grid">  
+      {% assign article = articles[block.settings.featured_article1] %}  
+      {% render 'blog-item', article: article, elem: block, blog: blog, btn_scheme: block.settings.btn_scheme %}
+
+      {% assign article = articles[block.settings.featured_article2] %}  
+      {% render 'blog-item', article: article, elem: block, blog: blog, btn_scheme: block.settings.btn_scheme %}
+
+      {% assign article = articles[block.settings.featured_article3] %}  
+      {% render 'blog-item', article: article, elem: block, blog: blog, btn_scheme: block.settings.btn_scheme %}
+
+      {% assign article = articles[block.settings.featured_article4] %}  
+      {% render 'blog-item', article: article, elem: block, blog: blog, btn_scheme: block.settings.btn_scheme %}
+    </div>
+  
+  </div>
+</section>
+
+{%- when 'last-articles' -%} 
+<div style="height:7px"></div>
+<section class="last_articles wrapper">
+
+    <h2 class="h2">{{ block.settings.block_title }}</h2>
+
+    <div class="last_articles--inner">
+    {% for link in linklists.blogs.links %}
+      {% assign blog = link.object %}
+      {% for article in blog.articles %}
+      <div data-sort="{{ article.published_at | date: "%s" }}" data-link="{{ article.url }}" class="article-item__list simulate-link">
+      
+        {% if article.image %}
+        <div class="article-item__left">
+          {% assign image_alt = article.title | escape %}
+          {{ article | img_url: '480x480' | img_tag: image_alt, 'article__image' }} 
+          {% render 'blog-category' article: article %}
+        </div>
+      {% endif %}
+        
+        <div class="article-item__right">
+          <h3 class="h3"><a href="{{ article.url }}">{{ article.title }}</a></h3>
+          <p class="blog-meta flex-item"> 
+            <svg xmlns="http://www.w3.org/2000/svg" style="transform:scale(.8); display:none" height="20" width="20"><path d="m12.708 13.562 1.188-1.166-3.063-3.063V5.021H9.167v5ZM10 18.167q-1.688 0-3.177-.636-1.49-.635-2.604-1.75-1.115-1.114-1.75-2.604-.636-1.489-.636-3.177 0-1.708.636-3.198.635-1.49 1.75-2.594 1.114-1.104 2.604-1.739Q8.312 1.833 10 1.833q1.708 0 3.198.646t2.583 1.74q1.094 1.093 1.74 2.583.646 1.49.646 3.198 0 1.688-.636 3.177-.635 1.49-1.739 2.604-1.104 1.115-2.594 1.75-1.49.636-3.198.636ZM10 10Zm0 6.438q2.688 0 4.562-1.886 1.876-1.885 1.876-4.552 0-2.688-1.876-4.562Q12.688 3.562 10 3.562q-2.667 0-4.552 1.876Q3.562 7.312 3.562 10q0 2.667 1.886 4.552Q7.333 16.438 10 16.438Z"/></svg> 
+            {{- article.published_at | time_tag: format: 'month_day_year' -}} - <a href="{{ blog.url }}">{{ blog.title }}</a> 
+          </p>
+
+          <div class="article__excerpt rte" style="margin-top:.5rem">
+            <p>{{ article.excerpt_or_content | strip_html | truncatewords: 25 }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %} 
+    {% endfor %}
+    </div>
+ 
+  </section>
+
+{%- endcase -%}  
+
+{% render 'product-block-custom-css', elem: block %}
+
+{%- endfor -%}      
+</div>
+<script defer>
+  const lastArticles = [...document.querySelectorAll('.last_articles--inner .article-item__list')].sort((a, b) => {
+    const contentA = parseInt(a.dataset.sort);
+    const contentB = parseInt(b.dataset.sort);
+    return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+  }).reverse();
+
+  $('.last_articles--inner').html(lastArticles);
+</script>
+
+<style>
+  .multiblog section h1 {
+    margin:0;
+  }
+  .multiblog img:hover {
+    opacity: 0.9;
+  }
+  .multiblog .section-header {
+    margin:0;
+    padding:0;
+  }
+  .multiblog .wrapper h3 {
+    font-size:21px;
+  }
+  
+   
+  .multiblog section {
+    margin-top:var(--gutter-quarter);
+    margin-bottom:var(--gutter-quarter);
+    padding-top:calc(var(--gutter-half) * 1.6);
+    padding-bottom:var(--gutter-quarter);
+  }
+  .multiblog .mt {
+    margin-top:var(--gutter);
+  }
+  .simulate-link {
+    cursor: pointer;
+  }
+  .multiblog .blog__category {
+    color: var(--colorPriceText);
+    background: var(--colorPriceBg);
+    position: absolute;
+    bottom: 1.8rem;
+    left:1rem;
+    margin-bottom: 0px;
+    padding:3px 5px;
+    display: inline-flex;
+    font-size: 12px;
+    min-width: auto;
+    text-transform: uppercase;
+  }
+  
+
+  .multiblog .blog__hero .blog__category {
+    position: relative;
+    bottom:auto;
+    left: auto;
+  }
+  .hero__item {
+    position: relative;   
+    overflow: hidden;
+  }
+ 
+  .hero__item .caption {
+    position: absolute;
+    bottom:0;   
+    padding: 15px;
+   
+  }
+  .hero__item .caption .h4 {
+    margin:var(--gutter-quarter) 0;
+  }
+  .hero__item .caption * {
+    color: #FFF;
+    fill: #FFF;
+  }
+
+  .blog-cont-img {
+    position: relative;
+    max-height: 290px;
+    overflow: hidden;
+    margin-bottom: var(--gutter-half);
+  }
+
+  .blog__popular {
+   
+  }
+  /* conseil */
+  .blog__tips-1, .blog__actu { 
+    background-color: #F0F0F0;
+  }
+  .blog__tips .grid-uniform .grid-item {
+    max-width: 50%;
+   
+  }
+  .blog__tips .grid__left .grid-uniform .grid-item {
+    max-width:98%;
+  }
+  
+  .blog__tips .grid__right .grid-uniform .grid-item > div { 
+    display: flex;
+    align-items: center;
+    gap:var(--gutter);
+  }
+
+  .blog__tips .grid__right .grid-uniform .article__excerpt, .blog__tips .grid__right .grid-uniform .btn {
+    display: none;
+  }
+  .blog__tips .grid__right .blog-cont-img {
+    flex:0 0 25%;
+  }
+  .blog__tips .grid__right h3 {
+    font-size:18px;
+    margin-bottom: var(--gutter-quarter);
+  }
+
+  @media screen and (min-width: 750px) {  
+    .multiblog section {
+      margin-top:var(--gutter-half);
+      margin-bottom:var(--gutter-half);
+      padding-top:calc(var(--gutter) * 1.6);
+      padding-bottom:var(--gutter-half);
+    }
+      .multiblog-global .wrapper {
+      max-width: 2400px;
+      padding:0 calc(var(--gutter) * 1.2) 0 calc(var(--gutter) * 1.2)
+    }
+
+    .multiblog .last_articles {
+      margin-top:var(--gutter);
+    }
+    .multiblog .wrapper {
+      max-width: 1400px;
+    }
+    .multiblog .wrapper--full {
+      max-width: 2400px;  
+    }
+    .multiblog .wrapper--full-width-padding { 
+      padding:var(--gutter) calc(var(--gutter) * 1.2) 0 calc(var(--gutter) * 1.2)
+    }
+    .blog__tips .grid-uniform .grid-item {
+
+      min-height: 115px;
+    }
+    .blog__grid {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .blog__grid__item {
+      flex:1 0 50%;
+    }
+    .hero__wrapper {
+      display:flex;
+    }
+    .hero__grid {
+      display: flex;
+      width: 50%;
+      align-items: flex-start;
+    
+    }
+    .blog__tips .grid__right {
+      padding:0 var(--gutter-half)
+    }
+    .last_articles .article-item__left {
+  
+      flex:0 0 25%;
+    }
+    .hero__item {
+      display: inline-flex;
+      height: 40vh;
+     
+     
+    }
+    .hero__item .article-item__left {
+      height: 100%;
+      flex:0 0 33%;
+    }
+    .hero__item img {
+      transition: all 1s;
+      object-position: 50% 50%;
+      object-fit: cover;
+      width: 100%;
+      min-height: 40vh;
+      transform: scale(1);
+    }
+    .hero__item:hover img { 
+      transform: scale(1.1);
+    }
+    .hero__item .caption {
+      /*transform: translateY(30px);
+      transition: all .3s;*/
+      padding: 15px;
+      text-shadow: 0 0 5px #333;
+    }
+    .hero__item:hover .caption {      
+      opacity: 1;
+    }
+   
+    .hero__wrapper--last-items {
+      display: flex;
+      width: 50%;
+      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 2vh;
+    }
+    .hero__wrapper--last-items > div { 
+      max-height: 19vh;
+      overflow: hidden;    
+    }
+    .hero__wrapper--last-items img { 
+      max-height: 100%;
+      overflow: hidden;    
+    }
+    .hero__wrapper--first-item {
+      width: 50%;
+      padding:0 15px;      
+    }
+    .hero__grid:last-child > .hero__item:first-child {   
+      width: 50%;
+    }
+  }
+
+  .blog__favorites {
+    color:#FFF;
+    background: #333;   
+  }
+
+  .blog__favorites * {
+    color:#FFF !important;
+  }
+
+  .blog__favorites .grid-uniform .article__excerpt, .blog__favorites .grid-uniform .btn {
+    display: none;
+  }
+
+  .article-item__list {    
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+    gap:var(--gutter);
+  }
+  
+  .article-item__left {
+    position: relative;
+  }
+ 
+  .flex-item {
+    display: flex;
+    align-items: center;
+    gap:.5rem;
+    margin:0;
+    font-size: 14px;
+  }
+
+  .flex-item svg {
+    fill:var(--colorTextBody);
+  }
+
+  @media screen and (max-width: 749px){
+    .multiblog section .h2 {
+      text-align: center;
+      font-size: 21px;
+    } 
+    .blog__tips .grid-uniform .grid-item {
+      max-width: 100%;
+    }
+    .blog__tips .large--one-third {
+      max-width: 100%;
+    }
+   
+    .article-item__list {
+      flex-wrap: wrap;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .flex-item {
+      justify-content: center;
+    }
+    .article-item__left {
+      flex:1 0 100%;
+    }
+
+    .blog__tips .grid-uniform .grid-item:nth-child(n+3) {
+      display: none;
+    }
+    .blog__popular .grid-uniform .grid-item:nth-child(n+3),
+    .blog__actu .grid-uniform .grid-item:nth-child(n+3),
+    .blog__favorites .grid-uniform .grid-item:nth-child(n+3) {
+      display: none;
+    }
+     
+  }
+
+  
+</style>

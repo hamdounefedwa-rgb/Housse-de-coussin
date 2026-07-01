@@ -1,0 +1,73 @@
+{% if product %}
+
+{%- assign desc_rte = product.description -%}
+{% endif %}
+
+{% if page %}
+{%- assign desc_rte = page.content -%}
+{% endif %}
+
+{% if article %}
+{%- assign desc_rte = article.content -%}
+{% endif %}
+
+{%- if desc_rte contains "[intro]" -%}
+  {%- assign short_description = desc_rte | split: "[/intro]" | first | remove: '[intro]' -%}
+  {%- assign long_description_array = desc_rte | split: "[/intro]" -%}
+  {%- assign long_description = long_description_array[1] -%}
+  {%- else -%}
+  {%- assign short_description = "" -%}
+  {%- assign long_description = desc_rte -%}
+
+{%- endif -%}
+
+{%- if long_description contains "[readmore]" -%}
+
+  {% comment %}
+  {% assign min = 1 %}
+  {% assign max = 100 %}
+  {% assign diff = max | minus: min %}
+  {% assign randomNumber = "now" | date: "%N" | modulo: diff | plus: min %}
+  {% endcomment %}
+
+  {% assign long_description = long_description | replace: '[readmore]', '<div id="rm-1"></div><span id="rm-dots-1" class="rm-dots"></span><div id="rm-wrapper-1" class="rm-wrapper">' %}
+  {% assign long_description = long_description | replace: '[/readmore]', '</div><div><button  id="rm-btn-1" class="btn btn--small btn-read-more rm-btn" onclick="readMore(1)"></button></div>' %}
+
+
+  <script defer>
+
+    document.addEventListener("DOMContentLoaded", (event) => {
+      const readMoreBtnText = document.getElementById("rm-btn-1"); 
+      if(readMoreBtnText) {
+        readMoreBtnText.innerHTML = "+ " + {{ 'general.text.read_more' | t | json }}     
+      }
+    }); 
+  
+    function readMore(id) {
+      let readMoreText1 = "+ " + {{ 'general.text.read_more' | t | json }};
+      let readMoreText2 = "- " + {{ 'general.text.read_less' | t | json }};
+      const cont = document.getElementById("rm-"+id);
+      const dots = document.getElementById("rm-dots-"+id);
+      const moreText = document.getElementById("rm-wrapper-"+id);
+      const btnText = document.getElementById("rm-btn-"+id); 
+      if (dots.style.display === "none") {
+        dots.style.display = "inline";
+        btnText.innerHTML = readMoreText1;
+        moreText.style.display = "none";
+      } else {
+        dots.style.display = "none";      
+        btnText.innerHTML = readMoreText2;
+        moreText.style.display = "inline";    
+      }	 
+    }
+  
+  </script>
+
+{%- endif -%}
+
+{% assign long_description_html = long_description | escape %}
+
+
+{{ short_description }}
+{{ long_description }}
+{{ long_description_html }}

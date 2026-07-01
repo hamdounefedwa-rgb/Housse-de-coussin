@@ -1,0 +1,559 @@
+{% if block.settings.direct_purchase %}
+
+{% else %}
+
+{% unless settings.special_offer_v1 %} 
+
+<div id="bkgOverlay" class="backgroundOverlay"></div>  
+<div id="delayedPopup" class="delayedPopupWindow">  
+
+  {% if settings.upsell_text %}    
+  <div class="upsell-header">{{ settings.upsell_text }}</div>            
+  {% endif %} 
+
+{% if product.metafields.se_upsell.upsell_1 %}
+
+  {% if product.metafields.se_upsell.upsell_1 %}
+  {% assign product1 = all_products[product.metafields.se_upsell.upsell_1] %}
+  <div class="cont-upsell">
+    <div class="cont-img">
+      <img class="img-1" src="{{ product1.featured_image.src | img_url: 'large' }}" alt="{{ product1.featured_image.alt | escape }}" loading="lazy" width="{{ product1.featured_image.width }}" height= "{{ product1.featured_image.height }}">
+    </div>
+    <div class="cont-texte">
+      <div class="h2"><a href="{{ product1.url }}">{{ product1.title }}</a></div>
+
+      <div class=" {% if section.settings.amount_percent %}amount-percent-{{section.settings.amount_percent}}{% endif %}">
+
+        <form action="/cart/add" method="post" class="form-upsell">
+          <select name="id" id="productSelect-{{ section.id }}" class="product-variants product-variants-1 product-variants-{{ section.id }}">
+            {% for variant in product1.variants %}
+            {% if variant.available %}
+            <option {% if variant == product1.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+            {% else %}
+            <option disabled="disabled">
+              {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+            </option>
+            {% endif %}
+            {% endfor %}
+          </select>
+          {% if section.settings.product_quantity_enable %}
+          <label for="quantity" class="quantity-selector quantity-selector-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+          <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
+          {% endif %}
+          <button type="submit" name="add" class="btn add-cart-upsell">
+
+            <span id="addToCartText-{{ section.id }}">{{ 'products.product.add_to_cart' | t }}</span>
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% if product.metafields.se_upsell.upsell_2 %}
+  {% assign product2 = all_products[product.metafields.se_upsell.upsell_2] %}
+  <div class="cont-upsell">
+    <div class="cont-img">  
+
+      <img class="img-2" src="{{ product2.featured_image.src | img_url: 'large' }}" alt="{{ product2.featured_image.alt | escape }}" loading="lazy" width="{{ product2.featured_image.width }}" height= "{{ product2.featured_image.height }}">
+    </div>
+    <div class="cont-texte">
+      <div class="h2"><a href="{{ product2.url }}">{{ product2.title }}</a></div>
+
+      <div class=" {% if section.settings.amount_percent %}amount-percent-{{section.settings.amount_percent}}{% endif %}">
+
+        <form action="/cart/add" method="post" class="form-upsell">
+          <select name="id" id="productSelect-{{ section.id }}" class="product-variants product-variants-2 product-variants-{{ section.id }}">
+            {% for variant in product2.variants %}
+            {% if variant.available %}
+            <option {% if variant == product2.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+            {% else %}
+            <option disabled="disabled">
+              {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+            </option>
+            {% endif %}
+            {% endfor %}
+          </select>
+          {% if section.settings.product_quantity_enable %}
+          <label for="quantity" class="quantity-selector quantity-selector-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+          <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
+          {% endif %}
+          <button type="submit" name="add" class="btn add-cart-upsell">
+
+            <span id="addToCartText-{{ section.id }}">{{ 'products.product.add_to_cart' | t }}</span>
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% if product.metafields.se_upsell.upsell_4 %}
+  <div style="clear:both;"></div>
+  {% endif %}
+  {% if product.metafields.se_upsell.upsell_3 %}
+
+  {% assign product3 = all_products[product.metafields.se_upsell.upsell_3] %}
+  <div class="cont-upsell">
+    <div class="cont-img">
+
+      <img class="img-3" src="{{ product3.featured_image.src | img_url: 'large' }}" alt="{{ product3.featured_image.alt | escape }}" loading="lazy" width="{{ product3.featured_image.width }}" height= "{{ product3.featured_image.height }}">
+    </div>
+    <div class="cont-texte">
+      <div class="h2"><a href="{{ product3.url }}">{{ product3.title }}</a></div>
+
+      <div class=" {% if section.settings.amount_percent %}amount-percent-{{section.settings.amount_percent}}{% endif %}">
+
+        <form action="/cart/add" method="post" class="form-upsell">
+          <select name="id" id="productSelect-{{ section.id }}" class="product-variants product-variants-3 product-variants-{{ section.id }}">
+            {% for variant in product3.variants %}
+            {% if variant.available %}
+            <option {% if variant == product3.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+            {% else %}
+            <option disabled="disabled">
+              {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+            </option>
+            {% endif %}
+            {% endfor %}
+          </select>
+          {% if section.settings.product_quantity_enable %}
+          <label for="quantity" class="quantity-selector quantity-selector-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+          <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
+          {% endif %}
+          <button type="submit" name="add" class="btn add-cart-upsell">
+
+            <span id="addToCartText-{{ section.id }}">{{ 'products.product.add_to_cart' | t }}</span>
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% if product.metafields.se_upsell.upsell_4 %}
+  {% assign product4 = all_products[product.metafields.se_upsell.upsell_4] %}
+  <div class="cont-upsell">
+    <div class="cont-img">
+
+      <img class="img-4" src="{{ product4.featured_image.src | img_url: 'large' }}" alt="{{ product4.featured_image.alt | escape }}" loading="lazy" width="{{ product4.featured_image.width }}" height= "{{ product4.featured_image.height }}">
+    </div>
+    <div class="cont-texte">
+      <div class="h2"><a href="{{ product4.url }}">{{ product4.title }}</a></div>
+
+      <div class=" {% if section.settings.amount_percent %}amount-percent-{{section.settings.amount_percent}}{% endif %}">
+
+        <form action="/cart/add" method="post" class="form-upsell">
+          <select name="id" id="productSelect-{{ section.id }}" class="product-variants product-variants-4 product-variants-{{ section.id }}">
+            {% for variant in product4.variants %}
+            {% if variant.available %}
+            <option {% if variant == product4.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+            {% else %}
+            <option disabled="disabled">
+              {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+            </option>
+            {% endif %}
+            {% endfor %}
+          </select>
+          {% if section.settings.product_quantity_enable %}
+          <label for="quantity" class="quantity-selector quantity-selector-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+          <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
+          {% endif %}
+          <button type="submit" name="add" class="btn add-cart-upsell">
+
+            <span id="addToCartText-{{ section.id }}">{{ 'products.product.add_to_cart' | t }}</span>
+          </button>           
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+{% else %}
+
+  {% if settings.product_upsell %}
+  {% assign product1 = all_products[settings.product_upsell] %}
+  <div class="cont-upsell">
+    <div class="cont-img">
+        
+      <img class="img-1" src="{{ product1.featured_image.src | img_url: 'large' }}" alt="{{ product1.featured_image.alt | escape }}" loading="lazy" width="{{ product1.featured_image.width }}" height= "{{ product1.featured_image.height }}">
+    </div>
+    <div class="cont-texte">
+      <div class="h2"><a href="{{ product1.url }}">{{ product1.title }}</a></div>
+
+      <div class=" {% if section.settings.amount_percent %}amount-percent-{{section.settings.amount_percent}}{% endif %}">
+
+        <form action="/cart/add" method="post" class="form-upsell">
+          <select name="id" id="productSelect-{{ section.id }}" class="product-variants product-variants-1 product-variants-{{ section.id }}">
+            {% for variant in product1.variants %}
+            {% if variant.available %}
+            <option {% if variant == product1.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+            {% else %}
+            <option disabled="disabled">
+              {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+            </option>
+            {% endif %}
+            {% endfor %}
+          </select>
+          {% if section.settings.product_quantity_enable %}
+          <label for="quantity" class="quantity-selector quantity-selector-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+          <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
+          {% endif %}
+          <button type="submit" name="add" class="btn add-cart-upsell">
+
+            <span id="addToCartText-{{ section.id }}">{{ 'products.product.add_to_cart' | t }}</span>
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% if settings.product_upsell2 != blank %}
+  {% assign product2 = all_products[settings.product_upsell2] %}
+  <div class="cont-upsell">
+    <div class="cont-img">        
+ 
+      <img class="img-2" src="{{ product2.featured_image.src | img_url: 'large' }}" alt="{{ product2.featured_image.alt | escape }}" loading="lazy" width="{{ product2.featured_image.width }}" height= "{{ product2.featured_image.height }}">
+    </div>
+    <div class="cont-texte">
+      <div class="h2"><a href="{{ product2.url }}">{{ product2.title }}</a></div>
+
+      <div class=" {% if section.settings.amount_percent %}amount-percent-{{section.settings.amount_percent}}{% endif %}">
+
+        <form action="/cart/add" method="post" class="form-upsell">
+          <select name="id" id="productSelect-{{ section.id }}" class="product-variants product-variants-2 product-variants-{{ section.id }}">
+            {% for variant in product2.variants %}
+            {% if variant.available %}
+            <option {% if variant == product2.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+            {% else %}
+            <option disabled="disabled">
+              {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+            </option>
+            {% endif %}
+            {% endfor %}
+          </select>
+          {% if section.settings.product_quantity_enable %}
+          <label for="quantity" class="quantity-selector quantity-selector-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+          <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
+          {% endif %}
+          <button type="submit" name="add" class="btn add-cart-upsell">
+
+            <span id="addToCartText-{{ section.id }}">{{ 'products.product.add_to_cart' | t }}</span>
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if settings.product_upsell4 != blank %}
+  <div style="clear:both;"></div>
+  {% endif %}
+  {% if settings.product_upsell3 != blank %}
+
+  {% assign product3 = all_products[settings.product_upsell3] %}
+  <div class="cont-upsell">
+    <div class="cont-img">
+      <img class="img-3" src="{{ product3.featured_image.src | img_url: 'large' }}" alt="{{ product3.featured_image.alt | escape }}" loading="lazy" width="{{ product3.featured_image.width }}" height= "{{ product3.featured_image.height }}">
+    </div>
+    <div class="cont-texte">
+      <div class="h2"><a href="{{ product3.url }}">{{ product3.title }}</a></div>
+
+      <div class=" {% if section.settings.amount_percent %}amount-percent-{{section.settings.amount_percent}}{% endif %}">
+
+        <form action="/cart/add" method="post" class="form-upsell">
+          <select name="id" id="productSelect-{{ section.id }}" class="product-variants product-variants-3 product-variants-{{ section.id }}">
+            {% for variant in product3.variants %}
+            {% if variant.available %}
+            <option {% if variant == product3.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+            {% else %}
+            <option disabled="disabled">
+              {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+            </option>
+            {% endif %}
+            {% endfor %}
+          </select>
+          {% if section.settings.product_quantity_enable %}
+          <label for="quantity" class="quantity-selector quantity-selector-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+          <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
+          {% endif %}
+          <button type="submit" name="add" class="btn add-cart-upsell">
+
+            <span id="addToCartText-{{ section.id }}">{{ 'products.product.add_to_cart' | t }}</span>
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% if settings.product_upsell4 != blank %}
+  {% assign product4 = all_products[settings.product_upsell4] %}
+  <div class="cont-upsell">
+    <div class="cont-img">      
+      <img class="img-4" src="{{ product4.featured_image.src | img_url: 'large' }}" alt="{{ product4.featured_image.alt | escape }}" loading="lazy" width="{{ product4.featured_image.width }}" height= "{{ product4.featured_image.height }}">
+    </div>
+    <div class="cont-texte">
+      <div class="h2"><a href="{{ product4.url }}">{{ product4.title }}</a></div>
+
+      <div class="{% if section.settings.amount_percent %}amount-percent-{{section.settings.amount_percent}}{% endif %}">
+
+        <form action="/cart/add" method="post" class="form-upsell">
+          <select name="id" id="productSelect-{{ section.id }}" class="product-variants product-variants-4 product-variants-{{ section.id }}">
+            {% for variant in product4.variants %}
+            {% if variant.available %}
+            <option {% if variant == product4.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+            {% else %}
+            <option disabled="disabled">
+              {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+            </option>
+            {% endif %}
+            {% endfor %}
+          </select>
+          {% if section.settings.product_quantity_enable %}
+          <label for="quantity" class="quantity-selector quantity-selector-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+          <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
+          {% endif %}
+          <button type="submit" name="add" class="btn add-cart-upsell">
+
+            <span id="addToCartText-{{ section.id }}">{{ 'products.product.add_to_cart' | t }}</span>
+          </button>           
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+{% endif %}
+
+  <div class="cont-btn">
+    {% if settings.ajax_cart_method != 'page' %} 
+    
+    {% unless settings.upsell_btn_disable %}
+  
+    <a href="{{ product.url }}" class="btn btn-secondary" >{{ 'general.upsells.product_continuer' | t }}</a>
+    {% endunless %}
+    {% endif %}
+   
+    <a href="/cart"  class="btn btn-secondary" >{{ 'cart.general.hc_view_cart' | t }}</a>
+  </div>
+  <div class="closeBtns">
+  <a href="#" id="btnCloseForm1" class="btnClose" title="Click here to close this box."><i class="fa fa-times"></i></a>
+  <a href="#" id="btnCloseForm2" class="btnClose" title="Click here to close this box."><i class="fa fa-times"></i></a>
+  <a href="#" id="btnCloseSticky" class="btnClose" title="Click here to close this box."><i class="fa fa-times"></i></a>
+  </div>
+</div>
+
+
+<script defer>
+  
+  const changeImageByVariantId = (product, cl, clImg) => { 
+    
+    const allSelects = document.querySelectorAll(cl);  
+    let allImages = [], allImagesObj = {}, variantId, variantImg;    
+	
+    if(product == "product1") {        
+      {% for image in product1.images %}
+        {% for variant in image.variants %}
+        variantId = {{ variant.id }};        
+        allImages.push(allImagesObj = {id:variantId, image:"{{ image.src | img_url: "medium" }}"});
+        {% endfor %}
+      {% endfor %} 
+    }
+    if(product == "product2") {        
+      {% for image in product2.images %}
+        {% for variant in image.variants %}
+          variantId = {{ variant.id }};       
+          allImages.push(allImagesObj = {id:variantId, image:"{{ image.src | img_url: "medium" }}"});
+        {% endfor %}
+      {% endfor %} 
+    }
+    if(product == "product3") {        
+      {% for image in product3.images %}
+        {% for variant in image.variants %}
+        variantId = {{ variant.id }};       
+        allImages.push(allImagesObj = {id:variantId, image:"{{ image.src | img_url: "medium" }}"});
+        {% endfor %}
+      {% endfor %} 
+    }
+    if(product == "product4") {        
+      {% for image in product4.images %}
+        {% for variant in image.variants %}
+        variantId = {{ variant.id }};        
+        allImages.push(allImagesObj = {id:variantId, image:"{{ image.src | img_url: "medium" }}"});
+        {% endfor %}
+      {% endfor %} 
+    }                
+
+    allSelects.forEach(item => {     
+      item.addEventListener('change', () => {      
+        allImages.map(element => {
+          if(element.id == item.value) {         
+           document.querySelector(clImg).setAttribute('src', element.image);           
+          }
+        })
+      });  
+    });
+  }
+  
+  changeImageByVariantId("product1",".product-variants-1", ".img-1");
+  changeImageByVariantId("product2",".product-variants-2", ".img-2"); 
+  changeImageByVariantId("product3",".product-variants-3", ".img-3"); 
+  changeImageByVariantId("product4",".product-variants-4", ".img-4");   
+
+    Shopify.AjaxifyCart = (function($) {
+
+      // Some configuration options.
+      // I have separated what you will never need to change from what
+      // you might change.
+
+      var _config = {
+
+        // What you might want to change
+        addToCartBtnLabel:             '{{ 'general.upsells.addToCartBtnLabel' | t }}',
+        addedToCartBtnLabel:           '{{ 'general.upsells.addedToCartBtnLabel' | t }}',
+        addingToCartBtnLabel:          '{{ 'general.upsells.addingToCartBtnLabel' | t }}',
+        soldOutBtnLabel:               '{{ 'general.upsells.soldOutBtnLabel' | t }}',
+        howLongTillBtnReturnsToNormal: 1000, // in milliseconds.
+        cartCountSelector:             '.cart-count, #cart-count a:first, #gocart p a, #cart .checkout em, .item-count',
+        cartTotalSelector:             '#cart-price',
+        // 'aboveForm' for top of add to cart form, 
+        // 'belowForm' for below the add to cart form, and 
+        // 'nextButton' for next to add to cart button.
+        feedbackPosition:              'nextButton',
+
+        // What you will never need to change
+        addToCartBtnSelector:          '.add-cart-upsell',
+        addToCartFormSelector:         '.form-upsell[action="/cart/add"]',
+        shopifyAjaxAddURL:             '/cart/add.js',
+        shopifyAjaxCartURL:            '/cart.js'
+      };
+
+      // We need some feedback when adding an item to the cart.
+      // Here it is.  
+      var _showFeedback = function(success, html, $addToCartForm) {
+        $('.ajaxified-cart-feedback').remove();
+        var feedback = '<p class="ajaxified-cart-feedback ' + success + '">' + html + '</p>';
+        switch (_config.feedbackPosition) {
+          case 'aboveForm':
+            $addToCartForm.before(feedback);
+            break;
+          case 'belowForm':
+            $addToCartForm.after(feedback);
+            break;
+          case 'nextButton':
+          default:
+            $addToCartForm.find(_config.addToCartBtnSelector).after(feedback);
+            break;   
+        }
+        // If you use animate.css
+        // $('.ajaxified-cart-feedback').addClass('animated bounceInDown');
+        $('.ajaxified-cart-feedback').slideDown();
+      };
+      var _setText = function($button, label) {
+        if ($button.children().length) {
+          $button.children().each(function() {
+            if ($.trim($(this).text()) !== '') {
+              $(this).text(label);
+            }
+          });
+        }
+        else {
+          $button.val(label).text(label);
+        }
+      };
+      var _init = function() {   
+        $(document).ready(function() { 
+          $(_config.addToCartFormSelector).submit(function(e) {
+            e.preventDefault();
+            var $addToCartForm = $(this);
+            var $addToCartBtn = $addToCartForm.find(_config.addToCartBtnSelector);
+            _setText($addToCartBtn, _config.addingToCartBtnLabel);
+            //$addToCartBtn.addClass('disabled').prop('disabled', true);
+            // Add to cart.
+            $.ajax({
+              url: _config.shopifyAjaxAddURL,
+              dataType: 'json',
+              type: 'post',
+              data: $addToCartForm.serialize(),
+              success: function(itemData) {
+                // Re-enable add to cart button.
+                $addToCartBtn.addClass('inverted'); 
+                _setText($addToCartBtn, _config.addedToCartBtnLabel);
+                _showFeedback('success','<i class="fa fa-check"></i> {{ 'products.product.add_to_cart_ajax' | t }}',$addToCartForm);
+                window.setTimeout(function(){
+                  //$addToCartBtn.prop('disabled', false).removeClass('disabled').removeClass('inverted');
+                  _setText($addToCartBtn,_config.addToCartBtnLabel);
+                }, _config.howLongTillBtnReturnsToNormal);
+                // Update cart count and show cart link.
+                $.getJSON(_config.shopifyAjaxCartURL, function(cart) {
+                  if (_config.cartCountSelector) {
+                    var value = $(_config.cartCountSelector).html() || '0';
+                    $(_config.cartCountSelector).html(value.replace(/[0-9]+/,cart.item_count)).removeClass('hidden-count');
+                  }
+                  if (_config.cartTotalSelector) {
+                    if (typeof Currency !== 'undefined' && typeof Currency.moneyFormats !== 'undefined') {
+                      var newCurrency = '';
+                      if ($('[name="currencies"]').size()) {
+                        newCurrency = $('[name="currencies"]').val();
+                      }
+                      else if ($('#currencies span.selected').size()) {
+                        newCurrency = $('#currencies span.selected').attr('data-currency');
+                      }
+                      if (newCurrency) {
+                        $(_config.cartTotalSelector).html('<span class=money>' + Shopify.formatMoney(Currency.convert(cart.total_price, "{{ shop.currency }}", newCurrency), Currency.money_format[newCurrency]) + '</span>');
+                      } 
+                      else {
+                      $(_config.cartTotalSelector).html(Shopify.formatMoney(cart.total_price, "{{ shop.money_format | remove: "'" | remove: '"' }}"));
+                      }
+                  }
+                else {
+                  $(_config.cartTotalSelector).html(Shopify.formatMoney(cart.total_price, "{{ shop.money_format | remove: "'" | remove: '"' }}"));
+                }
+                };
+                });        
+                }, 
+                error: function(XMLHttpRequest) {
+                var response = eval('(' + XMLHttpRequest.responseText + ')');
+                  response = response.description;
+                    if (response.slice(0,4) === 'All ') {
+                          _showFeedback('error', response.replace('All 1 ', 'All '), $addToCartForm);
+                          $addToCartBtn.prop('disabled', false);
+                          _setText($addToCartBtn, _config.soldOutBtnLabel);
+                          $addToCartBtn.prop('disabled',true);
+                        }
+                        else {
+                          _showFeedback('error', '<i class="fa fa-warning"></i> ' + response, $addToCartForm);
+                          $addToCartBtn.prop('disabled', false).removeClass('disabled');
+                          _setText($addToCartBtn, _config.addToCartBtnLabel);
+                        }
+                      }
+                    });   
+                    return false;    
+                  });
+                });
+              };
+              return {
+              init: function(params) {
+              // Configuration
+              params = params || {};
+              // Merging with defaults.
+              $.extend(_config, params);
+            // Action
+            $(function() {
+              _init();
+            });
+          },    
+          getConfig: function() {
+            return _config;
+          }
+        }  
+        })(jQuery);
+
+        Shopify.AjaxifyCart.init();
+
+  </script>
+{% endunless %}
+{% endif %}
+

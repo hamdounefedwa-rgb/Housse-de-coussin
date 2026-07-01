@@ -1,0 +1,15 @@
+<div id="search-overlay" class="search-overlay">
+  <span class="closebtn" onclick="closeSearch()" title="Close Overlay">×</span>
+  <div class="overlay-content">
+    {% comment %}
+    <form action="/search" method="get" class="search-bar" role="search">
+      <input type="hidden" name="type" value="product">
+      <input type="search" class="search-input" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'layout.search_bar.placeholder' | t }}" aria-label="{{ 'layout.search_bar.placeholder' | t }}">
+      <button type="submit" class="search-bar--submit icon-fallback-text" aria-label="Search">      
+        <i class="fa fa-search" aria-hidden="true"></i>
+      </button>
+    </form>
+    {% endcomment %}
+    {% render 'predictive-search' %}
+  </div>
+</div>

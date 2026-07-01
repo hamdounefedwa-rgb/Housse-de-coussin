@@ -1,0 +1,17 @@
+
+<div class="section-header section-header--layout-{{ section.settings.title_layout }}" >
+  {% if header_title %}
+    <{{ section.settings.title_hn }} class="section-title h1 {{ section.settings.title_hn }} {% if section.settings.collection_show_link %} section-header--left{% else %} section-header--center {% endif %} ">
+    {{ header_title }}
+    </{{ section.settings.title_hn }}>
+  {% endif %}
+  {% if section.settings.title_link_layout == "0" and section.settings.collection_show_link %}
+  <div class="section-header--right section-header--right--show--{{ section.settings.collection_show_link }} section-title-decal-{{ section.settings.collection_title_padding }} ">
+    <a href="{{ collections[featured_row].url }}" class="{% if section.settings.link_layout == '1' %} btn {{ section.settings.btn_collection_scheme }} {% else %} {{ section.settings.link_layout }}{% endif %} mt-1" >
+       {{ 'homepage.featured_collection_rows.more_in_collection' | t: collection_title: header_title }} {% if section.settings.link_layout == 'link' %}&rsaquo;{% endif %}
+    </a>
+  </div> 
+  {% endif %}
+</div>
+
+{% if section.settings.title_divider != blank %}<div class="section-header--divider text-center">{{ section.settings.title_divider }}</div>{% endif %}

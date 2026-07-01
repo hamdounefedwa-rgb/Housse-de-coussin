@@ -1,0 +1,80 @@
+<style>
+
+.section-id-{{ elem.id }} .article__content {
+  text-align:{{ elem.settings.alignment_text_sm }};
+}
+@media screen and (min-width: 1024px) {
+  .section-id-{{ elem.id }} .article__content {
+    text-align:{{ elem.settings.alignment_text }};
+  }
+}
+
+{% if elem.settings.block_color_enable %} 
+
+.section-id-{{ elem.id }} .blog-cont-img {
+  padding:{{ elem.settings.block_shadow_size }}px;
+}
+.section-id-{{ elem.id }} img { 
+  
+  box-shadow:0 0 {{ elem.settings.block_shadow_size }}px {{ elem.settings.block_shadow_color | color_modify: 'alpha', elem.settings.block_shadow_opacity }};
+}
+{% endif %}
+
+{% if elem.settings.colors_product_content %} 
+.section-id-{{ elem.id }} {
+  --colorSectionTitles: {{ elem.settings.block_title_color }};
+  --colorTextBody: {{ elem.settings.block_post_text_color }};    
+}
+
+.section-id-{{ elem.id }} h2, .section-id-{{ elem.id }} h3, .section-id-{{ elem.id }} h4, .section-id-{{ elem.id }} h5 {
+  color: {{ elem.settings.block_post_title_color }};    
+}
+
+.section-id-{{ elem.id }} .latest-articles li {
+  --color-text-body-opacity1: {{ elem.settings.block_post_text_color | color_modify: 'alpha', 0.05 }}
+}
+
+/* Article */
+
+
+{% endif %}
+
+{% if elem.settings.block_size_enable %} 
+
+@media screen and (max-width: 749px) {  
+  .section-id-{{ elem.id }}, .section-id-{{ elem.id }} .latest-articles small  {
+    --baseFontSize: {{ elem.settings.block_text_size_sm }}px;
+    font-size: {{ elem.settings.block_text_size_sm }}px;
+  }
+  .section-id-{{ elem.id }} .h1 {
+    font-size: {{ elem.settings.block_title_size_sm }}px;
+  }
+  .section-id-{{ elem.id }} h2, .section-id-{{ elem.id }} h3, .section-id-{{ elem.id }} h4, .section-id-{{ elem.id }} h5 {
+    font-size: {{ elem.settings.block_article_title_size_sm }}px;    
+  }
+  .section-id-{{ elem.id }} .btn {
+    font-size: {{ elem.settings.block_btn_size_sm }}px;
+    border-width: {{ elem.settings.block_btn_border_size_sm }}px;
+  }
+}
+  
+@media screen and (min-width: 750px) {
+  .section-id-{{ elem.id }}, .section-id-{{ elem.id }} .latest-articles small  {
+    --baseFontSize: {{ elem.settings.block_text_size }}px;
+    font-size: {{ elem.settings.block_text_size }}px;
+  }
+  .section-id-{{ elem.id }} .h1 {
+    font-size: {{ elem.settings.block_title_size }}px;
+  }
+  .section-id-{{ elem.id }} h2, .section-id-{{ elem.id }} h3, .section-id-{{ elem.id }} h4, .section-id-{{ elem.id }} h5 {
+    font-size: {{ elem.settings.block_article_title_size }}px;   
+  }
+  .section-id-{{ elem.id }} .btn {
+    font-size: {{ elem.settings.block_btn_size }}px;
+    border-width: {{ elem.settings.block_btn_border_size }}px;
+  }
+}
+{% endif %}
+
+
+</style>

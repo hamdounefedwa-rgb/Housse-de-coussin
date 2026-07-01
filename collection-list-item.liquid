@@ -1,0 +1,23 @@
+{% capture collection_title %}{{ collection.title }}{% endcapture %}
+{%- assign image_layout = "0" -%}
+<div class="section-header section-header-template display-flex" style="width:100%;justify-content:space-between;align-items:center;">
+  <h2 class="section-header--title h1">{{ collection_title }}</h2>
+  <div class="section-header--link">
+    <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}">{{ 'homepage.featured_collection_rows.more_in_collection' | t: collection_title: collection_title }} &rsaquo;</a>
+  </div>
+</div>
+
+<div class="grid-uniform text-center">
+  {% if collection.products %}
+    {%- assign grid_item_width = 'small--one-half one-quarter' -%}
+    {%- assign image_size = '276' -%}
+    {% for product in collection.products limit: 4 %}
+      {% render 'product-grid-item', product: product, grid_item_width: grid_item_width, image_size: image_size, image_layout: image_layout %}
+    {% endfor %} 
+
+  {% else %}
+    {% for product in collections[collection.handle].products limit: 4 %}
+      {% render 'product-grid-item' image_layout: image_layout %}
+    {% endfor %}
+  {% endif %}
+</div>

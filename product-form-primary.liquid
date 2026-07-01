@@ -1,0 +1,258 @@
+{% assign variant = product.selected_or_first_available_variant %}
+
+<div id="wrapper-form1" class="cont-form form-primary form-id-{{ block.id }} product-form-layout-{{ block.settings.product_form_template }}"
+  data-show-compare-at-price="{{ block.settings.product_show_compare_at_price }}" 
+  data-stock="false" 
+  data-incoming-transfer="false"
+  data-product-form-layout="{{ block.settings.product_form_template }}"
+  data-product-form-number="{{ block.settings.product_form_template_number }}"
+  data-product-form-add-to-cart-text="{{ 'products.product.add_to_cart' | t }}"
+  data-product-form-btn-checkout-text="{{ 'products.product.add_to_cart_bis' | t }}"
+  data-product-form-sold-out-text="{{ 'products.product.sold_out' | t }}"
+  >       
+
+  <div id="cont-form">
+    <div class="form-int amount-percent-{{ block.settings.amount_percent }}">
+
+      
+      <div class="product-cont-header2">      
+        
+        {% if block.settings.product_form_template == "2" %}       
+        <div class="form-infos">       
+        {% endif %}
+
+        <ul class="inline-list product-meta">
+          <li>
+            <span id="productPrice-{{ section.id }}" class="h1">
+              {% render 'price', price: variant.price %}               
+            </span>            
+          </li>    
+          <li>
+           
+            {% render 'product-unit-price', variant: variant, product-template: true %} 
+         
+          </li>
+          {% if product.compare_at_price_max > product.price %}
+          <li class="{% if block.settings.product_show_saved_amount %}show-saved-amount-true{% else %}show-saved-amount-false{% endif %} {% if block.settings.amount_percent %}show-saved-percent-true{% else %}show-saved-percent-false{% endif %}">
+            <span id="comparePrice-{{ section.id }}" class="sale-tag large">
+              {% assign compare_price = variant.compare_at_price %}
+              {% assign product_price = variant.price %}
+              {% render 'price-sale', product: product, compare_price: compare_price, product_price: product_price %}
+            </span>           
+          </li>
+          {% endif %}  
+          
+          {% if block.settings.product_form_template == "2" %}  
+          <li class="product-meta--review">
+            <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+            <div class="loox-rating" data-id="{{ product.id }}" data-rating="{{ product.metafields.loox.avg_rating }}" data-raters="{{ product.metafields.loox.num_reviews }}"></div>
+          </li>
+          {% endif %}
+
+        </ul>   
+          
+        {% if block.settings.product_form_template == "2" %}                  
+        </div>       
+        {% endif %}  
+        
+        {% if block.settings.form_intro != blank %}   
+          <div class="mt-1">{{ block.settings.form_intro }}</div>
+        {% endif %}
+        
+        {% if product.metafields.se_product_z5.contenu_simple_html != blank or product.metafields.se_product_z5.identifiant_page != blank %}
+        <div class="se-meta se-meta-z5">
+          {% if product.metafields.se_product_z5.contenu_simple_html != blank %}  
+          {{ product.metafields.se_product_z5.contenu_simple_html }}   
+          {% endif %} 
+          {% if product.metafields.se_product_z5.identifiant_page != blank %}  
+          {% assign page_handle = product.metafields.se_product_z5.identifiant_page %}    
+          {{ pages[page_handle].content }}
+          {% endif %} 
+        </div>
+        {% endif %}
+      </div>
+
+    </div>     
+
+    {% if product.metafields.se_product_z16.contenu_simple_html != blank or product.metafields.se_product_z16.identifiant_page != blank  or settings.size_chart %}
+    <div class="dg-sc-btn">
+      <span id="scBtn"><svg width="16" height="16"  viewBox="0 0 512 512" class="kiwi-svg kiwi-injectable" crossorigin="Anonymous"><path d="M0 136v240h512V136H0zm472 200H40V176h38v48h40v-48h40v88h40v-88h38v48h40v-48h38v88h40v-88h40v48h40v-48h38v160z"></path></svg>
+        {{ 'general.size_chart.title' | t }}
+      </span>
+    </div>
+    {% endif %} 
+   
+    {% assign classForm = "addToCartForm" %}   
+    
+    <div class="product-form {% if block.settings.btn_purchase %} product-form-direct-checkout{% endif %} ">
+
+    {% form 'product', product, id: "addToCartForm", class: classForm %}
+      
+      <div class="cont-selector {% if settings.product_selector_type == "0" %}swatch-container{% endif %}">
+
+        <select name="id" style="display:none" aria-label="Choix de la variante" id="productSelect-{{ section.id }}" class="product-variants product-variants-{{ section.id }}">
+          {% for variant in product.variants %}
+          {% if variant.available %}
+
+          <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}" data-pos="{{ variant.position }}">{{ variant.title }} </option>
+
+          {% else %}
+          <option>
+            {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+          </option>
+          {% endif %}
+          {% endfor %}
+        </select>
+
+      </div>
+
+   
+      {% if settings.product_selector_type == "0" %}
+      {% if product.available and product.variants.size > 0 %}
+      {% for option in product.options %}
+      {% if settings.swatch_image %} 
+      {% render 'swatch-variants', swatch: option, product: product %}
+      {% else %}
+      {% render 'swatch', swatch: option, product: product %}
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+      {% endif %}
+
+      {% if block.settings.html_cart != blank %}
+      <div class="html-cart spacing-2">
+        {{ block.settings.html_cart }}
+      </div>            
+      {% endif %}
+
+      {% if product.metafields.se_product_z6.contenu_simple_html != blank or product.metafields.se_product_z6.identifiant_page != blank %}
+      <div class="se-meta se-meta-z6">
+        {% if product.metafields.se_product_z6.contenu_simple_html != blank %}  
+        {{ product.metafields.se_product_z6.contenu_simple_html }}   
+        {% endif %} 
+        {% if product.metafields.se_product_z6.identifiant_page != blank %}  
+        {% assign page_handle = product.metafields.se_product_z6.identifiant_page %}    
+        {{ pages[page_handle].content }}
+        {% endif %} 
+      </div>
+      {% endif %}
+  
+      {% if block.settings.product_form_template != "2" %}
+      <div class="cont-form form-infos-1-button{% if block.settings.btn_purchase %} form-infos form-infos-2-buttons {% endif %}">    
+      {% endif %}   
+       
+      {% unless settings.special_offer_v1 %} 
+      {% if block.settings.product_quantity_enable %}
+        <div class="quantity-wrapper">     
+          <label for="quantity" class="quantity-selector quantity-selector-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+          {% render 'custom-selector-qty' %}
+        </div>
+      {% endif %} 
+      {% endunless %}     
+
+      {% comment %} SPEED OFFER {% endcomment %}
+      {% render 'special-offer-qty-form', product: product, block: block %}
+      {% if settings.special_offer_v1 %} 
+      <button type="submit" name="add" id="addToCartProduct" 
+      {% if settings.ajax_cart_method == "page" %} data-cart-method="cart" {% else %} data-cart-method="mini-cart" {% endif %}
+      {% if block.settings.direct_purchase %}  data-redirect="checkout"{% else %} data-redirect="cart" {% endif %} 
+      {% if out_stock %}disabled{% endif %} class="btn btn-atc add-to-cart-bundle {% if sold_out %}no-stock{% endif %} {% if block.settings.addtocart_shake %}addtocart-skake{% endif %}">
+        <span class="addToCartText-{{ section.id }}">{{ 'products.product.add_to_cart' | t }}</span>
+      </button>
+      {% endif %} 
+      {% comment %} SPEED OFFER {% endcomment %}
+
+      {% if block.settings.btn_purchase %} <div class="cont-add-btns" {% if settings.special_offer_v1 %}style="padding:0;" {% endif %}>{% endif %}
+
+        <div class="{% if block.settings.btn_purchase %}col50{% else %}full-width{% endif %}" {% if settings.special_offer_v1 %}style="display:block;width:100%;min-height:0;" {% endif %} >  
+          <button type="submit" {% if settings.special_offer_v1 %}style="display:block;width:100%;" {% endif %} 
+            name="add" id="addToCart"
+            {% if settings.ajax_cart_method == "page" %} data-cart-method="cart" {% else %} data-cart-method="mini-cart" {% endif %}
+            {% if block.settings.direct_purchase %}  data-redirect="checkout"{% else %} data-redirect="cart" {% endif %} 
+            {% if out_stock %}disabled{% endif %} class="btn addToCart btn-atc add-to-cart add-to-cart-first{% if sold_out %}no-stock{% endif %} {% if block.settings.addtocart_shake %}addtocart-skake{% endif %}">
+            <span class="addToCartText-{{ section.id }}">{{ 'products.product.add_to_cart' | t }}</span>
+          </button> 
+        </div>
+
+        {% if block.settings.btn_purchase %}         
+        <div class="col50" {% if settings.special_offer_v1 %}style="display:none;min-height:0;" {% endif %}>
+          {% if block.settings.addtocart_shake2 %}<div class="cont-shake">{% endif %}
+          {% unless settings.special_offer_v1 %}{{ form | payment_button }}{% endunless %}
+          {% if block.settings.addtocart_shake2 %}</div>{% endif %}
+        </div>
+        {% endif %} 
+
+      {% if block.settings.btn_purchase %} </div>{% endif %}
+    
+
+     {% if block.settings.product_form_template != "2" %}
+     </div>
+      {% endif %}   
+
+    {% if product.metafields.se_product_z8.contenu_simple_html != blank or product.metafields.se_product_z8.identifiant_page != blank %}
+    <div class="se-meta se-meta-z8">
+      {% if product.metafields.se_product_z8.contenu_simple_html != blank %}  
+      {{ product.metafields.se_product_z8.contenu_simple_html }}   
+      {% endif %} 
+      {% if product.metafields.se_product_z8.identifiant_page != blank %}  
+      {% assign page_handle = product.metafields.se_product_z8.identifiant_page %}    
+      {{ pages[page_handle].content }}
+      {% endif %} 
+    </div>
+    {% endif %}
+
+    {% comment %}
+      <span id="variantQuantity-{{ section.id }}" class="variant-quantity {% if variant.inventory_management and variant.inventory_quantity < 10 and variant.inventory_quantity > 0 %} is-visible{% endif %}">
+        {% if variant.inventory_management and variant.inventory_quantity < 10 and variant.inventory_quantity > 0 %}
+        {% assign qty = variant.inventory_quantity %}
+        {{ 'products.product.only_left' | t: count: qty }}
+        {% endif %}
+      </span>
+    {% endcomment %}
+    {% comment %}
+      <span id="variantIncoming-{{ section.id }}" class="variant-quantity {% if variant.inventory_management and variant.inventory_quantity <= 0 and variant.incoming %} is-visible{% endif %}">
+        {% if variant.inventory_management and variant.inventory_quantity == 0 or variant.inventory_quantity < 0 and current_variant.incoming %}
+        {% if variant.available %}
+        {% assign date = variant.next_incoming_date | date: "month_day_year" %}
+        {{ 'products.product.will_not_ship_until' | t: date: date }}
+        {% else %}
+        {% assign date = variant.next_incoming_date | date: "month_day_year" %}
+        {{ 'products.product.will_be_in_stock_after' | t: date: date }}
+        {% endif %}
+        {% endif %}
+      </span>
+    {% endcomment %}
+
+    {% if settings.app_recart %}  
+    <div class="recart-messenger-widget"></div>
+    {% endif %}
+
+    {% endform %}    
+        
+    {% if settings.special_offer_v1 %}
+    {% render 'special-offer-qty-script', product: product, block: block %}
+    {% endif %}
+      
+    </div>
+
+  </div>
+
+  {% if section.settings.product_cdtimer or product.description contains 'showcdtimer' -%}
+
+  {% if section.settings.product_cdtimer_type == "0" %}          
+  {% render "countdown", section: section %}          
+  {% endif %}
+  {% if section.settings.product_cdtimer_type == "1" %}          
+  {% render "countdown-2", section: section %}          
+  {% endif %}
+  {% if section.settings.product_cdtimer_type == "2" %}          
+  {% render "countdown-3", section: section %}          
+  {% endif %}  
+
+  {% endif %}
+
+</div>
+
+
+
+

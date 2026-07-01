@@ -1,0 +1,96 @@
+{% if settings.social_twitter_link != blank %}
+<li class="icon-link">
+  <a class="icon-fallback-text" rel="noreferrer" target="_blank" href="{{ settings.social_twitter_link | escape }}" title="{{ 'layout.footer.store_on_social_network' | t: store_name: shop.name, social_network: 'Twitter' | escape }}">
+    <i class="icon fa fa-twitter"></i>
+    <span class="fallback-text">Twitter</span>
+  </a>
+</li>
+{% endif %}
+{% if settings.social_facebook_link != blank %}
+<li class="icon-link">
+  <a class="icon-fallback-text" rel="noreferrer" target="_blank" href="{{ settings.social_facebook_link | escape }}" title="{{ 'layout.footer.store_on_social_network' | t: store_name: shop.name, social_network: 'Facebook' | escape }}">
+    <i class="icon fa fa-facebook"></i>
+    <span class="fallback-text">Facebook</span>
+  </a>
+</li>
+{% endif %}
+{% if settings.social_pinterest_link != blank %}
+<li class="icon-link">
+  <a class="icon-fallback-text" rel="noreferrer" target="_blank" href="{{ settings.social_pinterest_link | escape }}" title="{{ 'layout.footer.store_on_social_network' | t: store_name: shop.name, social_network: 'Pinterest' | escape }}">
+    <i class="icon fa fa-pinterest"></i>
+    <span class="fallback-text">Pinterest</span>
+  </a>
+</li>
+{% endif %}
+{% if settings.social_google_plus_link != blank %}
+<li class="icon-link">
+  <a class="icon-fallback-text" rel="noreferrer" target="_blank" href="{{ settings.social_google_plus_link | escape }}" title="{{ 'layout.footer.store_on_social_network' | t: store_name: shop.name, social_network: 'Google' | escape }}" rel="publisher">
+    <i class="icon fa fa-google-plus"></i>
+    <span class="fallback-text">Google</span>
+  </a>
+</li>
+{% endif %}
+{% if settings.social_instagram_link != blank %}
+<li class="icon-link">
+  <a class="icon-fallback-text" rel="noreferrer" target="_blank" href="{{ settings.social_instagram_link | escape }}" title="{{ 'layout.footer.store_on_social_network' | t: store_name: shop.name, social_network: 'Instagram' | escape }}">
+    <i class="icon fa fa-instagram"></i>
+    <span class="fallback-text">Instagram</span>
+  </a>
+</li>
+{% endif %}
+{% if settings.social_snapchat_link != blank %}
+<li class="icon-link">
+  <a class="icon-fallback-text" rel="noreferrer" target="_blank" href="{{ settings.social_snapchat_link }}" title="{{ 'layout.footer.store_on_social_network' | t: store_name: shop.name, social_network: 'Snapchat' | escape }}">
+    <i class="icon fa fa-snapchat"></i>
+    <span class="fallback-text">Snapchat</span>
+  </a>
+</li>
+{% endif %}
+{% if settings.social_tumblr_link != blank %}
+<li>
+  <a class="icon-fallback-text" rel="noreferrer" target="_blank" href="{{ settings.social_tumblr_link | escape }}" title="{{ 'layout.footer.store_on_social_network' | t: store_name: shop.name, social_network: 'Tumblr' | escape }}">
+    <i class="icon fa fa-tumblr"></i>
+    <span class="fallback-text">Tumblr</span>
+  </a>
+</li>
+{% endif %}
+{% if settings.social_youtube_link != blank %}
+<li class="icon-link">
+  <a class="icon-fallback-text" rel="noreferrer" target="_blank" href="{{ settings.social_youtube_link | escape }}" title="{{ 'layout.footer.store_on_social_network' | t: store_name: shop.name, social_network: 'YouTube' | escape }}">
+    <i class="icon fa fa-youtube"></i>
+    <span class="fallback-text">YouTube</span>
+  </a>
+</li>
+{% endif %}
+{% if settings.social_vimeo_link != blank %}
+<li class="icon-link">
+  <a class="icon-fallback-text" rel="noreferrer" target="_blank" href="{{ settings.social_vimeo_link | escape }}" title="{{ 'layout.footer.store_on_social_network' | t: store_name: shop.name, social_network: 'Vimeo' | escape }}">
+    <i class="icon fa fa-vimeo"></i>
+    <span class="fallback-text">Vimeo</span>
+  </a>
+</li>
+{% endif %}
+{% if settings.social_linkedin_link != blank %}
+<li class="icon-link">
+  <a class="icon-fallback-text" rel="noreferrer" target="_blank" href="{{ settings.social_linkedin_link | escape }}" title="{{ 'layout.footer.store_on_social_network' | t: store_name: shop.name, social_network: 'Linkedin' | escape }}">
+    <i class="icon fa fa-linkedin"></i>
+    <span class="fallback-text">Linkedin</span>
+  </a>
+</li>
+{% endif %}
+{% if settings.social_tiktok_link != blank %}
+<li class="icon-link">
+  <a class="icon-fallback-text" rel="noreferrer" target="_blank" href="{{ settings.social_tiktok_link | escape }}" title="{{ 'layout.footer.store_on_social_network' | t: store_name: shop.name, social_network: 'Tik Tok' | escape }}">
+   <svg height="20px" viewBox="-32 0 512 512" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="m432.734375 112.464844c-53.742187 0-97.464844-43.722656-97.464844-97.464844 0-8.285156-6.71875-15-15-15h-80.335937c-8.285156 0-15 6.714844-15 15v329.367188c0 31.59375-25.703125 57.296874-57.300782 57.296874-31.59375 0-57.296874-25.703124-57.296874-57.296874 0-31.597657 25.703124-57.300782 57.296874-57.300782 8.285157 0 15-6.714844 15-15v-80.335937c0-8.28125-6.714843-15-15-15-92.433593 0-167.632812 75.203125-167.632812 167.636719 0 92.433593 75.199219 167.632812 167.632812 167.632812 92.433594 0 167.636719-75.199219 167.636719-167.632812v-145.792969c29.855469 15.917969 63.074219 24.226562 97.464844 24.226562 8.285156 0 15-6.714843 15-15v-80.335937c0-8.28125-6.714844-15-15-15zm-15 79.714844c-32.023437-2.664063-62.433594-13.851563-88.707031-32.75-4.566406-3.289063-10.589844-3.742188-15.601563-1.171876-5.007812 2.5625-8.15625 7.71875-8.15625 13.347657v172.761719c0 75.890624-61.746093 137.632812-137.636719 137.632812-75.890624 0-137.632812-61.742188-137.632812-137.632812 0-70.824219 53.773438-129.328126 122.632812-136.824219v50.8125c-41.015624 7.132812-72.296874 42.984375-72.296874 86.011719 0 48.136718 39.160156 87.300781 87.296874 87.300781 48.140626 0 87.300782-39.164063 87.300782-87.300781v-314.367188h51.210937c6.871094 58.320312 53.269531 104.71875 111.589844 111.589844zm0 0"/></svg>
+  </a>
+</li>
+{% endif %}
+
+{% if settings.social_fancy_link != blank %}
+<li class="icon-link">
+  <a class="icon-fallback-text" rel="noreferrer" target="_blank" href="{{ settings.social_fancy_link | escape }}" title="{{ 'layout.footer.store_on_social_network' | t: store_name: shop.name, social_network: 'Fancy' | escape }}">
+    <i class="icon fa fa-fancy"></i>
+    <span class="fallback-text">Fancy</span>
+  </a>
+</li>
+{% endif %}

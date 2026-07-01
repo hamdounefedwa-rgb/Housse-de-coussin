@@ -1,0 +1,59 @@
+
+{% if settings.code_afterproduct %}
+{{ settings.code_afterproduct }}
+{% endif %}
+{% if settings.product_upsell != blank or product.metafields.se_upsell.upsell_1 %}
+{% render 'product-upsell' %}
+{% render 'script-upsells' %}
+{% endif %}
+
+{% if settings.stickybar %}
+{% render 'sticky-bar' product: product %}
+{% endif %}
+
+{% unless product == empty %}
+
+<script type="application/json" id="ProductJson-{{ section.id }}">
+  {{ product | json }}
+</script>
+{% comment %}
+<script type="application/json" id="VariantJson-{{ section.id }}">
+ [
+   {% for variant in product.variants %}
+     {
+        "incoming": {% if variant.incoming == 'null' or variant.next_incoming_date == null %}false{% else %}{{ variant.incoming | default: false | json }}{% endif %},
+        "inventory_quantity": {{ variant.inventory_quantity | default: false | json }},
+        "next_incoming_date": {{ variant.next_incoming_date | date: format: 'month_day_year' | json }}
+     }{% unless forloop.last %},{% endunless %}
+   {% endfor %}
+ ]      
+</script>
+{% endcomment %}
+{% endunless %}
+
+
+<style>  
+  
+  {% if block.settings.product_form_template_number == false %}
+  .shopify-section .section-id-{{ section.id }} .header-number {
+   display:none; 
+  }
+  {% endif %} 
+</style>
+{% if block.settings.direct_purchase %}
+<script defer>
+  /*$('#addToCart').click(function(e) {
+    e.preventDefault();
+    $('#ajaxifyModal').hide();
+    $('#ajaxifyCart-overlay').hide();    
+    setTimeout(function() {
+      document.location.href="/checkout";
+    }, 100);
+  });*/
+</script>
+{% endif %}
+
+
+{%- if request.page_type == 'product' -%}
+{% render 'structured-data-product' %}
+{% endif %}

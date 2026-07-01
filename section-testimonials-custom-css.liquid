@@ -1,0 +1,50 @@
+
+
+<style>
+
+  /* 
+  
+  block_title_color
+  block_faq_title_color
+  block_faq_text_color
+  block_faq_border_color
+  
+  */
+  
+  {% if elem.settings.colors_product_content %} 
+  
+  .section-id-{{ elem.id }} {
+    --colorSectionTitles: {{ elem.settings.block_title_color }};
+    --colorTextBody: {{ elem.settings.block_color }};
+    --color-testimonial: {{ elem.settings.color_testimonial_text }};
+    --color-testimonial-star: {{ elem.settings.color_testimonial_star }};
+    --color-testimonial-arrow-bg: {{ elem.settings.color_testimonial_arrow_bg }};
+    --color-testimonial-arrow: {{ elem.settings.color_testimonial_arrow }};
+  }
+  
+  {% endif %}
+  
+  {% if elem.settings.block_size_enable %} 
+
+@media screen and (max-width: 749px) {  
+  .section-id-{{ elem.id }}  {
+    font-size: {{ elem.settings.block_text_size_sm }}px;
+  }
+  .section-id-{{ elem.id }} .h1 {
+    font-size: {{ elem.settings.block_title_size_sm }}px;
+  }  
+}
+  
+@media screen and (min-width: 750px) {
+  .section-id-{{ elem.id }}  {
+    font-size: {{ elem.settings.block_text_size }}px;
+  }
+  .section-id-{{ elem.id }} .h1 {
+    font-size: {{ elem.settings.block_title_size }}px;
+  }  
+}
+
+{% endif %}
+  
+  
+  </style>

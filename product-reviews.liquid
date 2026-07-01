@@ -1,0 +1,6 @@
+<div class="section-product cont-avis section-spaced" style="margin:0 auto;flex:1 0 100%;">
+  <div id="looxReviews" data-product-id="{{ product.id }}">{{ product.metafields.loox.reviews }}</div>
+  <div id="shopify-product-reviews" data-id="{{ product.id }}"></div>
+  <div class="ryviu-show-reviews" product-handle="{{ product.handle }}">{{ product.metafields.ryviu.reviews }}</div>
+  <div id="shopify-ali-review" product-id="{{ product.id }}">{{ shop.metafields.review_collector.review_code }}</div>
+</div>

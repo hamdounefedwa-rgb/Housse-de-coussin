@@ -1,0 +1,57 @@
+<style>
+  
+{% if elem.settings.colors_product_content %} 
+
+.section-id-{{ elem.id }} .block-title  {
+  color: {{ elem.settings.block_title_color }}; 
+}
+.section-id-{{ elem.id }} .custom__item-inner .rte  {
+  color: {{ elem.settings.block_color }};
+}
+.section-id-{{ elem.id }} .btn {
+  color: {{ elem.settings.block_btn_color }};
+  background: {{ elem.settings.block_btn_bgcolor }};
+  border-color: {{ elem.settings.block_btn_border_color }};
+}
+.section-id-{{ elem.id }} .btn:hover {
+  color: {{ elem.settings.block_btn_color_hover }};
+  background: {{ elem.settings.block_btn_bgcolor_hover }};
+  border-color: {{ elem.settings.block_btn_border_color_hover }};
+}
+
+{% endif %}
+
+{% if elem.settings.block_size_enable %} 
+
+@media screen and (max-width: 749px) {  
+  .section-id-{{ elem.id }}  {
+    --baseFontSize: {{ elem.settings.block_text_size_sm }}px;
+    font-size: {{ elem.settings.block_text_size_sm }}px;
+  }
+  .section-id-{{ elem.id }} .block-title  {
+    font-size: {{ elem.settings.block_title_size_sm }}px;
+  }
+  .section-id-{{ elem.id }} .btn {
+    font-size: {{ elem.settings.block_btn_size_sm }}px;
+    border-width: {{ elem.settings.block_btn_border_size_sm }}px;
+  }
+}
+  
+@media screen and (min-width: 750px) {
+  .section-id-{{ elem.id }}  {
+    --baseFontSize: {{ elem.settings.block_text_size }}px;
+    font-size: {{ elem.settings.block_text_size }}px;
+  }
+  .section-id-{{ elem.id }} .block-title {
+    font-size: {{ elem.settings.block_title_size }}px;
+  }
+  .section-id-{{ elem.id }} .btn {
+    font-size: {{ elem.settings.block_btn_size }}px;
+    border-width: {{ elem.settings.block_btn_border_size }}px;
+  }
+}
+
+{% endif %}
+
+
+</style>

@@ -1,0 +1,121 @@
+{%  assign redirect = true %}
+{% if settings.ajax_cart_method != 'page' %}
+<div class="mini-cart-modal-overlay"></div>
+<div class="mini-cart-modal">
+  <mini-cart id="mini-cart__v2" class="mini-cart__v2">  
+    
+    <div class="mini-cart__header" data-cart-title={{ 'layout.cart.cart' | t }}></div>
+
+    <div class="cart-message-error"></div>
+
+    {% if template != 'cart' and settings.cart_goodies %}
+    {% render 'cart-goodies' %}
+    {% endif %}
+   
+    <div class="mini-cart__items"></div>
+    <div class="mini-cart__footer">
+      <div class="mini-cart__footer-subTotal"></div>
+      <div class="mini-cart__footer-totalDiscount"></div>
+    </div>  
+   
+    {% if settings.cart_cgv_enable %}
+    <p class="cgv-text" style="padding:1rem 1rem 0;font-size:13px;">
+      <input type="checkbox" id="agree2" />
+      <label for="agree">
+        {{ 'cart.general.cgv_text1' | t }} <a href="/pages/{{ settings.cart_cgv_link }}" target="_blank">{{ 'cart.general.cgv_text2' | t }}</a> {{ 'cart.general.cgv_text3' | t }} <a href="/pages/{{ settings.cart_pdc_link }}" target="_blank">{{ 'cart.general.cgv_text4' | t }}</a>.
+      </label>
+    </p>  
+    {% endif %}
+    {% if settings.cart_image_secure2 %}
+    <div class="cart-secure-zone" style="padding:0 1rem">
+      <img src="{{ settings.cart_image_secure2 | img_url: "master" }}" loading="lazy" alt="" width="{{ settings.cart_image_secure2.width }}"  height="{{ settings.cart_image_secure2.height }}"/>        
+    </div>
+    {% endif %}
+    <div class="mini-cart-btns {% if settings.header_cart_purchase %} direct-checkout {% endif %}">
+      {% if settings.header_cart_link %}  
+      <a href="{{ routes.cart_url }}" class="btn btn-secondary">
+      {% if settings.header_cart_icon_enable %}
+      <i class="fa fa-eye"></i>
+      {% endif %} {{ 'cart.general.hc_view_cart' | t }}
+      </a>
+      {% endif %}
+      {% if settings.header_cart_purchase %} 
+      {% assign last_character = routes.root_url | slice: -1, 1 %}   
+        <a {% if shop.metafields.global.sflc.size == 40 %} href="{% if routes.root_url == "" %}{{ shop.url }}{% endif %}{{ routes.root_url }}{%- if last_character != "/" -%}/{% endif %}checkout" {% endif %} class="agree-checkout go-pay btn btn-primary" >{% if settings.header_cart_icon_enable %}<i class="fa fa-credit-card"></i>{% endif %} {{ 'cart.general.hc_payment' | t }} {% if shop.metafields.global.sflc.size != 40 %} - disabled on trial version {% endif %}</a>
+      {% endif %}  
+    </div>   
+  
+    {% if template != 'cart' %}
+    {% if settings.cart_upsell_1 != blank %}
+
+    <div class="cart__upsells">  
+      <div class="product__upsells">
+        <div class="product__upsells__header">      
+          <div {% if settings.cart_upsell_header_with_lines %} class="title-with-lines" {% endif %}>{{ settings.cart_upsell_header }}</div>
+        </div>
+        {% if settings.cart_upsell_1 %}
+        {% render 'cart-upsells' upsell: all_products[settings.cart_upsell_1] %}  
+        {% endif %}
+        {% if settings.cart_upsell_2 != blank %}
+        {% render 'cart-upsells' upsell: all_products[settings.cart_upsell_2] %}  
+        {% endif %}
+        {% if settings.cart_upsell_3 != blank %}
+        {% render 'cart-upsells' upsell: all_products[settings.cart_upsell_3] %}  
+        {% endif %}
+        {% if settings.cart_upsell_4 != blank %}
+        {% render 'cart-upsells' upsell: all_products[settings.cart_upsell_4] %}  
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+    {% endif %}
+    
+  </mini-cart>
+
+  
+</div>
+{% endif %}
+
+<script>
+  
+    const lc = "{{ last_character }}";      
+    let btns = document.querySelectorAll('.btn-atc');
+    btns.forEach(btn => {
+      btn.addEventListener('click', (e) => {     
+
+        if(btn.dataset.cartMethod === "cart") {
+          setTimeout(function() {
+            if(!document.querySelector('.upsell-header')) {
+              // document.querySelector('.mini-cart-modal').remove();
+              if(btn.dataset.redirect === "cart") {
+                {% if redirect %} window.location.href = '{{ routes.cart_url }}'; {% endif %}
+              } else {
+                if(lc !== "/") {
+                   window.location.href = '{{ routes.root_url }}/checkout';
+                }
+                else {
+                  window.location.href = '{{ routes.root_url }}checkout';
+                }
+              }
+            }
+          }, 1000) 
+        } else {
+          setTimeout(function() {
+            if(!document.querySelector('.upsell-header')) {
+             
+              if(btn.dataset.redirect === "checkout") {
+                document.querySelector('.mini-cart-modal').remove();
+                if(lc !== "/") {
+                   window.location.href = '{{ routes.root_url }}/checkout';
+                }
+                else {
+                  window.location.href = '{{ routes.root_url }}checkout';
+                }        
+              }              
+            }
+          }, 1000) 
+        }
+      });
+    });
+ 
+</script>

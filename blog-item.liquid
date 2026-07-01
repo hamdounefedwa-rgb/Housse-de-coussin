@@ -1,0 +1,54 @@
+
+<div class="grid-item {% if elem.settings.post_limit == 4 or elem.settings.post_limit == 8 %}one-quarter  {% else %}one-third {% endif %} small--one-whole">
+  <div class="wow slideInUp article__content color-scheme-inner" data-wow-duration="{{ settings.wow_effects_duration }}s" 
+     data-wow-delay="{{ settings.wow_effects_delay | times: forloop.index }}s">
+    
+    {% if article.image %}
+    <div class="blog-cont-img effect-img" style="{% if elem.settings.blog_crop_image_statut %}height:{{ elem.settings.blog_crop_image }}px;{% endif %}">
+    
+      <a href="{{ article.url }}" aria-label="read more">       
+        <img  
+        width= "{{ article.image.width }}"
+        height= "{{ article.image.height }}"
+        loading="lazy"
+        src="{{ article.image | img_url: settings.perf_img_lazy }}" 
+        srcset="{%- if article.image.width >= 160 -%}{{ article.image | image_url: width: 160 }} 160w,{%- endif -%}
+        {%- if article.image.width >= 210 -%}{{ article.image | image_url: width: 210 }} 210w,{%- endif -%}
+        {%- if article.image.width >= 280 -%}{{ article.image | image_url: width: 280 }} 280w,{%- endif -%}
+        {%- if article.image.width >= 360 -%}{{ article.image | image_url: width: 360 }} 360w,{%- endif -%}
+        {%- if article.image.width >= 480 -%}{{ article.image | image_url: width: 480 }} 480w,{%- endif -%}
+        {%- if article.image.width >= 750 -%}{{ article.image | image_url: width: 750 }} 750w,{%- endif -%}"
+        sizes="(min-width: 960px) {{ image_size }}px, 50vw"
+        style="border-radius:{{ elem.settings.block_image_radius_v2 }};"
+        alt="{{ article.image.alt | escape }}">
+      </a>
+
+      {% if show_blog_category == true %}
+
+      {% render 'blog-category' article: article %}
+
+      {% endif %}
+     
+    </div>
+    {% endif %}
+    <div class="blog-content">
+      <{{ elem.settings.block_title_hn }} class="h3 article-title"><a href="{{ article.url }}" aria-label="read more">  {{ article.title | truncate: 67 }}</a></{{ elem.settings.block_title_hn }}>
+        
+      <p class="blog-meta"> 
+        {% if elem.settings.blog_publish_date %}        
+        <span>{{- article.published_at | time_tag: format: 'month_day_year' -}}</span>
+        {% endif %}
+        {% if elem.settings.blog_publish_author %}
+        - <span class="strong">{{ article.author }}</span>       
+        {% endif %}
+      </p>
+      
+      <div class="article__excerpt rte">
+        <p>{{ article.excerpt_or_content | strip_html | truncatewords: 20 }}</p>
+      </div>
+
+      <p><a class="btn {{ btn_scheme }}" href="{{ article.url }}">{{ 'blogs.article.read_more' | t }}</a></p>
+    </div>
+  </div>
+</div>
+

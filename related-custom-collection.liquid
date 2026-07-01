@@ -1,0 +1,17 @@
+{% assign custom_collection = section.settings.custom_collection %}
+<div class="wrapper">
+  <div class="h1 {% if section.settings.title_center %} text-center{% endif %}">{{ 'products.general.custom_collection' | t }}</div>
+  <div class="grid-uniform {% if custom_collection.products_count > 5 %} slider-items {% endif %}"
+  data-slider-nb-desktop="5" data-slider-nb-mobile="2">
+   {% liquid
+      if section.settings.not_showing_sold_out_products
+        assign featured_collection = collections[custom_collection].products | where: 'available' 
+      else 
+        assign featured_collection = collections[custom_collection].products
+      endif
+    %}
+  {% for product in featured_collection %}
+    {% render 'related-product-grid-item', product: product, image_size: image_size %}
+  {% endfor %}
+  </div>
+</div>

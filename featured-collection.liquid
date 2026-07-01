@@ -1,0 +1,101 @@
+<div class="grid-item {{ block_width }} {{ block_width_sm }} block-id-{{ block.id }}">   
+  <a href="{{ collections[featured].url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}" class="featured-box featured-box-{{ section.settings.collections_list_placement_title }} wow slideInUp"  data-wow-duration="{{ settings.wow_effects_duration }}s" data-wow-delay="{{ loop1 }}s">
+    <div class="featured-box--inner">
+      <div class="featured-box--image">   
+        
+        <div class="media-hidden">
+          {% if block.settings.image != blank %}        
+          <img    
+          {% if desktop_layout != "normal" %}             
+          srcset="{{ block.settings.image | image_url }} {{ block.settings.image.width }}w"
+          style="width:100%;"
+          {% else %}
+          srcset="
+          {%- if block.settings.image.width >= 330 -%}{{ block.settings.image | image_url: width: 330 }} 330w,{%- endif -%}
+          {%- if block.settings.image.width >= 390 -%}{{ block.settings.image | image_url: width: 390 }} 390w,{%- endif -%}
+          {%- if block.settings.image.width >= 420 -%}{{ block.settings.image | image_url: width: 420 }} 420w,{%- endif -%}
+          {%- if block.settings.image.width >= 480 -%}{{ block.settings.image | image_url: width: 480 }} 480w,{%- endif -%}
+          {%- if block.settings.image.width >= 600 -%}{{ block.settings.image | image_url: width: 600 }} 600w,{%- endif -%}
+          {%- if block.settings.image.width >= 750 -%}{{ block.settings.image | image_url: width: 750 }} 750w,{%- endif -%}
+          {%- if block.settings.image.width >= 1070 -%}{{ block.settings.image | image_url: width: 1070 }} 1070w,{%- endif -%}
+          {%- if block.settings.image.width >= 1500 -%}{{ block.settings.image | image_url: width: 1500 }} 1500w,{%- endif -%}
+          {%- if block.settings.image.width >= 1780 -%}{{ block.settings.image | image_url: width: 1780 }} 1780w,{%- endif -%}
+          {%- if block.settings.image.width >= 2000 -%}{{ block.settings.image | image_url: width: 2000 }} 2000w,{%- endif -%}
+          {%- if block.settings.image.width >= 3000 -%}{{ block.settings.image | image_url: width: 3000 }} 3000w,{%- endif -%}
+          {{ block.settings.image | image_url }} {{ block.settings.image.width }}w"
+          {% endif %}   
+            
+            src="{{ block.settings.image | image_url: width: settings.perf_img_lazy }}"      
+            loading="lazy"         
+            alt="{{ block.settings.image.alt | escape }}" 
+            width="{{ block.settings.image.width }}"                 
+            height="{{ block.settings.image.width }}"
+            sizes="(min-width: 960px) {{ image_size }}px, 100vw"
+          >             
+              
+        {% else %}  
+        {% if collections[featured].image and featured != blank %}   
+          <img       
+          {% if desktop_layout != "normal" %}             
+          srcset="{{ collections[featured].image | image_url }} {{ collections[featured].image.width }}w"
+          style="width:100%;"
+          {% else %}          
+          srcset="{%- if collections[featured].image.width >= 330 -%}{{ collections[featured].image | image_url: width: 330 }} 330w,{%- endif -%}
+          {%- if collections[featured].image.width >= 380 -%}{{ collections[featured].image | image_url: width: 380 }} 380w,{%- endif -%}
+          {%- if collections[featured].image.width >= 390 -%}{{ collections[featured].image | image_url: width: 390 }} 390w,{%- endif -%}
+          {%- if collections[featured].image.width >= 420 -%}{{ collections[featured].image | image_url: width: 420 }} 420w,{%- endif -%}
+          {%- if collections[featured].image.width >= 480 -%}{{ collections[featured].image | image_url: width: 480 }} 480w,{%- endif -%}
+          {%- if collections[featured].image.width >= 600 -%}{{ collections[featured].image | image_url: width: 600 }} 600w,{%- endif -%}
+          {%- if collections[featured].image.width >= 750 -%}{{ collections[featured].image | image_url: width: 750 }} 750w,{%- endif -%}
+          {%- if collections[featured].image.width >= 1070 -%}{{ collections[featured].image | image_url: width: 1070 }} 1070w,{%- endif -%}
+          {%- if collections[featured].image.width >= 1500 -%}{{ collections[featured].image | image_url: width: 1500 }} 1500w,{%- endif -%}
+          {%- if collections[featured].image.width >= 1780 -%}{{ collections[featured].image | image_url: width: 1780 }} 1780w,{%- endif -%}
+          {%- if collections[featured].image.width >= 2000 -%}{{ collections[featured].image | image_url: width: 2000 }} 2000w,{%- endif -%}
+          {%- if collections[featured].image.width >= 3000 -%}{{ collections[featured].image | image_url: width: 3000 }} 3000w,{%- endif -%}"
+          {% endif %}
+          src="{{ collections[featured].image | image_url: width: settings.perf_img_lazy }}"     
+          loading="lazy"          
+          alt="{{ collections[featured].image.alt | escape }}"
+          width="{{ collections[featured].image.width }}"                 
+          height="{{ collections[featured].image.width }}"  
+          sizes="(min-width: 960px) {{ image_size }}px, {% if image_size_sm < 200 %}50vw{% else %}50vw{% endif %}"
+          >
+          
+        {% elsif collections[featured].products.first.featured_image and featured != blank %}   
+        <img
+          {% if desktop_layout != "normal" %}             
+          srcset="{{ collections[featured].products.first.featured_image | image_url }} {{ collections[featured].products.first.featured_image.width }}w"
+          style="width:100%;"
+          {% else %}
+          srcset="{%- if collections[featured].products.first.featured_image.width >= 330 -%}{{ collections[featured].products.first.featured_image | image_url: width: 330 }} 330w,{%- endif -%}
+          {%- if collections[featured].products.first.featured_image.width >= 380 -%}{{ collections[featured].products.first.featured_image | image_url: width: 380 }} 380w,{%- endif -%}
+          {%- if collections[featured].products.first.featured_image.width >= 390 -%}{{ collections[featured].products.first.featured_image | image_url: width: 390 }} 390w,{%- endif -%}
+          {%- if collections[featured].products.first.featured_image.width >= 420 -%}{{ collections[featured].products.first.featured_image | image_url: width: 420 }} 420w,{%- endif -%}
+          {%- if collections[featured].products.first.featured_image.width >= 480 -%}{{ collections[featured].products.first.featured_image | image_url: width: 480 }} 480w,{%- endif -%}
+          {%- if collections[featured].products.first.featured_image.width >= 600 -%}{{ collections[featured].products.first.featured_image | image_url: width: 600 }} 600w,{%- endif -%}
+          {%- if collections[featured].products.first.featured_image.width >= 750 -%}{{ collections[featured].products.first.featured_image | image_url: width: 750 }} 750w,{%- endif -%}
+          {%- if collections[featured].products.first.featured_image.width >= 1070 -%}{{ collections[featured].products.first.featured_image | image_url: width: 1070 }} 1070w,{%- endif -%}
+          {%- if collections[featured].products.first.featured_image.width >= 1500 -%}{{ collections[featured].products.first.featured_image | image_url: width: 1500 }} 1500w,{%- endif -%}
+          {%- if collections[featured].products.first.featured_image.width >= 1780 -%}{{ collections[featured].products.first.featured_image | image_url: width: 1780 }} 1780w,{%- endif -%}
+          {%- if collections[featured].products.first.featured_image.width >= 2000 -%}{{ collections[featured].products.first.featured_image | image_url: width: 2000 }} 2000w,{%- endif -%}
+          {%- if collections[featured].products.first.featured_image.width >= 3000 -%}{{ collections[featured].products.first.featured_image | image_url: width: 3000 }} 3000w,{%- endif -%}
+          {{ collections[featured].products.first.featured_image | image_url }} {{ collections[featured].products.first.featured_image.width }}w"
+          {% endif %}
+          src="{{ collections[featured].products.first.featured_image | image_url: width: settings.perf_img_lazy }}"
+          loading="lazy"        
+          alt="{{ collections[featured].products.first.featured_image.alt | escape }}"
+          width="{{ collections[featured].products.first.featured_image.width }}"                 
+          height="{{ collections[featured].products.first.featured_image.width }}"
+          sizes="(min-width: 960px) {{ image_size }}px, {% if image_size_sm < 200 %}50vw{% else %}50vw{% endif %}"                
+        >          
+        {% else %}
+        {% capture current %}{% cycle 1, 2, 3 %}{% endcapture %}
+        {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+        {% endif %}        
+        {% endif %}
+        </div>
+      </div>
+    </div>
+    <{{ section.settings.block_title_hn }} class="h4 featured-box--title" style="border-radius:{{ section.settings.block_title_radius }}px;{% if section.settings.block_title_rotate != 0 %}transform:rotate(-{{ section.settings.block_title_rotate }}deg);{% endif %}">{% if collections[featured].title != blank %}{{ collections[featured].title }}{% else %}{{ 'homepage.featured_collection_rows.heading' | t }}{% endif %}</{{ section.settings.block_title_hn }}>
+  </a> 
+</div> 

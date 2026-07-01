@@ -1,0 +1,95 @@
+<ul class="tabs__menu tabs" data-active="{{ block.settings.tabs_closed }}">
+  
+  <li data-target="tab-1"
+      class="is-active
+      {% if settings.mobile_product_tab_enable %}
+      {% if block.settings.review_avis == "1" %}
+      vingt
+      {% else %}      
+      trente
+      {% endif %}
+      {% endif %}
+      ">
+    <a href="#tab-1" >
+      {% if settings.mobile_product_tab_enable %}
+      <i class="icon-tabs fa {{ settings.mobile_product_tab_icon1 }}"></i>
+      {% endif %} 
+      <span>{{ block.settings.titrecontenu }}</span>                           
+    </a>
+  </li>
+
+  {% if block.settings.titrelivraison != blank %} 
+  <li 
+    data-target="tab-2"
+    {% if settings.mobile_product_tab_enable %}
+    {% if block.settings.review_avis == "1" %}class="vingt"{% else %}
+    class="trente"
+    
+    {% endif %}
+    {% endif %}>
+    <a href="#tab-2">
+      {% if settings.mobile_product_tab_enable %}
+      <i class="icon-tabs fa {{ settings.mobile_product_tab_icon2 }}"></i>   
+      {% endif %} 
+      {% if product.metafields.se_product_z10.titre1 != blank %}
+      <span>{{ product.metafields.se_product_z10.titre1 }} </span>  
+      {% else %} 
+      <span>{{ block.settings.titrelivraison }}</span>   
+      {% endif %} 
+    </a>
+  </li>
+  {% endif %} 
+	
+  {% if block.settings.titrewhy != blank %}  
+  <li data-target="tab-3"
+      {% if settings.mobile_product_tab_enable %}
+      {% if block.settings.review_avis == "1" %}class="vingt"{% else %}      
+      class="trente"
+      {% endif %}
+      {% endif %}>
+    <a href="#tab-3">
+      {% if settings.mobile_product_tab_enable %}
+      <i class="icon-tabs fa {{ settings.mobile_product_tab_icon3 }}"></i> 
+      {% endif %}
+      {% if product.metafields.se_product_z10.titre2 != blank %}
+      <span>{{ product.metafields.se_product_z10.titre2 }} </span>  
+      {% else %} 
+      <span>{{ block.settings.titrewhy }}</span>   
+      {% endif %}
+    </a>
+  </li>   
+  {% endif %}  
+    
+  {% if block.settings.tab_reviews_enable %} 
+  <li data-target="tab-4"
+      {% if settings.mobile_product_tab_enable %}
+      {% if block.settings.review_avis == "1" %}class="vingt"{% else %}      
+      class="trente"
+      {% endif %}
+      {% endif %}>
+    <a href="#tab-4">
+      {% if settings.mobile_product_tab_enable %}
+      <i class="icon-tabs fa {{ settings.mobile_product_tab_icon4 }}"></i>  
+      {% endif %}
+      {% if product.metafields.se_product_z10.titre3 != blank %}
+      <span>{{ product.metafields.se_product_z10.titre3 }} </span>  
+      {% else %} 
+      <span>{{ block.settings.reviews_tabs_title }}</span>   
+      {% endif %}                                      
+    </a>
+  </li> 
+  {% endif %} 
+</ul>
+
+<style>
+{% if settings.mobile_product_tab_enable %}
+  @media screen and (max-width: 749px) {
+    ul.tabs li span {
+      display: none;
+    }
+    ul.tabs li i {
+      display: inline-block;
+    }
+  }
+{% endif %}
+</style>

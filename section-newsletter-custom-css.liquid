@@ -1,0 +1,65 @@
+<style>
+
+/* 
+
+block_title_color
+block_faq_title_color
+block_faq_text_color
+block_faq_border_color
+
+*/
+
+{% if elem.settings.colors_product_content %} 
+
+.section-id-{{ elem.id }} {
+
+  --colorSectionTitles: {{ elem.settings.block_title_color }};
+  --colorTextBody: {{ elem.settings.block_color }};
+  --color-newsletter-form-field: {{ elem.settings.form_newsletter_color_field }};
+  --color-newsletter-form-field-bg: {{ elem.settings.form_newsletter_color_field_bg }};
+  --color-newsletter-form-btn: {{ elem.settings.form_newsletter_color_btn }};
+  --color-newsletter-form-btn-bg: {{ elem.settings.form_newsletter_color_btn_bg }};
+}
+
+.section-id-{{ elem.id }} .input-email::placeholder, .section-id-{{ elem.id }} a {
+  color: {{ elem.settings.form_newsletter_color_field }};
+}
+
+{% endif %}
+
+{% if elem.settings.block_size_enable %} 
+
+@media screen and (max-width: 749px) {  
+  .section-id-{{ elem.id }}  {
+    font-size: {{ elem.settings.block_text_size_sm }}px;
+  }
+  .section-id-{{ elem.id }} .h1 {
+    font-size: {{ elem.settings.block_title_size_sm }}px;
+  }
+  .section-id-{{ elem.id }} .input-email {
+    font-size: {{ elem.settings.block_input_size_sm }}px;   
+  }
+  .section-id-{{ elem.id }} .btn {
+    font-size: {{ elem.settings.block_btn_size_sm }}px;   
+  }
+}
+  
+@media screen and (min-width: 750px) {
+  .section-id-{{ elem.id }}  {
+    font-size: {{ elem.settings.block_text_size }}px;
+  }
+  .section-id-{{ elem.id }} .h1 {
+    font-size: {{ elem.settings.block_title_size }}px;
+  }
+  .section-id-{{ elem.id }} .input-email {
+    font-size: {{ elem.settings.block_input_size }}px;   
+  }
+  .section-id-{{ elem.id }} .btn {
+    font-size: {{ elem.settings.block_btn_size }}px;   
+  }
+}
+
+{% endif %}
+
+
+</style>

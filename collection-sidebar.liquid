@@ -1,0 +1,180 @@
+
+<div class="filter-form">
+{% render 'collection-sorting' block: block %}
+{% if block.settings.sidebar_filter_collection %}
+<div class="widget">
+  <select class="coll-picker"> 
+    <option value="all">{{ block.settings.sidebar_filter_collection_title }}</option>
+    {% for c in collections %}
+    {% unless c.handle == 'all' %}
+    {% if collection.handle == c.handle %}
+    <option value="{{ c.handle }}" selected>{{ c.title }}</option>
+    {% else %}
+    <option value="{{ c.handle }}">{{ c.title }}</option>
+    {% endif %}
+    {% endunless %}
+    {% endfor %}
+  </select>
+</div>
+
+{% endif %}
+{% if block.settings.sidebar_filter_enable %}
+
+{% for block in section.blocks %}
+  
+  {% case block.type %}
+    {% when 'filter_color' %}
+  	{% if block.settings.enable %}
+      <div class="widget sidebar-custom sidebar-tag color sidebar_toggle" id="block-{{ block.id }}">
+        {% if block.settings.title != blank %}
+       
+        {% endif %}
+        <div class="widget-content">
+          <ul>
+            {% for i in (1..20) %}
+              {% capture color_text %}color_text_{{ i }}{% endcapture %}
+              {% capture color %}color_img_{{ i }}{% endcapture %}
+            
+              {% if block.settings[color] != blank %}
+                {%- assign img_url = block.settings[color] | img_url: '34x34' -%}
+              {% else %}
+                {%- assign img_url = '' -%}
+              {% endif %}
+
+              {% if color_text != blank %}
+                {% assign tag = block.settings[color_text] | strip %}
+                {% if collection.tags contains tag %} 
+                  <li>
+                    {% assign tag_value = tag | handleize %}
+                    <input type="checkbox" value="{{ tag_value }}" {% if current_tags contains tag %}checked{% endif %}/>
+                    <a href="javascript:void(0)"  {% if current_tags contains tag %} class="active" {% endif %} title="{{ tag }}">
+                      <img src="{{ img_url }}" alt="" loading="lazy" width="{{ img_url.width }}" height="{{ img_url.height }}">
+                    </a>
+                  </li>
+              {% endif %}
+              {% endif %}      
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+	  {% endif %}
+    {% when 'filter_text' %}
+  	{% if block.settings.enable %}
+    
+      <div class="widget sidebar-custom sidebar-tag sidebar_toggle {% if block.settings.title == 'Size | Größe' %}size{% endif %}" id="block-{{ block.id }}">
+        {% assign tags = block.settings.list_tags | split: ',' %}   
+        <select class="coll-filter">
+          <option value="">{{ block.settings.title }}</option>         
+          {% for t in tags %}
+          {% assign tag = t | strip %}
+          {% assign tag_value = tag | handleize %} 
+
+          {% if sidebar_filter_collection_all_tags %}  
+          {% if current_tags contains tag %} 
+          <option value="{{ tag_value }}" selected>{{ tag }}</option>
+          {% else %}
+          <option value="{{ tag_value }}">{{ tag }}</option>
+          {% endif %}
+          {% else %} 
+          {% if collections[collection.handle].tags contains tag %}
+          {% if current_tags contains tag %}
+          <option value="{{ tag_value }}" selected>{{ tag }}</option>
+          {% else %}
+          <option value="{{ tag_value }}">{{ tag }}</option>
+          {% endif %}
+          {% endif %}           
+          {% endif %} 
+          {% endfor %}
+        </select>  
+             
+    
+      </div>
+      <script>
+      if ($('#block-{{ block.id }} option').length < 2) { $('#block-{{ block.id }}').hide(); }
+      </script>
+	  {% endif %}		
+    {% when 'image' %}
+  	{% if block.settings.enable %}
+      {% if block.settings.image != blank %}
+        {%- assign img_url = block.settings.image | img_url: '1024x1024' -%}
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+
+      <div class="widget sidebar-banner">
+      {% if block.settings.link != blank %}
+        <a href="{{ block.settings.link }}">
+      {% endif %}
+        <img src="{{ img_url }}" alt="" loading="lazy" width="{{ img_url.width }}" height="{{ img_url.height }}">
+      {% if block.settings.link != blank %}
+        </a>
+      {% endif %}
+      </div>
+	{% endif %}
+    {% when 'quote' %}
+	  {% if block.settings.enable %}
+      <div class="widget sidebar-cms-custom">
+        {% if block.settings.title != blank %}
+        <div class="widget-title">
+          <p class="h4 toggle">{% render 'multilang', block: block.settings.title | escape %}</p> 
+        </div>
+        {% endif %}
+        <div class="widget-content">
+          {% if block.settings.quote != blank %}
+          	 {% if settings.enable_multilang %}
+                <div class="rte-setting lang1">{{ block.settings.quote | split: '|' | first }}</div>
+                <div class="rte-setting lang2">{{ block.settings.quote | split: '|' | last }}</div>
+              {% else %}
+              <div class="rte-setting">{{ block.settings.quote | split: '|' | first }}</div>
+              {% endif %}
+          {% endif %}
+        </div>
+ 	 </div>
+  	{% endif %}
+  {% endcase %}
+{% endfor %}
+{% endif %}
+
+</div>
+<script>
+  
+  /* Product Tag & Collection Filters - Good for any number of filters on any type of collection pages */
+  /* Give you product tag filter select element a class of coll-filter */
+  /* Give your collection select a class of coll-picker */
+  /* Brought to you by Caroline Schnapp */
+  
+  var allFilters = jQuery('.coll-filter, .coll-picker');
+  allFilters.change(function() {
+   
+    var newTags = [];
+    jQuery('.coll-filter').each(function() { 
+      if (jQuery(this).val()) {
+        newTags.push(jQuery(this).val());
+      }
+    });
+    if (newTags.length) {
+      var query = newTags.join('+');
+      if (jQuery('.coll-picker').length) {
+        window.location.href = '/collections/' + jQuery('.coll-picker').val() + '/' + query;
+      }
+      else {
+        query = '/'+query;
+        window.location.href = jQuery('{{ 'tag' | link_to_tag: 'tag' }}').attr('href').replace('/tag', query);
+      }
+    } 
+    else {
+      if (jQuery('.coll-picker').length) {
+        window.location.href = '/collections/' + jQuery('.coll-picker').val();
+      }
+      else {
+        {% if collection.handle %}
+        window.location.href = '/collections/{{ collection.handle }}';
+        {% elsif collection.products.first.type == collection.title %}
+        window.location.href = '{{ collection.title | url_for_type }}';
+        {% elsif collection.products.first.vendor == collection.title %}
+        window.location.href = '{{ collection.title | url_for_vendor }}';
+        {% endif %}
+      }
+      }
+    });
+</script>

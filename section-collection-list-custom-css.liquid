@@ -1,0 +1,93 @@
+<style>
+
+  .section-id-{{ elem.id }} img {
+    border-radius:{{ elem.settings.block_image_radius_v2 }};
+  }
+      
+  .color-scheme-inverse {     
+    --colorPrice: {{ settings.color_scheme_1_bg }}; 
+    --colorPrice2: {{ settings.color_scheme_1_bg }};     
+  }
+  .color-scheme-inverse span {  
+    color:{{ settings.color_scheme_1_bg }}; 
+  }
+  .color-scheme-1 {    
+    --colorPrice: {{ settings.color_scheme_1_text }}; 
+    --colorPrice2: {{ settings.color_scheme_1_text }};     
+  }
+  .color-scheme-1 .product-grid-content span {  
+    color:{{ settings.color_scheme_1_text }}; 
+  }  
+  .color-scheme-2 {    
+    --colorPrice: {{ settings.color_scheme_2_text }}; 
+    --colorPrice2: {{ settings.color_scheme_2_text }};     
+  }
+  .color-scheme-2 .product-grid-content span {  
+    color:{{ settings.color_scheme_2_text }}; 
+  } 
+  .color-scheme-3 {    
+    --colorPrice: {{ settings.color_scheme_3_text }}; 
+    --colorPrice2: {{ settings.color_scheme_3_text }};     
+  }
+  .color-scheme-3 .product-grid-content span {  
+    color:{{ settings.color_scheme_3_text }}; 
+  } 
+
+  {% if elem.settings.block_color_enable %} 
+
+  .section-id-{{ elem.id }} .opacity-enable .product-grid-item:hover::after {
+      box-shadow:0 0 {{ elem.settings.block_shadow_size }}px {{ elem.settings.block_shadow_color | color_modify: 'alpha', elem.settings.block_shadow_opacity }};
+    
+      background: rgba(0, 0, 0, {{ elem.settings.thumbnails_img_opacity_deg }});
+     
+    }
+  
+  .section-id-{{ elem.id }} .media-hidden {
+    overflow:initial;
+    /* padding:{{ elem.settings.block_shadow_size | times: 1.2 }}px; */
+  }
+  .section-id-{{ elem.id }} img {
+    
+    box-shadow:0 0 {{ elem.settings.block_shadow_size }}px {{ elem.settings.block_shadow_color | color_modify: 'alpha', elem.settings.block_shadow_opacity }};
+  }
+
+  {% endif %}
+
+  {% if elem.settings.colors_product_content %} 
+  
+  .section-id-{{ elem.id }} {
+    --colorSectionTitles: {{ elem.settings.block_title_color }};
+    --sectionCollectionColorText:{{ elem.settings.section_collection_color }};
+    --sectionCollectionColorBg:{{ elem.settings.section_collection_bgcolor | color_modify: 'alpha', elem.settings.section_collection_bgcolor_opacity }};
+    --sectionCollectionColorTextHover:{{ elem.settings.section_collection_color_hover }};
+    --sectionCollectionColorBgHover:{{ elem.settings.section_collection_bgcolor_hover | color_modify: 'alpha', elem.settings.section_collection_bgcolor_opacity }};
+
+  }
+
+  .section-id-{{ elem.id }} .h1 {
+    color: {{ elem.settings.block_title_color }};
+  }
+  {% endif %}
+  
+  {% if elem.settings.block_size_enable %} 
+
+  @media screen and (max-width: 749px) {    
+    .section-id-{{ elem.id }} .h1 {
+      font-size: {{ elem.settings.block_title_size_sm }}px;
+    }
+    .section-id-{{ elem.id }} .featured-box--title {
+      font-size: {{ elem.settings.block_collection_title_size_sm }}px; 
+    }
+  }
+  @media screen and (min-width: 750px) {   
+    .section-id-{{ elem.id }} .h1 {
+      font-size: {{ elem.settings.block_title_size }}px;
+    } 
+    .section-id-{{ elem.id }} .featured-box--title {
+      font-size: {{ elem.settings.block_collection_title_size }}px; 
+    }
+  }
+  
+  {% endif %}
+  
+  </style>
